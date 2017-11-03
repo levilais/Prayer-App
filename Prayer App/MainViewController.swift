@@ -108,7 +108,6 @@ class MainViewController: UIViewController {
                 textField.text = "\(currentText)\n\n\(TopicIdeas().topicArray[i])"
             } else {
                 textField.text = TopicIdeas().topicArray[i]
-                print("created")
             }
         }
     }
