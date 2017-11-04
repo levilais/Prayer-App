@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA7D1FAE26FB00545786 /* Prayer.xcdatamodeld */; };
+		042FCA811FAE458500545786 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA801FAE458500545786 /* Utilities.swift */; };
 		043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */; };
 		043520BA1FAB90E400CFD0C1 /* TimerStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043520B91FAB90E400CFD0C1 /* TimerStruct.swift */; };
 		043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		042FCA7E1FAE26FB00545786 /* Prayer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Prayer.xcdatamodel; sourceTree = "<group>"; };
+		042FCA801FAE458500545786 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicIdeasClass.swift; sourceTree = "<group>"; };
 		043520B91FAB90E400CFD0C1 /* TimerStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerStruct.swift; sourceTree = "<group>"; };
 		043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPreferenceTableViewCell.swift; sourceTree = "<group>"; };
@@ -83,6 +87,7 @@
 				043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */,
 				0474DD6B1F9FE7B4008D79E3 /* Animations.swift */,
 				04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */,
+				042FCA801FAE458500545786 /* Utilities.swift */,
 				043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */,
 				043520B91FAB90E400CFD0C1 /* TimerStruct.swift */,
 				04F0E4E01FA12762006D1244 /* LoadsStruct.swift */,
@@ -90,6 +95,7 @@
 				04D325261F9E8EA700EC615D /* Assets.xcassets */,
 				04D325281F9E8EA700EC615D /* LaunchScreen.storyboard */,
 				04D3252B1F9E8EA700EC615D /* Info.plist */,
+				042FCA7D1FAE26FB00545786 /* Prayer.xcdatamodeld */,
 			);
 			path = "Prayer App";
 			sourceTree = "<group>";
@@ -167,6 +173,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				044C7AAA1FA513A800AFCEA5 /* HeaderTableViewCell.swift in Sources */,
+				042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */,
+				042FCA811FAE458500545786 /* Utilities.swift in Sources */,
 				04D325321F9EA88400EC615D /* MainViewController.swift in Sources */,
 				04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */,
 				044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */,
@@ -364,6 +372,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		042FCA7D1FAE26FB00545786 /* Prayer.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				042FCA7E1FAE26FB00545786 /* Prayer.xcdatamodel */,
+			);
+			currentVersion = 042FCA7E1FAE26FB00545786 /* Prayer.xcdatamodel */;
+			path = Prayer.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 04D325141F9E8EA700EC615D /* Project object */;
 }

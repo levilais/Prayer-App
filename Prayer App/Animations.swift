@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class Animations {
-    func animateFirstLoad(settingsIcon: UIButton, ideaIcon: UIButton, timerIcon: UIButton, titleImage: UIImageView, view: UIView) {
+    func animateFirstLoad(journalIcon: UIButton, settingsIcon: UIButton, timerIcon: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView) {
         view.layoutIfNeeded()
         
         let titleImageStartingPoint = CGPoint(x: titleImage.center.x, y: titleImage.center.y)
@@ -19,9 +19,10 @@ class Animations {
         
         titleImage.image = UIImage(named: "swipeToSave.pdf")
         titleImage.alpha = 0
-        ideaIcon.alpha = 0
+        toolbarView.alpha = 0
         timerIcon.alpha = 0
         settingsIcon.alpha = 0
+        journalIcon.alpha = 0
         
         titleImage.isHidden = false
         settingsIcon.isHidden = false
@@ -52,9 +53,10 @@ class Animations {
                                     titleImage.alpha = 1
                                 }, completion: { finish in
                                     UIView.animate(withDuration: 1.5, delay: 1.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                                        ideaIcon.alpha = 1
+                                        toolbarView.alpha = 1
                                         timerIcon.alpha = 1
                                         settingsIcon.alpha = 1
+                                        journalIcon.alpha = 1
                                     })
                                 })
                             })
@@ -65,14 +67,15 @@ class Animations {
         })
     }
     
-    func animateLoad(settingsIcon: UIButton, ideaIcon: UIButton, timerIcon: UIButton, titleImage: UIImageView, view: UIView) {
+    func animateLoad(journalIcon: UIButton, settingsIcon: UIButton, timerIcon: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView) {
         view.layoutIfNeeded()
         titleImage.alpha = 0
         titleImage.isHidden = false
         settingsIcon.alpha = 0
         settingsIcon.isHidden = false
-        ideaIcon.alpha = 0
+        toolbarView.alpha = 0
         timerIcon.alpha = 0
+        journalIcon.alpha = 0
         
         UIView.animate(withDuration: 0.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
             titleImage.image = UIImage(named: "prayerTitle.pdf")
@@ -81,9 +84,10 @@ class Animations {
                 titleImage.alpha = 1
             }, completion: { finish in
                 UIView.animate(withDuration: 1.0, delay: 1.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                    ideaIcon.alpha = 1
+                    toolbarView.alpha = 1
                     timerIcon.alpha = 1
                     settingsIcon.alpha = 1
+                    journalIcon.alpha = 1
                 }, completion: nil)
             })
         })
