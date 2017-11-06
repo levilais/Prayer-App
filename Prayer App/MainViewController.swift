@@ -8,6 +8,7 @@
 
 import UIKit
 import StoreKit
+import CoreData
 
 class MainViewController: UIViewController {
     
@@ -32,6 +33,7 @@ class MainViewController: UIViewController {
     var timerIsRunning = false
     var resumeTapped = false
     var timerChanged = false
+    var categorySelected = false
     var timer = Timer()
     
     var tapGesture = UITapGestureRecognizer()
@@ -151,6 +153,7 @@ class MainViewController: UIViewController {
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
+        categoryCreationTextField.becomeFirstResponder()
     }
     
     @IBAction func journalButtonDidPress(_ sender: Any) {
@@ -203,7 +206,17 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func confirmSaveToJournalDidPress(_ sender: Any) {
+        savePrayer(prayerText: textField, prayerHeader: categoryCreationTextField)
+        dismissSaveToJournalPopup()
+        textField.text = ""
+        categoryCreationTextField.text = ""
         print("save pressed")
+       
+//            let alert = UIAlertController(title: "No Category Selected", message: "Please enter text and try again.", preferredStyle: .alert)
+//            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+//            alert.addAction(action)
+//            self.present(alert, animated: true, completion: nil)
+//        }
     }
     
     @IBAction func timerPreferenceBackgroundShadowDidPress(_ sender: Any) {
@@ -261,7 +274,53 @@ class MainViewController: UIViewController {
         
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
+    }
+    
+    func savePrayer(prayerText: UITextView, prayerHeader: UITextField) {
+        CoreDataHelper().storePrayer(prayerCategory: prayerHeader, prayerText: prayerText)
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+//            return
+//        }
+//        // 1
+//        let managedContext = appDelegate.persistentContainer.viewContext
+//
+//        // 2
+//        let entity = NSEntityDescription.entity(forEntityName: "Prayer", in: managedContext)!
+//
+//        let prayer = NSManagedObject(entity: entity, insertInto: managedContext)
+//
+//        // 3
+//        prayer.setValue(prayerText.text, forKeyPath: "prayerText")
+//        prayer.setValue(prayerHeader.text, forKey: "prayerCategory")
+//        prayer.setValue(Date(), forKey: "timeStamp")
+//        prayer.setValue(1, forKey: "prayerCount")
+//
+//        // 4
+//        do {
+//            try managedContext.save()
+//        } catch let error as NSError {
+//            print("Could not save. \(error), \(error.userInfo)")
+//        }
         
+        
+//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//        let prayer = Prayer(context: context) // Link Task & Context
+//        prayer.prayerText = prayerText.text
+//        prayer.prayerCategory = prayerHeader.text
+//        prayer.prayerCount = 1
+//        prayer.timeStamp = Date()
+//
+//        // Save the data to coredata
+//        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+//
+//        do {
+//            try context.save()
+//            prayerText.text = ""
+//            prayerHeader.text = ""
+//        } catch {
+//            let nserror = error as NSError
+//            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+//        }
     }
     
     func shareText() {
