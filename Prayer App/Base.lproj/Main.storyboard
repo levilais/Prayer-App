@@ -73,6 +73,9 @@
                                         <state key="normal" backgroundImage="journalIcon"/>
                                         <connections>
                                             <action selector="journalButtonDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="z8i-0A-aIb"/>
+                                            <segue destination="cQs-b5-hFa" kind="popoverPresentation" animates="NO" popoverAnchorView="doJ-F1-KKm" id="1Ux-KU-sia">
+                                                <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                            </segue>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -602,7 +605,157 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n4f-cl-DOZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1230" y="28.52112676056338"/>
+            <point key="canvasLocation" x="998" y="829"/>
+        </scene>
+        <!--Journal View Controller-->
+        <scene sceneID="xSf-3N-KAc">
+            <objects>
+                <viewController id="cQs-b5-hFa" customClass="JournalViewController" customModule="Prayer_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mRG-1O-TRJ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pQ6-x9-G1q">
+                                <rect key="frame" x="0.0" y="60" width="320" height="508"/>
+                                <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="prayerCell" rowHeight="134" id="Ems-1B-dTM" customClass="PrayerTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="134"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ems-1B-dTM" id="V1b-g1-NPJ">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="133.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ec-aU-IeI">
+                                                    <rect key="frame" x="10" y="10" width="300" height="93"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ELi-W9-Q0x">
+                                                    <rect key="frame" x="165" y="108.5" width="145" height="15"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="15" id="jgZ-sA-UF2"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                    <color key="textColor" red="0.64313725489999995" green="0.64705882349999999" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="art-Fa-eqr">
+                                                    <rect key="frame" x="10" y="108.5" width="145" height="15"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="15" id="IJN-yO-9wC"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                    <color key="textColor" red="0.64313725489999995" green="0.64705882349999999" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="0ec-aU-IeI" secondAttribute="trailing" constant="10" id="Ocs-V1-NMN"/>
+                                                <constraint firstItem="ELi-W9-Q0x" firstAttribute="leading" secondItem="art-Fa-eqr" secondAttribute="trailing" constant="10" id="Smh-eq-wez"/>
+                                                <constraint firstItem="art-Fa-eqr" firstAttribute="leading" secondItem="V1b-g1-NPJ" secondAttribute="leading" constant="10" id="clc-bn-QTA"/>
+                                                <constraint firstAttribute="bottom" secondItem="ELi-W9-Q0x" secondAttribute="bottom" constant="10" id="hPQ-UR-4fs"/>
+                                                <constraint firstAttribute="trailing" secondItem="ELi-W9-Q0x" secondAttribute="trailing" constant="10" id="hgr-AN-tKa"/>
+                                                <constraint firstItem="art-Fa-eqr" firstAttribute="top" secondItem="0ec-aU-IeI" secondAttribute="bottom" constant="5" id="jyg-LV-wSQ"/>
+                                                <constraint firstAttribute="bottom" secondItem="art-Fa-eqr" secondAttribute="bottom" constant="10" id="mxi-jA-ATW"/>
+                                                <constraint firstItem="ELi-W9-Q0x" firstAttribute="top" secondItem="0ec-aU-IeI" secondAttribute="bottom" constant="5" id="qol-W4-fga"/>
+                                                <constraint firstItem="0ec-aU-IeI" firstAttribute="leading" secondItem="V1b-g1-NPJ" secondAttribute="leading" constant="10" id="sGR-pQ-aJx"/>
+                                                <constraint firstItem="0ec-aU-IeI" firstAttribute="top" secondItem="V1b-g1-NPJ" secondAttribute="top" constant="10" id="v3d-fY-dNq"/>
+                                                <constraint firstItem="ELi-W9-Q0x" firstAttribute="width" secondItem="art-Fa-eqr" secondAttribute="width" id="y55-Ew-nSa"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="prayedCountLabel" destination="ELi-W9-Q0x" id="xUX-Hl-lv0"/>
+                                            <outlet property="prayedLastLabel" destination="art-Fa-eqr" id="DNQ-Yz-eou"/>
+                                            <outlet property="prayerTextView" destination="0ec-aU-IeI" id="4WL-cF-5Ox"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="cQs-b5-hFa" id="a3V-Sx-GxH"/>
+                                    <outlet property="delegate" destination="cQs-b5-hFa" id="7UR-Og-dpz"/>
+                                </connections>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nws-Sc-CqS">
+                                <rect key="frame" x="0.0" y="20" width="320" height="40"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s2E-Sw-pVu">
+                                        <rect key="frame" x="282" y="6" width="28" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="28" id="9pD-hl-rKj"/>
+                                            <constraint firstAttribute="height" constant="28" id="YPv-4L-Au5"/>
+                                        </constraints>
+                                        <state key="normal" backgroundImage="settingsIconDeselected"/>
+                                        <connections>
+                                            <segue destination="ZLf-i2-f6S" kind="popoverPresentation" animates="NO" popoverAnchorView="s2E-Sw-pVu" id="2fT-HB-G90">
+                                                <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                            </segue>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="prayerTitle" translatesAutoresizingMaskIntoConstraints="NO" id="Ugm-xm-bVf">
+                                        <rect key="frame" x="67" y="5" width="186" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="rfz-ZG-7JR"/>
+                                            <constraint firstAttribute="width" constant="186" id="x9g-FY-FDA"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eAx-ex-fkg">
+                                        <rect key="frame" x="67" y="0.0" width="186" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="186" id="Gr3-B5-iZC"/>
+                                            <constraint firstAttribute="height" constant="40" id="TBd-SJ-fH0"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ag3-gs-pkF">
+                                        <rect key="frame" x="10" y="6" width="27" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="27" id="dSc-dK-5qZ"/>
+                                            <constraint firstAttribute="height" constant="28" id="fsM-gQ-iqQ"/>
+                                        </constraints>
+                                        <state key="normal" backgroundImage="prayerIcon"/>
+                                        <connections>
+                                            <action selector="journalButtonDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9ds-g3-vRC"/>
+                                            <action selector="prayerIconDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="Aao-Ge-hNV"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="eAx-ex-fkg" firstAttribute="centerY" secondItem="nws-Sc-CqS" secondAttribute="centerY" id="A6t-yl-4lI"/>
+                                    <constraint firstItem="s2E-Sw-pVu" firstAttribute="centerY" secondItem="nws-Sc-CqS" secondAttribute="centerY" id="CAf-dQ-fdN"/>
+                                    <constraint firstItem="eAx-ex-fkg" firstAttribute="centerX" secondItem="nws-Sc-CqS" secondAttribute="centerX" id="PP8-PU-RUG"/>
+                                    <constraint firstItem="Ugm-xm-bVf" firstAttribute="centerY" secondItem="nws-Sc-CqS" secondAttribute="centerY" id="TdR-LP-bSz"/>
+                                    <constraint firstItem="Ugm-xm-bVf" firstAttribute="centerX" secondItem="nws-Sc-CqS" secondAttribute="centerX" id="f16-H4-E4b"/>
+                                    <constraint firstItem="ag3-gs-pkF" firstAttribute="centerY" secondItem="nws-Sc-CqS" secondAttribute="centerY" id="f8t-6I-ziV"/>
+                                    <constraint firstAttribute="trailing" secondItem="s2E-Sw-pVu" secondAttribute="trailing" constant="10" id="gpC-Ac-3LP"/>
+                                    <constraint firstAttribute="height" constant="40" id="oJ9-n9-Hqj"/>
+                                    <constraint firstItem="ag3-gs-pkF" firstAttribute="leading" secondItem="nws-Sc-CqS" secondAttribute="leading" constant="10" id="qHx-w1-cq1"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.92920595407485962" green="0.9334074854850769" blue="0.93326789140701294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="nws-Sc-CqS" firstAttribute="leading" secondItem="IDy-NI-5UP" secondAttribute="leading" id="5iu-s3-JV7"/>
+                            <constraint firstItem="nws-Sc-CqS" firstAttribute="trailing" secondItem="IDy-NI-5UP" secondAttribute="trailing" id="6kw-ld-JlZ"/>
+                            <constraint firstItem="pQ6-x9-G1q" firstAttribute="top" secondItem="nws-Sc-CqS" secondAttribute="bottom" id="DnL-XB-atx"/>
+                            <constraint firstItem="pQ6-x9-G1q" firstAttribute="bottom" secondItem="IDy-NI-5UP" secondAttribute="bottom" id="EhF-wS-c9u"/>
+                            <constraint firstItem="nws-Sc-CqS" firstAttribute="top" secondItem="IDy-NI-5UP" secondAttribute="top" id="NW5-rH-kKa"/>
+                            <constraint firstItem="pQ6-x9-G1q" firstAttribute="leading" secondItem="IDy-NI-5UP" secondAttribute="leading" id="SiU-1Y-yz2"/>
+                            <constraint firstItem="pQ6-x9-G1q" firstAttribute="trailing" secondItem="IDy-NI-5UP" secondAttribute="trailing" id="Z6A-E8-AwY"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="IDy-NI-5UP"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="pQ6-x9-G1q" id="wN1-Ga-H9E"/>
+                        <outlet property="tableViewBottomConstraint" destination="EhF-wS-c9u" id="gdn-VC-vqu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WY8-5v-Adf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1359" y="29"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Bsn-MO-DKY">
@@ -629,6 +782,7 @@
         <image name="5Deselected" width="720" height="720"/>
         <image name="ideaIcon" width="228" height="348"/>
         <image name="journalIcon" width="312" height="348"/>
+        <image name="prayerIcon" width="336" height="348"/>
         <image name="prayerTitle" width="2232" height="360"/>
         <image name="saveIcon" width="312" height="348"/>
         <image name="sendIcon" width="336" height="372"/>
@@ -637,4 +791,7 @@
         <image name="shareIcon" width="240" height="348"/>
         <image name="timerIcon" width="354" height="354"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="2fT-HB-G90"/>
+    </inferredMetricsTieBreakers>
 </document>

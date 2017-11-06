@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA7D1FAE26FB00545786 /* Prayer.xcdatamodeld */; };
 		042FCA811FAE458500545786 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA801FAE458500545786 /* Utilities.swift */; };
+		042FCA871FAF7BC500545786 /* PrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA861FAF7BC500545786 /* PrayerTableViewCell.swift */; };
 		043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */; };
 		043520BA1FAB90E400CFD0C1 /* TimerStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043520B91FAB90E400CFD0C1 /* TimerStruct.swift */; };
 		043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */; };
@@ -17,6 +18,7 @@
 		044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */; };
 		046203301FA39ACE00BDF8ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */; };
 		0474DD6C1F9FE7B4008D79E3 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474DD6B1F9FE7B4008D79E3 /* Animations.swift */; };
+		04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */; };
 		04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3251F1F9E8EA700EC615D /* AppDelegate.swift */; };
 		04D325251F9E8EA700EC615D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04D325231F9E8EA700EC615D /* Main.storyboard */; };
 		04D325271F9E8EA700EC615D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04D325261F9E8EA700EC615D /* Assets.xcassets */; };
@@ -29,6 +31,7 @@
 /* Begin PBXFileReference section */
 		042FCA7E1FAE26FB00545786 /* Prayer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Prayer.xcdatamodel; sourceTree = "<group>"; };
 		042FCA801FAE458500545786 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		042FCA861FAF7BC500545786 /* PrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTableViewCell.swift; sourceTree = "<group>"; };
 		043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicIdeasClass.swift; sourceTree = "<group>"; };
 		043520B91FAB90E400CFD0C1 /* TimerStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerStruct.swift; sourceTree = "<group>"; };
 		043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPreferenceTableViewCell.swift; sourceTree = "<group>"; };
@@ -37,6 +40,7 @@
 		044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		0474DD6B1F9FE7B4008D79E3 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
+		04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalViewController.swift; sourceTree = "<group>"; };
 		04D3251C1F9E8EA700EC615D /* Prayer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Prayer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D3251F1F9E8EA700EC615D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04D325241F9E8EA700EC615D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -81,10 +85,12 @@
 				04D3251F1F9E8EA700EC615D /* AppDelegate.swift */,
 				04D325311F9EA88400EC615D /* MainViewController.swift */,
 				0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */,
+				04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */,
 				044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */,
 				044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */,
 				044C7AA91FA513A800AFCEA5 /* HeaderTableViewCell.swift */,
 				043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */,
+				042FCA861FAF7BC500545786 /* PrayerTableViewCell.swift */,
 				0474DD6B1F9FE7B4008D79E3 /* Animations.swift */,
 				04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */,
 				042FCA801FAE458500545786 /* Utilities.swift */,
@@ -176,11 +182,13 @@
 				042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */,
 				042FCA811FAE458500545786 /* Utilities.swift in Sources */,
 				04D325321F9EA88400EC615D /* MainViewController.swift in Sources */,
+				04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */,
 				04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */,
 				044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */,
 				04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */,
+				042FCA871FAF7BC500545786 /* PrayerTableViewCell.swift in Sources */,
 				04F0E4DF1FA1271E006D1244 /* UserDefaultsHelper.swift in Sources */,
 				044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */,
 				043520BA1FAB90E400CFD0C1 /* TimerStruct.swift in Sources */,

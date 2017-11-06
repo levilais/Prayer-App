@@ -26,6 +26,8 @@ extension UITextView {
         let boundingRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
         let adjustedRect = CGRect(x: boundingRect.minX, y: boundingRect.minY + boundingRect.height / 2 - 1, width: boundingRect.width, height: boundingRect.height)
         
+        print("adjustedRect.midX: \(boundingRect.midX), adjustedRect.midY: \(boundingRect.midY)")
+        
         return adjustedRect
     }
 }
