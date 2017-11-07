@@ -6,6 +6,7 @@
 //  Copyright © 2017 App Volks. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import StoreKit
 import CoreData
@@ -35,6 +36,9 @@ class MainViewController: UIViewController {
     var timerChanged = false
     var categorySelected = false
     var timer = Timer()
+    
+    var prayer: Prayer?
+    var managedObjectContext: NSManagedObjectContext?
     
     var tapGesture = UITapGestureRecognizer()
     var longGesture = UILongPressGestureRecognizer()
@@ -211,12 +215,6 @@ class MainViewController: UIViewController {
         textField.text = ""
         categoryCreationTextField.text = ""
         print("save pressed")
-       
-//            let alert = UIAlertController(title: "No Category Selected", message: "Please enter text and try again.", preferredStyle: .alert)
-//            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-//            alert.addAction(action)
-//            self.present(alert, animated: true, completion: nil)
-//        }
     }
     
     @IBAction func timerPreferenceBackgroundShadowDidPress(_ sender: Any) {
@@ -253,7 +251,6 @@ class MainViewController: UIViewController {
         
         contentInset.bottom = keyboardFrame.size.height + 5 + toolbarView.frame.height
         textViewInset.bottom = keyboardFrame.size.height + 5 + toolbarView.frame.height
-
         
         self.toolbarBottomLayoutConstraint.constant = keyboardFrame.size.height - view.safeAreaInsets.bottom
         self.view.layoutIfNeeded()
@@ -277,50 +274,44 @@ class MainViewController: UIViewController {
     }
     
     func savePrayer(prayerText: UITextView, prayerHeader: UITextField) {
-        CoreDataHelper().storePrayer(prayerCategory: prayerHeader, prayerText: prayerText)
-//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-//            return
+        
+//        guard let managedObjectContext = managedObjectContext else { return }
+//        if prayer == nil {
+//            // Create Quote
+//            let newPrayer = Prayer(context: managedObjectContext)
+//
+//            // Configure Quote
+//            newPrayer.timeStamp = Date()
+//
+//            // Set Quote
+//            prayer = newPrayer
 //        }
-//        // 1
-//        let managedContext = appDelegate.persistentContainer.viewContext
 //
-//        // 2
-//        let entity = NSEntityDescription.entity(forEntityName: "Prayer", in: managedContext)!
-//
-//        let prayer = NSManagedObject(entity: entity, insertInto: managedContext)
-//
-//        // 3
-//        prayer.setValue(prayerText.text, forKeyPath: "prayerText")
-//        prayer.setValue(prayerHeader.text, forKey: "prayerCategory")
-//        prayer.setValue(Date(), forKey: "timeStamp")
-//        prayer.setValue(1, forKey: "prayerCount")
-//
-//        // 4
-//        do {
-//            try managedContext.save()
-//        } catch let error as NSError {
-//            print("Could not save. \(error), \(error.userInfo)")
+//        if let prayer = prayer {
+//            // Configure Quote
+//            prayer.setValue(prayerText.text, forKeyPath: "prayerText")
+//            prayer.setValue(prayerHeader.text, forKey: "prayerCategory")
+//            prayer.setValue(1, forKey: "prayerCount")
 //        }
         
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
         
-//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//        let prayer = Prayer(context: context) // Link Task & Context
-//        prayer.prayerText = prayerText.text
-//        prayer.prayerCategory = prayerHeader.text
-//        prayer.prayerCount = 1
-//        prayer.timeStamp = Date()
-//
-//        // Save the data to coredata
-//        (UIApplication.shared.delegate as! AppDelegate).saveContext()
-//
-//        do {
-//            try context.save()
-//            prayerText.text = ""
-//            prayerHeader.text = ""
-//        } catch {
-//            let nserror = error as NSError
-//            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-//        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "Prayer", in: managedContext)!
+        let prayer = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        prayer.setValue(prayerText.text, forKeyPath: "prayerText")
+        prayer.setValue(prayerHeader.text, forKey: "prayerCategory")
+        prayer.setValue(Date(), forKey: "timeStamp")
+        prayer.setValue(1, forKey: "prayerCount")
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
     }
     
     func shareText() {

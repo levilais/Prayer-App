@@ -9,103 +9,211 @@
 import UIKit
 import CoreData
 
-class JournalViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class JournalViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
-
-    var prayers: [NSManagedObject] = [NSManagedObject]()
-    var prayersByCategory: Array<[NSManagedObject]> = Array<[NSManagedObject]>()
     
-    var prayerCategoryHeadersHard = ["Personal","Julie","Our Marriage"]
-    var prayersByCategoryHard: [Int: [String]] = [:]
+    @IBOutlet weak var messageLabel: UILabel!
     
-    var prayer1Hard = ["Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore ","Last prayed 3 days ago","Prayed 5 times"]
-    var prayer2Hard = ["Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore ","Last prayed 1 day ago","Prayed 4 times"]
-    var prayer3Hard = ["Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore ","Last prayed 1 week ago","prayed 5 times"]
+    var sectionTitle = String()
+    let persistentContainer = NSPersistentContainer(name: "Prayer")
+    
+    fileprivate lazy var fetchedResultsController: NSFetchedResultsController<Prayer> = {
+        let fetchRequest: NSFetchRequest<Prayer> = Prayer.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "prayerCategory", ascending: true)]
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.persistentContainer.viewContext, sectionNameKeyPath: #keyPath(Prayer.prayerCategory), cacheName: nil)
+        fetchedResultsController.delegate = self
+        return fetchedResultsController
+    } ()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        prayersByCategory = [0 : prayer1, 1 : prayer2, 2 : prayer3]
+        persistentContainer.loadPersistentStores { (persistentStoreDescription, error) in
+            if let error = error {
+                print("Unable to Load Persistent Store")
+                print("\(error), \(error.localizedDescription)")
+
+            } else {
+                self.updateView()
+                do {
+                    try self.fetchedResultsController.performFetch()
+                } catch {
+                    let fetchError = error as NSError
+                    print("Unable to Perform Fetch Request")
+                    print("\(fetchError), \(fetchError.localizedDescription)")
+                }
+                self.updateView()
+            }
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground(_:)), name: Notification.Name.UIApplicationDidEnterBackground, object: nil)
+        
         tableView.tableFooterView = UIView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         tableView.estimatedRowHeight = 40
         tableView.rowHeight = UITableViewAutomaticDimension
-        
-        if let results = CoreDataHelper().getPrayers() {
-            prayers = results
+    }
+    
+    fileprivate func updateView() {
+        var hasPrayers = false
+        if let prayers = fetchedResultsController.fetchedObjects {
+            print("prayers.count: \(prayers.count)")
+            hasPrayers = prayers.count > 0
         }
-        
-        let prayer = prayers[0]
-        if let prayerTextString = prayer.value(forKey: "prayerText") as? String {
-            print("prayerTextString: \(prayerTextString)")
+    
+        tableView.isHidden = !hasPrayers
+        messageLabel.isHidden = hasPrayers
+    }
+    
+    @objc func applicationDidEnterBackground(_ notification: Notification) {
+        do {
+            try persistentContainer.viewContext.save()
+        } catch {
+            print("Unable to Save Changes")
+            print("\(error), \(error.localizedDescription)")
         }
-        
-//        tableView.reloadData()
     }
 
-
     @IBAction func prayerIconDidPress(_ sender: Any) {
-        dismiss(animated: false, completion: nil)
+        _ = navigationController?.popViewController(animated: false)
+//        dismiss(animated: false, completion: nil)
+    }
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+        updateView()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch (type) {
+        case .insert:
+            if let indexPath = newIndexPath {
+                tableView.insertRows(at: [indexPath], with: .fade)
+            }
+            break
+        case .delete:
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            break
+        case .update:
+            if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) as? PrayerTableViewCell {
+                configure(cell, at: indexPath)
+            }
+            break
+        case .move:
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            
+            if let newIndexPath = newIndexPath {
+                tableView.insertRows(at: [newIndexPath], with: .fade)
+            }
+            break
+        }
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        switch type {
+        case .insert:
+            tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .delete:
+            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+        default:
+            break
+        }
     }
     
     // MARK: - Table view data source
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView()
-        view.backgroundColor = UIColor(red:0.78, green:0.78, blue:0.78, alpha:1.0)
-        let label = UILabel(frame: CGRect(x: 10, y: 0, width: self.view.frame.width - 20, height: 30))
-//        label.text = prayerCategoryHeaders[section]
-        label.font = UIFont(name: "Baskerville", size: 20)
-        view.addSubview(label)
-        
-        return view
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard let sectionInfo = fetchedResultsController.sections?[section] else { fatalError("Unexpected Section") }
+        sectionTitle = sectionInfo.name
+        return sectionInfo.name
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 30
     }
     
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if (view is UITableViewHeaderFooterView) {
+            if let tableViewHeaderFooterView = view as? UITableViewHeaderFooterView {
+                tableViewHeaderFooterView.contentView.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
+                tableViewHeaderFooterView.textLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 20)
+                tableViewHeaderFooterView.textLabel?.textColor = UIColor(red:0.33, green:0.33, blue:0.33, alpha:1.0)
+            }
+        }
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return  prayers.count
+        guard let sections = fetchedResultsController.sections else { return 0 }
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return prayers.count
+        guard let sectionInfo = fetchedResultsController.sections?[section] else { fatalError("Unexpected Section") }
+        return sectionInfo.numberOfObjects
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as! PrayerTableViewCell
-        
-//        if let prayerDataForCategory = prayersByCategory[indexPath.section] {
-//            cell.prayerTextView.text = prayerDataForCategory[0]
-//            cell.prayedLastLabel.text = prayerDataForCategory[1]
-//            cell.prayedCountLabel.text = prayerDataForCategory[2]
-//        }
-        
-//        swipeRight.direction = UISwipeGestureRecognizerDirection.right
-//        self.tableView.cellForRow(at: indexPath)?.addGestureRecognizer(swipeRight)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as? PrayerTableViewCell else {
+            fatalError("Unexpected Index Path")
+        }
+        configure(cell, at: indexPath)
         return cell
+    }
+    
+    func configure(_ cell: PrayerTableViewCell, at indexPath: IndexPath) {
+        let prayer = fetchedResultsController.object(at: indexPath)
+        cell.prayerTextView.text = prayer.prayerText
+        
+        let daysAgoString = Utilities().dayDifference(from: (prayer.timeStamp?.timeIntervalSince1970)!)
+        cell.prayedLastLabel.text = "Last prayed \(daysAgoString)"
+        
+        var timeVsTimesString = ""
+        if prayer.prayerCount == 1 {
+            timeVsTimesString = "time"
+        } else {
+            timeVsTimesString = "times"
+        }
+        
+        cell.prayedCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
+        cell.selectionStyle = .none
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            let prayer = fetchedResultsController.object(at: indexPath)
+            prayer.managedObjectContext?.delete(prayer)
+            print("attempting to delete")
+            do {
+                try prayer.managedObjectContext?.save()
+                print("saved!")
+            } catch let error as NSError  {
+                print("Could not save \(error), \(error.userInfo)")
+            } catch {
+            }
         }
     }
     
-    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
-        {
-            let amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-                print("Attempted animation")
-                if let cell = self.tableView.cellForRow(at: indexPath) as? PrayerTableViewCell {
-                    cell.prayerTextView.textColor = UIColor.lightGray
-                }
-                
-                success(true)
-            })
-            return UISwipeActionsConfiguration(actions: [amenAction])
-        }
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            if let cell = self.tableView.cellForRow(at: indexPath) as? PrayerTableViewCell {
+                cell.prayerTextView.textColor = UIColor.lightGray
+            }
+            success(true)
+        })
+        return UISwipeActionsConfiguration(actions: [amenAction])
+    }
 }

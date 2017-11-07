@@ -9,6 +9,23 @@
 import Foundation
 import UIKit
 
+class Utilities {
+    func dayDifference(from interval: TimeInterval) -> String {
+        let calendar = NSCalendar.current
+        let date = Date(timeIntervalSince1970: interval)
+        if calendar.isDateInYesterday(date) { return "yesterday" }
+        else if calendar.isDateInToday(date) { return "today" }
+        else {
+            let startOfNow = calendar.startOfDay(for: Date())
+            let startOfTimeStamp = calendar.startOfDay(for: date)
+            let components = calendar.dateComponents([.day], from: startOfNow, to: startOfTimeStamp)
+            let day = components.day!
+            if day < 1 { return "\(abs(day)) days ago" }
+            else { return "In \(day) days" }
+        }
+    }
+}
+
 extension UITextView {
     func boundingRectForCharacterRange(index: Int) -> CGRect? {
         let range = NSRange(location: index, length: 1)
