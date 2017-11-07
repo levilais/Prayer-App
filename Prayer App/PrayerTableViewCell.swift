@@ -15,6 +15,7 @@ class PrayerTableViewCell: UITableViewCell {
     @IBOutlet weak var prayedCountLabel: UILabel!
     
     var labelArray = [UILabel]()
+    var recentlyPrayed = false
     
     override func awakeFromNib() {
         super.awakeFromNib()

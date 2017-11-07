@@ -13,7 +13,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var messageLabel: UILabel!
     
     var sectionTitle = String()
@@ -79,7 +78,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
 
     @IBAction func prayerIconDidPress(_ sender: Any) {
         _ = navigationController?.popViewController(animated: false)
-//        dismiss(animated: false, completion: nil)
     }
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -190,6 +188,8 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         
         cell.prayedCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
         cell.selectionStyle = .none
+        
+        markRecentlyPrayed(cell: cell, lastPrayedString: daysAgoString)
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -208,12 +208,50 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-            if let cell = self.tableView.cellForRow(at: indexPath) as? PrayerTableViewCell {
-                cell.prayerTextView.textColor = UIColor.lightGray
-            }
-            success(true)
-        })
-        return UISwipeActionsConfiguration(actions: [amenAction])
+        let cell = tableView.cellForRow(at: indexPath) as? PrayerTableViewCell
+        var recentPrayed = false
+        var amenAction = UIContextualAction()
+        
+        if let recentlyPrayed = cell?.recentlyPrayed {
+            recentPrayed = recentlyPrayed
+        }
+        
+        if recentPrayed == false {
+            amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+                self.markPrayed(indexPath: indexPath)
+                success(true)
+                
+                
+            })
+            return UISwipeActionsConfiguration(actions: [amenAction])
+        } else {
+            return nil
+        }
+    }
+    
+    func markRecentlyPrayed(cell: PrayerTableViewCell, lastPrayedString: String) {
+        if lastPrayedString == "today" {
+            cell.prayerTextView.textColor = UIColor.lightGray
+            cell.recentlyPrayed = true
+        } else {
+            cell.prayerTextView.textColor = UIColor.black
+            cell.recentlyPrayed = false
+        }
+    }
+    
+    func markPrayed(indexPath: IndexPath) {
+        let prayer = fetchedResultsController.object(at: indexPath)
+        print(prayer.prayerCount)
+        let newCount = prayer.prayerCount + 1
+        prayer.setValue(newCount, forKey: "prayerCount")
+        prayer.setValue(Date(), forKey: "timeStamp")
+        print("attempting to set new time stamp")
+        do {
+            try prayer.managedObjectContext?.save()
+            print("saved!")
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
+        } catch {
+        }
     }
 }
