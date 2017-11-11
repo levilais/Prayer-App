@@ -11,7 +11,6 @@ import UIKit
 
 class TimerStruct {
     
-    // will set and get from UserDefaults
     static var preferredTimerDuration = Int()
     static var seconds = Int()
     

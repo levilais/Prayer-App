@@ -25,6 +25,7 @@
 		04D325271F9E8EA700EC615D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04D325261F9E8EA700EC615D /* Assets.xcassets */; };
 		04D3252A1F9E8EA700EC615D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04D325281F9E8EA700EC615D /* LaunchScreen.storyboard */; };
 		04D325321F9EA88400EC615D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D325311F9EA88400EC615D /* MainViewController.swift */; };
+		04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */; };
 		04F0E4DF1FA1271E006D1244 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */; };
 		04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4E01FA12762006D1244 /* LoadsStruct.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +51,7 @@
 		04D325291F9E8EA700EC615D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04D3252B1F9E8EA700EC615D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04D325311F9EA88400EC615D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIScrollView.swift; sourceTree = "<group>"; };
 		04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
 		04F0E4E01FA12762006D1244 /* LoadsStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadsStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +102,7 @@
 				043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */,
 				043520B91FAB90E400CFD0C1 /* TimerStruct.swift */,
 				04F0E4E01FA12762006D1244 /* LoadsStruct.swift */,
+				04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */,
 				04D325231F9E8EA700EC615D /* Main.storyboard */,
 				04D325261F9E8EA700EC615D /* Assets.xcassets */,
 				04D325281F9E8EA700EC615D /* LaunchScreen.storyboard */,
@@ -189,6 +192,7 @@
 				04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */,
 				04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */,
 				044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */,
+				04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */,
 				04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */,
@@ -337,7 +341,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZA86U458DA;
 				INFOPLIST_FILE = "Prayer App/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.AppVolks.Prayer-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -353,7 +357,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZA86U458DA;
 				INFOPLIST_FILE = "Prayer App/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.AppVolks.Prayer-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";

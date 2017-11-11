@@ -168,4 +168,44 @@ class Animations {
         
         CATransaction.commit()
     }
+    
+    func animateSaveToJournalPopup(view: UIView, backgroundButton: UIButton, subView: UIView, viewController: UIViewController, textField: UITextField, textView: UITextView) {
+        textView.resignFirstResponder()
+        UIView.animate(withDuration: 0.33, animations: {
+             backgroundButton.alpha = 0.66
+        }) { (success) in
+            view.alpha = 1
+            subView.alpha = 1
+        }
+        UIView.animate(withDuration: 0.33, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 10, options: UIViewAnimationOptions(rawValue: 0), animations: {
+            subView.center = CGPoint(x: viewController.view.center.x, y: viewController.view.bounds.height / 3 + 20)
+        }, completion: { (completed) in
+            subView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            subView.alpha = 0.0
+            UIView.animate(withDuration: 0.33, animations: {
+                subView.alpha = 1.0
+                subView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                textField.becomeFirstResponder()
+            }, completion: nil)
+        })
+    }
+    
+    func animateSpinner(spinnerView: UIView, spinnerImage: UIImageView, spinnerLabel: UILabel, spinnerString: String, textView: UITextView, viewController: UIViewController) {
+        spinnerLabel.text = spinnerString
+        UIView.animate(withDuration: 0.8, delay: 0.0, options: [.curveEaseIn], animations: {
+            spinnerImage.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            spinnerLabel.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            spinnerView.alpha = 1.0
+            spinnerImage.alpha = 1.0
+            spinnerLabel.alpha = 1.0
+        }) { (completed) in
+            UIView.animate(withDuration: 0.33, delay: 1.0, options: [.curveEaseIn], animations: {
+                spinnerImage.alpha = 0
+                spinnerLabel.alpha = 0
+                spinnerView.alpha = 0
+            }, completion: { (completed) in
+                textView.becomeFirstResponder()
+            })
+        }
+    }
 }

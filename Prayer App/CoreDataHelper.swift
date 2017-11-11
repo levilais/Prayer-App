@@ -57,27 +57,26 @@ class CoreDataHelper {
 //            }
 //        }
 //    }
-//
-//    func getPrayers() -> [NSManagedObject]? {
-//        // Create a fetch request to pull an array out of the Entity
-//        let fetchRequest: NSFetchRequest<Prayer> = Prayer.fetchRequest()
-//        // Because this could fail, we need to do a do / catch
-//        do {
-//            // use the getContext function above to get a context and then use the fetch request function to pass in the NSFetchRequest we created in this function right above
-//            let searchResults = try getContext().fetch(fetchRequest)
-//            // To see how many results we have (to make sure we're retreiving data) print the count
-//            print("levil - number of results \(searchResults.count)")
-//            // For each results, we want to put them into an array (note that the function itself is returning an array of NSManagedObjects.  We're using the results to create that array now.
-//            for result in searchResults as [NSManagedObject] {
-//                if let prayerTextCheck = result.value(forKey: "prayerCategory") as? String {
-//                    print("levil Result: \(prayerTextCheck)")
-//                }
-//            }
-//            // Now that the for loop filled the searchResults up with the searchResults fetched above, return searchResults as the array
-//            return searchResults as [NSManagedObject]
-//        } catch {
-//            print("unable to get results")
-//            return nil
-//        }
-//    }
+
+    func getPrayersCategories() -> [String]? {
+        var categoryHeaders: [String] = [String]()
+        let fetchRequest: NSFetchRequest<Prayer> = Prayer.fetchRequest()
+        
+        do {
+            let searchResults = try getContext().fetch(fetchRequest)
+            for result in searchResults as [NSManagedObject] {
+                if let prayerCategoryCheck = result.value(forKey: "prayerCategory") as? String {
+                    print("levil Result: \(prayerCategoryCheck)")
+                    if !categoryHeaders.contains(prayerCategoryCheck) {
+                        categoryHeaders.append(prayerCategoryCheck)
+                    }
+                }
+            }
+            
+            return categoryHeaders as [String]
+        } catch {
+            print("unable to get results")
+            return nil
+        }
+    }
 }

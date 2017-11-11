@@ -88,6 +88,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func settingsButtonDidPress(_ sender: Any) {
-        dismiss(animated: false, completion: nil)
+        _ = navigationController?.popViewController(animated: false)
     }
 }

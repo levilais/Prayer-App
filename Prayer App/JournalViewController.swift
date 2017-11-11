@@ -205,28 +205,16 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             } catch {
             }
         }
+        tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let cell = tableView.cellForRow(at: indexPath) as? PrayerTableViewCell
-        var recentPrayed = false
         var amenAction = UIContextualAction()
-        
-        if let recentlyPrayed = cell?.recentlyPrayed {
-            recentPrayed = recentlyPrayed
-        }
-        
-        if recentPrayed == false {
-            amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-                self.markPrayed(indexPath: indexPath)
-                success(true)
-                
-                
-            })
+        amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            self.markPrayed(indexPath: indexPath)
+            success(true)
+        })
             return UISwipeActionsConfiguration(actions: [amenAction])
-        } else {
-            return nil
-        }
     }
     
     func markRecentlyPrayed(cell: PrayerTableViewCell, lastPrayedString: String) {
