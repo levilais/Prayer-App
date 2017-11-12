@@ -11,9 +11,75 @@ import UIKit
 
 class TimerStruct {
     
+    static var timer = Timer()
+    static var timerIsRunning = false
     static var preferredTimerDuration = Int()
-    static var seconds = Int()
+    static var timerExpired = false {
+        didSet {
+            if timerExpired == true {
+                let expirationDict:[String: Bool] = ["timerExpired": timerExpired]
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil, userInfo: expirationDict)
+            }
+        }
+    }
     
+    static var seconds = Int() {
+        didSet  {
+            print("timer seconds were updated")
+            let timerDict:[String: Int] = ["timerSeconds": seconds]
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil, userInfo: timerDict)
+        }
+    }
+    
+    func startTimer(timerButton: UIButton, titleImageView: UIImageView, timerIcon: UIButton) {
+        TimerStruct().resetSeconds()
+        titleImageView.isHidden = true
+        timerButton.setTitle(TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds)), for: .normal)
+        timerButton.alpha = 1
+        timerButton.isHidden = false
+        timerIcon.setBackgroundImage(UIImage(named: "timerIconSelected.pdf"), for: .normal)
+        TimerStruct.timerIsRunning = true
+        TimerStruct().runTimer()
+        print("attempt was successfull")
+    }
+    
+    @objc func updateTimer() {
+        if TimerStruct.seconds < 1 {
+            TimerStruct.timer.invalidate()
+            TimerStruct.timerIsRunning = false
+            TimerStruct.timerExpired = true
+        } else {
+            print("attempting a countdown")
+            TimerStruct.seconds -= 1
+            print("TimerStruct.seconds: \(TimerStruct.seconds)")
+        }
+    }
+    
+    func updateTimerButtonLabel(timerButton: UIButton) {
+        UIView.performWithoutAnimation {
+            timerButton.setTitle(TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds)), for: .normal)
+            timerButton.layoutIfNeeded()
+        }
+    }
+    
+    func runTimer() {
+        TimerStruct.timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(TimerStruct.updateTimer)), userInfo: nil, repeats: true)
+    }
+    
+    func stopTimer(timerButton: UIButton, titleImageView: UIImageView, timerIcon: UIButton) {
+        titleImageView.isHidden = false
+        timerButton.isHidden = true
+        timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
+        TimerStruct.timerIsRunning = false
+        TimerStruct.timer.invalidate()
+        TimerStruct().resetSeconds()
+        UIView.performWithoutAnimation {
+            timerButton.setTitle("\(TimerStruct.seconds)", for: .normal)
+            timerButton.layoutIfNeeded()
+        }
+        timerButton.setTitle("\(TimerStruct.seconds)", for: .normal)
+    }
+
     func resetSeconds() {
         TimerStruct.seconds = TimerStruct.preferredTimerDuration
         print(TimerStruct.seconds)

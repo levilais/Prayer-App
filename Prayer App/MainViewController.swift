@@ -40,12 +40,10 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     var toolbarBottomConstraintInitialValue: CGFloat?
     
     // Timer & Popup
-    @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var timerPreferencesSelectionView: UIView!
     @IBOutlet var timerButtons: [UIButton]!
-    var timerIsRunning = false
+    @IBOutlet weak var timerHeaderButton: UIButton!
     var timerChanged = false
-    var timer = Timer()
     
     // Save To Journal Popup
     @IBOutlet weak var categoryCreationTextField: UITextField!
@@ -84,6 +82,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         
         self.toolbarBottomConstraintInitialValue = toolbarBottomLayoutConstraint.constant
         
@@ -129,12 +129,14 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             titleImage.isHidden = false
             settingsIcon.isHidden = false
         }
-        
         if Loads.loadCount == 3 && passFirstResonder == true {
             SKStoreReviewController.requestReview()
             passFirstResonder = false
         } else {
             textField.becomeFirstResponder()
+        }
+        if TimerStruct.timerIsRunning == true {
+            titleImage.isHidden = true
         }
     }
     
@@ -149,6 +151,15 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             }
         }
         firstAppear = false
+    }
+    
+    @IBAction func timerHeaderButtonPressed(_ sender: Any) {
+        print("timerHeaderButtonPressed")
+        // showStopTimerPopup()
+    }
+    
+    func showStopTimerPopup() {
+        
     }
     
     @IBAction func timerButtonTapped(_ sender: Any) {
@@ -187,7 +198,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @IBAction func addButtonDidPress(_ sender: Any) {
-       launchAddButtonPressed()
+        self.swipeLeft.isEnabled = false
+        self.swipeRight.isEnabled = false
+        launchAddButtonPressed()
     }
     
     func launchAddButtonPressed() {
@@ -227,6 +240,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 button.setTitle(prayerCategory, for: .normal)
                 button.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
                 button.titleLabel?.font = UIFont(name: "Baskerville", size: 15)
+//                button.titleLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 15)
                 button.setTitleColor(UIColor.black, for: .normal)
                 button.sizeToFit()
                 buttonWidth = button.frame.size.width + 10
@@ -266,10 +280,10 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @objc func normalTap(_ sender: UIGestureRecognizer){
-        if timerIsRunning == false {
-            startTimer()
+        if TimerStruct.timerIsRunning == false {
+            TimerStruct().startTimer(timerButton: timerHeaderButton, titleImageView: titleImage, timerIcon: timerIcon)
         } else {
-            stopTimer()
+            TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage, timerIcon: timerIcon)
         }
     }
     
@@ -327,8 +341,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBAction func timerPreferenceBackgroundShadowDidPress(_ sender: Any) {
         dismissTimerPopup()
         if timerChanged == true {
-            stopTimer()
-            startTimer()
+            TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage, timerIcon: timerIcon)
+            TimerStruct().startTimer(timerButton: timerHeaderButton, titleImageView: titleImage, timerIcon: timerIcon)
             timerChanged = false
         }
     }
@@ -510,43 +524,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         undoTimer.invalidate()
     }
     
-    func runTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(MainViewController.updateTimer)), userInfo: nil, repeats: true)
-    }
-    
-    @objc func updateTimer() {
-        if TimerStruct.seconds < 1 {
-            timer.invalidate()
-            timerIsRunning = false
-            Animations().endTimerAnimation(timerIcon: timerIcon, timerLabel: timerLabel, titleImage: titleImage)
-            // Do Animation
-        } else {
-            TimerStruct.seconds -= 1
-            timerLabel.text = TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds))
-        }
-    }
-    
-    func startTimer() {
-        TimerStruct().resetSeconds()
-        titleImage.isHidden = true
-        timerLabel.text = TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds))
-        timerLabel.alpha = 1
-        timerLabel.isHidden = false
-        timerIcon.setBackgroundImage(UIImage(named: "timerIconSelected.pdf"), for: .normal)
-        timerIsRunning = true
-        runTimer()
-    }
-    
-    func stopTimer() {
-        titleImage.isHidden = false
-        timerLabel.isHidden = true
-        timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
-        timerIsRunning = false
-        timer.invalidate()
-        TimerStruct().resetSeconds()    //Here we manually enter the restarting point for the seconds, but it would be wiser to make this a variable or constant.
-        timerLabel.text = "\(TimerStruct.seconds)"
-    }
-    
     func setupPopupTextField(popupTextField: UITextField) {
         let myColor: UIColor = UIColor.lightGray
         categoryCreationTextField.layer.borderColor = myColor.cgColor
@@ -658,9 +635,16 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             return false
         }
     }
+
+    @objc func handleNotification(_ notification: NSNotification) {
+        TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
+    }
+    
+    @objc func handleNotification2(_ notification: NSNotification) {
+        Animations().endTimerAnimation(timerIcon: timerIcon, timerButton: timerHeaderButton, titleImage: titleImage)
+    }
     
     override func viewWillDisappear(_ animated: Bool) {
         textField.resignFirstResponder()
-        stopTimer()
     }
 }

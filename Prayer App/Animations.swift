@@ -136,23 +136,23 @@ class Animations {
         CATransaction.commit()
     }
     
-    func endTimerAnimation(timerIcon: UIButton, timerLabel: UILabel, titleImage: UIImageView) {
+    func endTimerAnimation(timerIcon: UIButton, timerButton: UIButton, titleImage: UIImageView) {
         CATransaction.begin()
         CATransaction.setCompletionBlock {
             titleImage.alpha = 0
             titleImage.isHidden = false
             UIView.animate(withDuration: 1.5, animations: {
-                timerLabel.alpha = 0
+                timerButton.alpha = 0
                 timerIcon.alpha = 0
             }, completion: { (finish) in
-                timerLabel.isHidden = true
+                timerButton.isHidden = true
                 UIView.animate(withDuration: 1.5, delay: 1.0, options: [], animations: {
                     timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
                     timerIcon.alpha = 1
                     titleImage.alpha = 1
                 }, completion: { (finish) in
                     TimerStruct().resetSeconds()
-                    timerLabel.text = TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds))
+                    timerButton.setTitle(TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds)), for: .normal)
                 })
             })
         }
@@ -164,7 +164,7 @@ class Animations {
         pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         pulseAnimation.autoreverses = true
         pulseAnimation.repeatCount = 3
-        timerLabel.layer.add(pulseAnimation, forKey: "animateOpacity")
+        timerButton.layer.add(pulseAnimation, forKey: "animateOpacity")
         
         CATransaction.commit()
     }
