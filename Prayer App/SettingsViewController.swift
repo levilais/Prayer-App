@@ -14,6 +14,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
+    var sectionHeaders = ["Timer Duration","How To","Review"]
     var imageNames: [String] = ["swipeToSend.pdf","swipeToSave.pdf"]
     
     override func viewDidLoad() {
@@ -31,37 +32,62 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let sectionTitle = sectionHeaders[section]
+        return sectionTitle
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if (view is UITableViewHeaderFooterView) {
+            if let tableViewHeaderFooterView = view as? UITableViewHeaderFooterView {
+                tableViewHeaderFooterView.contentView.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
+                tableViewHeaderFooterView.textLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 20)
+                tableViewHeaderFooterView.textLabel?.textColor = UIColor(red:0.33, green:0.33, blue:0.33, alpha:1.0)
+            }
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sectionHeaders.count
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        var numberOfRows = 0
+        switch section {
+        case 0:
+            numberOfRows = 1
+        case 1:
+            numberOfRows = 2
+        case 2:
+            numberOfRows = 1
+        default:
+            print("need to change number of sections")
+        }
+        return numberOfRows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        switch indexPath.row {
+        switch indexPath.section {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "headerCell", for: indexPath) as! HeaderTableViewCell
-            cell.label.text = "Timer Duration"
-            return cell
-        case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "timerPreferenceCell", for: indexPath) as! TimerPreferenceTableViewCell
             return cell
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+            switch indexPath.row {
+            case 0:
+                cell.customCellImageView.image = UIImage(named: imageNames[indexPath.row])
+            case 1:
+                cell.customCellImageView.image = UIImage(named: imageNames[indexPath.row])
+            default:
+                print("too many rows showed up in section 2")
+            }
+
+            return cell
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "headerCell", for: indexPath) as! HeaderTableViewCell
-            cell.label.text = "How To"
-            return cell
-        case 3:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-            cell.customCellImageView.image = UIImage(named: imageNames[0])
-            return cell
-        case 4:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-            cell.customCellImageView.image = UIImage(named: imageNames[1])
-            return cell
-        case 5:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "headerCell", for: indexPath) as! HeaderTableViewCell
-            cell.label.text = "Review"
-            return cell
-        case 6:
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
             cell.customCellImageView.image = UIImage(named: "reviewImage.pdf")
             cell.isUserInteractionEnabled = true
@@ -76,24 +102,21 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height: CGFloat = CGFloat()
         
-        switch indexPath.row {
-        case 0,2,5:
-            height = 30
-        case 1:
+        switch indexPath.section {
+        case 0:
             height = 80
-        case 3,4,6:
-            height = 40
         default:
-            height = 30
+            height = 40
         }
         return height
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case 6:
+        switch indexPath.section {
+        case 2:
             tableView.deselectRow(at: indexPath, animated: true)
             SKStoreReviewController.requestReview()
+            print("Requesting Review")
         default:
             break
         }

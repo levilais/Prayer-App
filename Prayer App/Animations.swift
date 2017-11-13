@@ -230,7 +230,7 @@ class Animations {
             spinnerImage.alpha = 1.0
             spinnerLabel.alpha = 1.0
         }) { (completed) in
-            UIView.animate(withDuration: 0.33, delay: 1.0, options: [.curveEaseIn], animations: {
+            UIView.animate(withDuration: 0.5, delay: 1.0, options: [.curveEaseIn], animations: {
                 spinnerImage.alpha = 0
                 spinnerLabel.alpha = 0
                 spinnerView.alpha = 0

@@ -62,7 +62,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBOutlet weak var spinnerLabel: UILabel!
 
     // Review Popup Variables
-    var passFirstResonder = true
+    var passFirstResponder = true
     
     // Core Data Variables
     var prayer: Prayer?
@@ -131,9 +131,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             titleImage.isHidden = false
             settingsIcon.isHidden = false
         }
-        if Loads.loadCount == 3 && passFirstResonder == true {
+        if Loads.loadCount == 3 && passFirstResponder == true {
             SKStoreReviewController.requestReview()
-            passFirstResonder = false
+            passFirstResponder = false
         } else {
             textField.becomeFirstResponder()
         }
@@ -144,7 +144,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         } else {
             timerIcon.setBackgroundImage(UIImage(named: "timerIconSelected.pdf"), for: .normal)
         }
-        
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
     }
     
@@ -227,14 +226,14 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         }
         
         categoryButtons = [UIButton]()
+        var xOffset: CGFloat = 0
+        var buttonWidth: CGFloat = 0
         
         if let prayerCategories = CoreDataHelper().getPrayersCategories() {
+            if prayerCategories.count > 0 {
             print("current prayer category count: \(prayerCategories.count)")
             
             categoryLabelScrollView.translatesAutoresizingMaskIntoConstraints = false
-            
-            var xOffset: CGFloat = 0
-            var buttonWidth: CGFloat = 0
             var i = 0
             
             for prayerCategory in prayerCategories {
@@ -245,7 +244,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 button.setTitle(prayerCategory, for: .normal)
                 button.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
                 button.titleLabel?.font = UIFont(name: "Baskerville", size: 15)
-//                button.titleLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 15)
                 button.setTitleColor(UIColor.black, for: .normal)
                 button.sizeToFit()
                 buttonWidth = button.frame.size.width + 10
@@ -255,10 +253,29 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 categoryButtons.append(button)
                 
                 xOffset = xOffset + buttonWidth + 10
-                print("xOffset: \(xOffset) for index: \(i)")
                 i += 1
             }
             categoryLabelScrollView.contentSize = CGSize(width: xOffset - 10, height: categoryLabelScrollView.frame.height)
+            } else {
+                print("there were no prayer categories so we're creating one")
+                let button = UIButton()
+                button.frame = CGRect(x: xOffset, y: 0, width: buttonWidth, height: categoryLabelScrollView.frame.height)
+                button.tag = 0
+                button.setTitle("General Prayers", for: .normal)
+                button.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
+                button.titleLabel?.font = UIFont(name: "Baskerville", size: 15)
+                button.setTitleColor(UIColor.black, for: .normal)
+                button.sizeToFit()
+                buttonWidth = button.frame.size.width + 10
+                button.addTarget(self, action: #selector(categoryButtonTapped(sender:)), for: .touchUpInside)
+                button.frame = CGRect(x: button.frame.minX, y: button.frame.minY, width: buttonWidth, height: button.frame.size.height)
+                categoryLabelScrollView.addSubview(button)
+                categoryButtons.append(button)
+                
+                xOffset = xOffset + buttonWidth + 10
+                categoryLabelScrollView.contentSize = CGSize(width: xOffset - 10, height: categoryLabelScrollView.frame.height)
+                print("finished attempting to create prayer category")
+            }
         }
     }
     
@@ -268,6 +285,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         resetCountLabel()
         
         for button in categoryButtons {
+            print("button.tag \(button.tag)")
             if button.tag == sender.tag {
                 sender.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
                 if let titleLabelCheck = button.titleLabel?.text {

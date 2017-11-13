@@ -119,7 +119,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             if let indexPath = indexPath {
                 tableView.deleteRows(at: [indexPath], with: .fade)
             }
-            
             if let newIndexPath = newIndexPath {
                 tableView.insertRows(at: [newIndexPath], with: .fade)
             }
@@ -138,7 +137,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    // MARK: - Table view data source
+    // TABLE VIEW DATA SOURCE
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -201,20 +200,29 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         markRecentlyPrayed(cell: cell, lastPrayedString: daysAgoString)
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            let prayer = fetchedResultsController.object(at: indexPath)
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .default, title: "Delete") { (action:UITableViewRowAction, indexPath:IndexPath) in
+            print("delete at:\(indexPath)")
+            let prayer = self.fetchedResultsController.object(at: indexPath)
             prayer.managedObjectContext?.delete(prayer)
             print("attempting to delete")
             do {
                 try prayer.managedObjectContext?.save()
                 print("saved!")
+                tableView.reloadData()
             } catch let error as NSError  {
                 print("Could not save \(error), \(error.userInfo)")
             } catch {
             }
         }
-        tableView.reloadData()
+        delete.backgroundColor = .red
+        
+        let more = UITableViewRowAction(style: .default, title: "Answered") { (action:UITableViewRowAction, indexPath:IndexPath) in
+            print("Answered:\(indexPath)")
+        }
+        more.backgroundColor = UIColor.darkGray
+        
+        return [delete, more]
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
