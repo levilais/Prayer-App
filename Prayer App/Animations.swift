@@ -136,7 +136,7 @@ class Animations {
         CATransaction.commit()
     }
     
-    func endTimerAnimation(timerIcon: UIButton, timerButton: UIButton, titleImage: UIImageView) {
+    func endTimerMainViewAnimation(timerIcon: UIButton, timerButton: UIButton, titleImage: UIImageView) {
         CATransaction.begin()
         CATransaction.setCompletionBlock {
             titleImage.alpha = 0
@@ -146,9 +146,40 @@ class Animations {
                 timerIcon.alpha = 0
             }, completion: { (finish) in
                 timerButton.isHidden = true
+                timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
                 UIView.animate(withDuration: 1.5, delay: 1.0, options: [], animations: {
                     timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
                     timerIcon.alpha = 1
+                    titleImage.alpha = 1
+                }, completion: { (finish) in
+                    TimerStruct().resetSeconds()
+                    timerButton.setTitle(TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds)), for: .normal)
+                })
+            })
+        }
+        
+        let pulseAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
+        pulseAnimation.duration = 0.5
+        pulseAnimation.fromValue = 1
+        pulseAnimation.toValue = 0
+        pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        pulseAnimation.autoreverses = true
+        pulseAnimation.repeatCount = 3
+        timerButton.layer.add(pulseAnimation, forKey: "animateOpacity")
+        
+        CATransaction.commit()
+    }
+    
+    func endTimerAnimation(timerButton: UIButton, titleImage: UIImageView) {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            titleImage.alpha = 0
+            titleImage.isHidden = false
+            UIView.animate(withDuration: 1.5, animations: {
+                timerButton.alpha = 0
+            }, completion: { (finish) in
+                timerButton.isHidden = true
+                UIView.animate(withDuration: 1.5, delay: 1.0, options: [], animations: {
                     titleImage.alpha = 1
                 }, completion: { (finish) in
                     TimerStruct().resetSeconds()

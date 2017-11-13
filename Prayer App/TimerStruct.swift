@@ -31,19 +31,19 @@ class TimerStruct {
         }
     }
     
-    func startTimer(timerButton: UIButton, titleImageView: UIImageView, timerIcon: UIButton) {
+    func startTimer(timerButton: UIButton, titleImageView: UIImageView) {
         TimerStruct().resetSeconds()
         titleImageView.isHidden = true
         timerButton.setTitle(TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds)), for: .normal)
         timerButton.alpha = 1
         timerButton.isHidden = false
-        timerIcon.setBackgroundImage(UIImage(named: "timerIconSelected.pdf"), for: .normal)
         TimerStruct.timerIsRunning = true
         TimerStruct().runTimer()
         print("attempt was successfull")
     }
     
     @objc func updateTimer() {
+        print("updateTimer called")
         if TimerStruct.seconds < 1 {
             TimerStruct.timer.invalidate()
             TimerStruct.timerIsRunning = false
@@ -53,6 +53,7 @@ class TimerStruct {
             TimerStruct.seconds -= 1
             print("TimerStruct.seconds: \(TimerStruct.seconds)")
         }
+        print("updateTimer finished")
     }
     
     func updateTimerButtonLabel(timerButton: UIButton) {
@@ -66,30 +67,38 @@ class TimerStruct {
         TimerStruct.timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(TimerStruct.updateTimer)), userInfo: nil, repeats: true)
     }
     
-    func stopTimer(timerButton: UIButton, titleImageView: UIImageView, timerIcon: UIButton) {
+    func stopTimer(timerButton: UIButton, titleImageView: UIImageView) {
         titleImageView.isHidden = false
         timerButton.isHidden = true
-        timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
         TimerStruct.timerIsRunning = false
         TimerStruct.timer.invalidate()
-        TimerStruct().resetSeconds()
         UIView.performWithoutAnimation {
             timerButton.setTitle("\(TimerStruct.seconds)", for: .normal)
             timerButton.layoutIfNeeded()
         }
-        timerButton.setTitle("\(TimerStruct.seconds)", for: .normal)
     }
 
     func resetSeconds() {
         TimerStruct.seconds = TimerStruct.preferredTimerDuration
-        print(TimerStruct.seconds)
-        print(TimerStruct.preferredTimerDuration)
+        print("TimerStruct.seconds: \(TimerStruct.seconds)")
+        print("TimerStruct.preferredTimerDuration: \(TimerStruct.preferredTimerDuration)")
     }
     
     func timeString(time: TimeInterval) -> String {
         let minutes = Int(time) / 60 % 60
         let seconds = Int(time) % 60
         return String(format:"%2i:%02i", minutes, seconds)
+    }
+    
+    func showTimerIfRunning(timerHeaderButton: UIButton, titleImage: UIImageView) {
+        if TimerStruct.timerIsRunning {
+            titleImage.isHidden = true
+            timerHeaderButton.setTitle(TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds)), for: .normal)
+            timerHeaderButton.isHidden = false
+        } else {
+            titleImage.isHidden = false
+            timerHeaderButton.isHidden = true
+        }
     }
     
     enum Duration: String {

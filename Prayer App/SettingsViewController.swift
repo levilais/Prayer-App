@@ -11,12 +11,24 @@ import StoreKit
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var titleImage: UIImageView!
+    @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     var imageNames: [String] = ["swipeToSend.pdf","swipeToSave.pdf"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
+        TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
+    }
+    
+    @IBAction func timerButtonDidPress(_ sender: Any) {
+        TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -89,5 +101,18 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBAction func settingsButtonDidPress(_ sender: Any) {
         _ = navigationController?.popViewController(animated: false)
+    }
+    
+    @objc func handleNotification(_ notification: NSNotification) {
+        TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
+    }
+    
+    @objc func handleNotification2(_ notification: NSNotification) {
+        Animations().endTimerAnimation(timerButton: timerHeaderButton, titleImage: titleImage)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
     }
 }

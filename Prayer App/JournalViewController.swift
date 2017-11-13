@@ -14,6 +14,8 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var titleImage: UIImageView!
+    @IBOutlet weak var timerHeaderButton: UIButton!
     
     var sectionTitle = String()
     let persistentContainer = NSPersistentContainer(name: "Prayer")
@@ -52,8 +54,15 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         tableView.estimatedRowHeight = 40
         tableView.rowHeight = UITableViewAutomaticDimension
+        TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
+    }
+    
+    @IBAction func timerButtonDidPress(_ sender: Any) {
+        TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
     }
     
     fileprivate func updateView() {
@@ -233,13 +242,26 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         let newCount = prayer.prayerCount + 1
         prayer.setValue(newCount, forKey: "prayerCount")
         prayer.setValue(Date(), forKey: "timeStamp")
-        print("attempting to set new time stamp")
         do {
             try prayer.managedObjectContext?.save()
-            print("saved!")
         } catch let error as NSError  {
             print("Could not save \(error), \(error.userInfo)")
         } catch {
         }
+    }
+    
+    @objc func handleNotification(_ notification: NSNotification) {
+        TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
+        print("timerUpdate on JournalViewController called")
+    }
+    
+    @objc func handleNotification2(_ notification: NSNotification) {
+        Animations().endTimerAnimation(timerButton: timerHeaderButton, titleImage: titleImage)
+        print("endTimerAnimation on JournalViewController called")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
     }
 }

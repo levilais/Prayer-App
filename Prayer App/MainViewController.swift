@@ -23,7 +23,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBOutlet weak var undoSendPopupCountdownLabel: UILabel!
     var undoSendString = ""
     var undoTimerIsRunning = false
-    var undoTimerChanged = false
     var undoTimerSeconds = 10
     var undoTimer = Timer()
     
@@ -123,6 +122,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
+        
         titleImage.isHidden = true
         settingsIcon.isHidden = true
         if !firstAppear {
@@ -135,9 +137,15 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         } else {
             textField.becomeFirstResponder()
         }
-        if TimerStruct.timerIsRunning == true {
-            titleImage.isHidden = true
+        
+        TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
+        if !TimerStruct.timerIsRunning {
+            timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
+        } else {
+            timerIcon.setBackgroundImage(UIImage(named: "timerIconSelected.pdf"), for: .normal)
         }
+        
+        TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -155,11 +163,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     @IBAction func timerHeaderButtonPressed(_ sender: Any) {
         print("timerHeaderButtonPressed")
-        // showStopTimerPopup()
-    }
-    
-    func showStopTimerPopup() {
-        
+        TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
+        timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
     }
     
     @IBAction func timerButtonTapped(_ sender: Any) {
@@ -281,9 +286,11 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     @objc func normalTap(_ sender: UIGestureRecognizer){
         if TimerStruct.timerIsRunning == false {
-            TimerStruct().startTimer(timerButton: timerHeaderButton, titleImageView: titleImage, timerIcon: timerIcon)
+            TimerStruct().startTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
+            timerIcon.setBackgroundImage(UIImage(named: "timerIconSelected.pdf"), for: .normal)
         } else {
-            TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage, timerIcon: timerIcon)
+            TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
+            timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
         }
     }
     
@@ -341,8 +348,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBAction func timerPreferenceBackgroundShadowDidPress(_ sender: Any) {
         dismissTimerPopup()
         if timerChanged == true {
-            TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage, timerIcon: timerIcon)
-            TimerStruct().startTimer(timerButton: timerHeaderButton, titleImageView: titleImage, timerIcon: timerIcon)
+            TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
+            TimerStruct().startTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
+            timerIcon.setBackgroundImage(UIImage(named: "timerIconSelected.pdf"), for: .normal)
             timerChanged = false
         }
     }
@@ -638,13 +646,17 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
 
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
+        print("timerUpdate on MainViewController called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {
-        Animations().endTimerAnimation(timerIcon: timerIcon, timerButton: timerHeaderButton, titleImage: titleImage)
+        Animations().endTimerMainViewAnimation(timerIcon: timerIcon, timerButton: timerHeaderButton, titleImage: titleImage)
+        print("endTimerAnimation on MainViewController called")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         textField.resignFirstResponder()
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
     }
 }

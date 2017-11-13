@@ -654,11 +654,29 @@
                                             <constraint firstAttribute="height" constant="30" id="fmb-rb-9Pu"/>
                                         </constraints>
                                     </imageView>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4M6-Tw-nRq">
+                                        <rect key="frame" x="67" y="0.0" width="186" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="186" id="ZfX-jQ-5KO"/>
+                                            <constraint firstAttribute="height" constant="40" id="njB-cf-CUY"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="22"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="timerButtonDidPress:" destination="ZLf-i2-f6S" eventType="touchUpInside" id="VFU-i2-PAR"/>
+                                            <action selector="timerButtonDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="w5S-BJ-uum"/>
+                                            <action selector="timerHeaderButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NOS-Lx-oWZ"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="5O9-g9-3sh" firstAttribute="centerY" secondItem="Gmd-C3-RpW" secondAttribute="centerY" id="328-vS-Pg1"/>
                                     <constraint firstAttribute="height" constant="40" id="9EH-Ii-WMe"/>
+                                    <constraint firstItem="4M6-Tw-nRq" firstAttribute="centerY" secondItem="Gmd-C3-RpW" secondAttribute="centerY" id="I1n-fG-Yfn"/>
                                     <constraint firstItem="iTV-P6-qvg" firstAttribute="centerY" secondItem="Gmd-C3-RpW" secondAttribute="centerY" id="TTR-Qa-sVs"/>
+                                    <constraint firstItem="4M6-Tw-nRq" firstAttribute="centerX" secondItem="Gmd-C3-RpW" secondAttribute="centerX" id="cvB-8i-EdZ"/>
                                     <constraint firstAttribute="trailing" secondItem="5O9-g9-3sh" secondAttribute="trailing" constant="10" id="gtg-U9-0KX"/>
                                     <constraint firstItem="iTV-P6-qvg" firstAttribute="centerX" secondItem="Gmd-C3-RpW" secondAttribute="centerX" id="oRO-HX-Fns"/>
                                 </constraints>
@@ -678,6 +696,8 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="sVK-Yk-svL" id="clS-CV-Pwx"/>
+                        <outlet property="timerHeaderButton" destination="4M6-Tw-nRq" id="QhJ-Ub-tBh"/>
+                        <outlet property="titleImage" destination="iTV-P6-qvg" id="8cv-j3-Uv1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n4f-cl-DOZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -775,6 +795,21 @@
                                             <constraint firstAttribute="width" constant="186" id="x9g-FY-FDA"/>
                                         </constraints>
                                     </imageView>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I1X-Wi-TpH">
+                                        <rect key="frame" x="67" y="0.0" width="186" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="186" id="hwt-6N-Kbo"/>
+                                            <constraint firstAttribute="height" constant="40" id="n5E-op-3Ye"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="22"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="timerButtonDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="bMh-4G-9dg"/>
+                                            <action selector="timerHeaderButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Mhj-HP-iYF"/>
+                                        </connections>
+                                    </button>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eAx-ex-fkg">
                                         <rect key="frame" x="67" y="0.0" width="186" height="40"/>
                                         <constraints>
@@ -803,9 +838,11 @@
                                     <constraint firstItem="s2E-Sw-pVu" firstAttribute="centerY" secondItem="nws-Sc-CqS" secondAttribute="centerY" id="CAf-dQ-fdN"/>
                                     <constraint firstItem="eAx-ex-fkg" firstAttribute="centerX" secondItem="nws-Sc-CqS" secondAttribute="centerX" id="PP8-PU-RUG"/>
                                     <constraint firstItem="Ugm-xm-bVf" firstAttribute="centerY" secondItem="nws-Sc-CqS" secondAttribute="centerY" id="TdR-LP-bSz"/>
+                                    <constraint firstItem="I1X-Wi-TpH" firstAttribute="centerX" secondItem="nws-Sc-CqS" secondAttribute="centerX" id="Wit-wX-86n"/>
                                     <constraint firstItem="Ugm-xm-bVf" firstAttribute="centerX" secondItem="nws-Sc-CqS" secondAttribute="centerX" id="f16-H4-E4b"/>
                                     <constraint firstItem="ag3-gs-pkF" firstAttribute="centerY" secondItem="nws-Sc-CqS" secondAttribute="centerY" id="f8t-6I-ziV"/>
                                     <constraint firstAttribute="trailing" secondItem="s2E-Sw-pVu" secondAttribute="trailing" constant="10" id="gpC-Ac-3LP"/>
+                                    <constraint firstItem="I1X-Wi-TpH" firstAttribute="centerY" secondItem="nws-Sc-CqS" secondAttribute="centerY" id="j60-FL-ZEe"/>
                                     <constraint firstAttribute="height" constant="40" id="oJ9-n9-Hqj"/>
                                     <constraint firstItem="ag3-gs-pkF" firstAttribute="leading" secondItem="nws-Sc-CqS" secondAttribute="leading" constant="10" id="qHx-w1-cq1"/>
                                 </constraints>
@@ -835,6 +872,8 @@
                         <outlet property="messageLabel" destination="9lv-ZQ-rF1" id="p4g-JH-sm9"/>
                         <outlet property="tableView" destination="pQ6-x9-G1q" id="wN1-Ga-H9E"/>
                         <outlet property="tableViewBottomConstraint" destination="EhF-wS-c9u" id="gdn-VC-vqu"/>
+                        <outlet property="timerHeaderButton" destination="I1X-Wi-TpH" id="i5Y-Da-cmV"/>
+                        <outlet property="titleImage" destination="Ugm-xm-bVf" id="0Sn-Q1-vUe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WY8-5v-Adf" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -880,6 +919,6 @@
         <image name="undoButtonBackground" width="900" height="360"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="VHA-wN-pc5"/>
+        <segue reference="2fT-HB-G90"/>
     </inferredMetricsTieBreakers>
 </document>
