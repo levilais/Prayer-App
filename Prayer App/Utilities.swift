@@ -43,21 +43,6 @@ extension UITextView {
         let boundingRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
         let adjustedRect = CGRect(x: boundingRect.minX, y: boundingRect.minY + boundingRect.height / 2 - 1, width: boundingRect.width, height: boundingRect.height)
         
-        print("adjustedRect.midX: \(boundingRect.midX), adjustedRect.midY: \(boundingRect.midY)")
-        
         return adjustedRect
-    }
-}
-
-extension UIDevice {
-    var modelName: String {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let identifier = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        return identifier
     }
 }

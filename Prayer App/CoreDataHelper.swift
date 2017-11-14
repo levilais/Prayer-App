@@ -72,7 +72,6 @@ class CoreDataHelper {
                     }
                 }
             }
-            
             return categoryHeaders as [String]
         } catch {
             print("unable to get results")

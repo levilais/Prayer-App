@@ -25,7 +25,6 @@ class TimerStruct {
     
     static var seconds = Int() {
         didSet  {
-            print("timer seconds were updated")
             let timerDict:[String: Int] = ["timerSeconds": seconds]
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil, userInfo: timerDict)
         }
@@ -39,21 +38,16 @@ class TimerStruct {
         timerButton.isHidden = false
         TimerStruct.timerIsRunning = true
         TimerStruct().runTimer()
-        print("attempt was successfull")
     }
     
     @objc func updateTimer() {
-        print("updateTimer called")
         if TimerStruct.seconds < 1 {
             TimerStruct.timer.invalidate()
             TimerStruct.timerIsRunning = false
             TimerStruct.timerExpired = true
         } else {
-            print("attempting a countdown")
             TimerStruct.seconds -= 1
-            print("TimerStruct.seconds: \(TimerStruct.seconds)")
         }
-        print("updateTimer finished")
     }
     
     func updateTimerButtonLabel(timerButton: UIButton) {
@@ -80,8 +74,6 @@ class TimerStruct {
 
     func resetSeconds() {
         TimerStruct.seconds = TimerStruct.preferredTimerDuration
-        print("TimerStruct.seconds: \(TimerStruct.seconds)")
-        print("TimerStruct.preferredTimerDuration: \(TimerStruct.preferredTimerDuration)")
     }
     
     func timeString(time: TimeInterval) -> String {

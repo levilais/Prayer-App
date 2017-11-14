@@ -11,19 +11,38 @@ import CoreData
 
 class JournalViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
+    // HEADER VIEW
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var timerHeaderButton: UIButton!
     
+    // SUBHEADER VIEW
+    @IBOutlet weak var activeButton: UIButton!
+    @IBOutlet weak var toggleButton: UIButton!
+    @IBOutlet weak var answerButton: UIButton!
+    
+    // TABLEVIEW
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
     var sectionTitle = String()
+    var answeredShowing = false
+    
+    // MARK ANSWERED POPUP
+    @IBOutlet weak var markAnsweredPopoverView: UIView!
+    @IBOutlet weak var markAnsweredBackgroundButton: UIButton!
+    @IBOutlet weak var markAnsweredSubview: UIView!
+    @IBOutlet weak var markAnsweredTextView: UITextView!
+    var indexPathToMarkAnswered: IndexPath = IndexPath()
+    
+    // DATA HANDLING
     let persistentContainer = NSPersistentContainer(name: "Prayer")
     
     fileprivate lazy var fetchedResultsController: NSFetchedResultsController<Prayer> = {
         let fetchRequest: NSFetchRequest<Prayer> = Prayer.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "prayerCategory", ascending: true)]
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.persistentContainer.viewContext, sectionNameKeyPath: #keyPath(Prayer.prayerCategory), cacheName: nil)
+        let predicate = NSPredicate(format: "isAnswered = \(NSNumber(value:false))")
+        fetchedResultsController.fetchRequest.predicate = predicate
         fetchedResultsController.delegate = self
         return fetchedResultsController
     } ()
@@ -34,7 +53,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             if let error = error {
                 print("Unable to Load Persistent Store")
                 print("\(error), \(error.localizedDescription)")
-
             } else {
                 self.updateView()
                 do {
@@ -61,8 +79,59 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
     }
     
+    @IBAction func activeButtonDidPress(_ sender: Any) {
+        showActive()
+    }
+    
+    @IBAction func toggleButtonDidPress(_ sender: Any) {
+        if answeredShowing == false {
+            showAnswered()
+        } else {
+            showActive()
+        }
+    }
+    
+    @IBAction func answerButtonDidPress(_ sender: Any) {
+        showAnswered()
+    }
+    
+    func showAnswered() {
+        answerButton.titleLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 17)
+        activeButton.titleLabel?.font = UIFont(name: "Baskerville", size: 17)
+        toggleButton.setBackgroundImage(UIImage(named: "tableToggleRightSelected.pdf"), for: .normal)
+        answeredShowing = true
+    }
+    
+    func showActive() {
+        answerButton.titleLabel?.font = UIFont(name: "Baskerville", size: 17)
+        activeButton.titleLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 17)
+        toggleButton.setBackgroundImage(UIImage(named: "tableToggleLeftSelected.pdf"), for: .normal)
+        answeredShowing = false
+    }
+    
     @IBAction func timerButtonDidPress(_ sender: Any) {
         TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
+    }
+    
+    @IBAction func markAnsweredSaveDidPress(_ sender: Any) {
+        print("pressed save mark answered")
+        markAnswered()
+        dismissMarkAnsweredPopup()
+    }
+    
+    @IBAction func markAnsweredCancelDidPress(_ sender: Any) {
+        dismissMarkAnsweredPopup()
+    }
+    
+    @IBAction func markAnsweredBackgroundButtonDidPress(_ sender: Any) {
+        dismissMarkAnsweredPopup()
+    }
+    
+    func dismissMarkAnsweredPopup() {
+        self.markAnsweredPopoverView.alpha = 0
+        self.markAnsweredTextView.text = ""
+        self.markAnsweredTextView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+        markAnsweredTextView.resignFirstResponder()
     }
     
     fileprivate func updateView() {
@@ -194,6 +263,11 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             timeVsTimesString = "times"
         }
         
+        print("isAnswered: \(prayer.isAnswered) for index: \(indexPath)")
+        if let how = prayer.howAnswered {
+            print("howAnswered: \(how) for index: \(indexPath)")
+        }
+        
         cell.prayedCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
         cell.selectionStyle = .none
         
@@ -215,12 +289,13 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             } catch {
             }
         }
-        delete.backgroundColor = .red
+        delete.backgroundColor = UIColor(red:0.65, green:0.23, blue:0.31, alpha:1.0)
         
         let more = UITableViewRowAction(style: .default, title: "Answered") { (action:UITableViewRowAction, indexPath:IndexPath) in
-            print("Answered:\(indexPath)")
+            self.indexPathToMarkAnswered = indexPath
+            Animations().animateMarkAnsweredPopup(view: self.markAnsweredPopoverView, backgroundButton: self.markAnsweredBackgroundButton, subView: self.markAnsweredSubview, viewController: self, textView: self.markAnsweredTextView)
         }
-        more.backgroundColor = UIColor.darkGray
+        more.backgroundColor = UIColor(red:0.00, green:0.15, blue:0.26, alpha:1.0)
         
         return [delete, more]
     }
@@ -231,12 +306,13 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             self.markPrayed(indexPath: indexPath)
             success(true)
         })
-            return UISwipeActionsConfiguration(actions: [amenAction])
+        amenAction.backgroundColor = UIColor(red:0.58, green:0.66, blue:0.67, alpha:1.0)
+        return UISwipeActionsConfiguration(actions: [amenAction])
     }
     
     func markRecentlyPrayed(cell: PrayerTableViewCell, lastPrayedString: String) {
         if lastPrayedString == "today" {
-            cell.prayerTextView.textColor = UIColor.lightGray
+            cell.prayerTextView.textColor = UIColor(red:0.46, green:0.46, blue:0.46, alpha:1.0)
             cell.recentlyPrayed = true
         } else {
             cell.prayerTextView.textColor = UIColor.black
@@ -246,7 +322,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func markPrayed(indexPath: IndexPath) {
         let prayer = fetchedResultsController.object(at: indexPath)
-        print(prayer.prayerCount)
         let newCount = prayer.prayerCount + 1
         prayer.setValue(newCount, forKey: "prayerCount")
         prayer.setValue(Date(), forKey: "timeStamp")
@@ -254,8 +329,19 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             try prayer.managedObjectContext?.save()
         } catch let error as NSError  {
             print("Could not save \(error), \(error.userInfo)")
-        } catch {
         }
+    }
+    
+    func markAnswered() {
+        let prayer = fetchedResultsController.object(at: indexPathToMarkAnswered)
+        prayer.setValue(true, forKey: "isAnswered")
+        prayer.setValue(markAnsweredTextView.text, forKey: "howAnswered")
+        do {
+            try prayer.managedObjectContext?.save()
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
+        }
+        tableView.reloadData()
     }
     
     @objc func handleNotification(_ notification: NSNotification) {

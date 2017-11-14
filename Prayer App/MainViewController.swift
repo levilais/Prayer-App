@@ -104,9 +104,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
         self.view.addGestureRecognizer(swipeDown)
-        
-        print("Current Device: \(UIDevice.current.modelName)")
-        
+                
         UserDefaultsHelper().getLoads()
         Loads.loadCount += 1
         UserDefaultsHelper().saveLoad()
@@ -161,7 +159,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @IBAction func timerHeaderButtonPressed(_ sender: Any) {
-        print("timerHeaderButtonPressed")
         TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
         timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
     }
@@ -231,13 +228,11 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         
         if let prayerCategories = CoreDataHelper().getPrayersCategories() {
             if prayerCategories.count > 0 {
-            print("current prayer category count: \(prayerCategories.count)")
             
             categoryLabelScrollView.translatesAutoresizingMaskIntoConstraints = false
             var i = 0
             
             for prayerCategory in prayerCategories {
-                print(prayerCategory)
                 let button = UIButton()
                 button.frame = CGRect(x: xOffset, y: 0, width: buttonWidth, height: categoryLabelScrollView.frame.height)
                 button.tag = i
@@ -257,7 +252,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             }
             categoryLabelScrollView.contentSize = CGSize(width: xOffset - 10, height: categoryLabelScrollView.frame.height)
             } else {
-                print("there were no prayer categories so we're creating one")
                 let button = UIButton()
                 button.frame = CGRect(x: xOffset, y: 0, width: buttonWidth, height: categoryLabelScrollView.frame.height)
                 button.tag = 0
@@ -274,7 +268,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 
                 xOffset = xOffset + buttonWidth + 10
                 categoryLabelScrollView.contentSize = CGSize(width: xOffset - 10, height: categoryLabelScrollView.frame.height)
-                print("finished attempting to create prayer category")
             }
         }
     }
@@ -285,7 +278,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         resetCountLabel()
         
         for button in categoryButtons {
-            print("button.tag \(button.tag)")
             if button.tag == sender.tag {
                 sender.backgroundColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
                 if let titleLabelCheck = button.titleLabel?.text {
@@ -360,7 +352,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         dismissSaveToJournalPopup()
         resetCountLabel()
         categoryCreationTextField.text = ""
-        print("save pressed")
     }
     
     @IBAction func timerPreferenceBackgroundShadowDidPress(_ sender: Any) {
@@ -436,6 +427,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         prayer.setValue(Date(), forKey: "timeStamp")
         prayer.setValue(1, forKey: "prayerCount")
         prayer.setValue(chosenCategory, forKey: "prayerCategory")
+        prayer.setValue(false, forKey: "isAnswered")
+        prayer.setValue("", forKey: "howAnswered")
         
         do {
             try managedContext.save()
@@ -527,7 +520,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         } else {
             undoTimerSeconds -= 1
             undoSendPopupCountdownLabel.text = String(undoTimerSeconds)
-            print("undoTimerSeconds: \(undoTimerSeconds)")
         }
     }
     
@@ -652,7 +644,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 categoryInputIsTextfield = true
             }
             if charactersLeft <= 5 {
-                self.countLabel.textColor = UIColor.red
+                self.countLabel.textColor = UIColor(red:0.65, green:0.23, blue:0.31, alpha:1.0)
             } else {
                 self.countLabel.textColor = UIColor.gray
             }
@@ -664,12 +656,10 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
 
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
-        print("timerUpdate on MainViewController called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {
         Animations().endTimerMainViewAnimation(timerIcon: timerIcon, timerButton: timerHeaderButton, titleImage: titleImage)
-        print("endTimerAnimation on MainViewController called")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
