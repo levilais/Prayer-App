@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13524"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,6 +18,7 @@
         </array>
         <array key="HelveticaNeue.ttc">
             <string>HelveticaNeue</string>
+            <string>HelveticaNeue-Bold</string>
             <string>HelveticaNeue-Medium</string>
         </array>
         <array key="HelveticaNeueLights.ttc">
@@ -316,7 +318,7 @@
                                                             <constraint firstAttribute="height" constant="17" id="Nkl-bm-Xpb"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="12"/>
-                                                        <color key="textColor" red="0.33329343795776367" green="0.33335629105567932" blue="0.33328947424888611" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hzk-Ji-3mQ" customClass="CustomUIScrollView" customModule="Prayer_App" customModuleProvider="target">
@@ -686,70 +688,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pQ6-x9-G1q">
-                                <rect key="frame" x="0.0" y="90" width="320" height="478"/>
-                                <color key="backgroundColor" red="0.92920595407485962" green="0.9334074854850769" blue="0.93326789140701294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="tintColor" red="0.20755016800000001" green="0.2154294252" blue="0.23204407099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <inset key="separatorInset" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="prayerCell" rowHeight="134" id="Ems-1B-dTM" customClass="PrayerTableViewCell" customModule="Prayer_App" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="134"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ems-1B-dTM" id="V1b-g1-NPJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="133.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ec-aU-IeI">
-                                                    <rect key="frame" x="10" y="10" width="300" height="94"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                </textView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ELi-W9-Q0x">
-                                                    <rect key="frame" x="165" y="109" width="145" height="15"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="15" id="jgZ-sA-UF2"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                                    <color key="textColor" red="0.64313725489999995" green="0.64705882349999999" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="art-Fa-eqr">
-                                                    <rect key="frame" x="10" y="109" width="145" height="15"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="15" id="IJN-yO-9wC"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                                    <color key="textColor" red="0.64313725489999995" green="0.64705882349999999" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="0ec-aU-IeI" secondAttribute="trailing" constant="10" id="Ocs-V1-NMN"/>
-                                                <constraint firstItem="ELi-W9-Q0x" firstAttribute="leading" secondItem="art-Fa-eqr" secondAttribute="trailing" constant="10" id="Smh-eq-wez"/>
-                                                <constraint firstItem="art-Fa-eqr" firstAttribute="leading" secondItem="V1b-g1-NPJ" secondAttribute="leading" constant="10" id="clc-bn-QTA"/>
-                                                <constraint firstAttribute="bottom" secondItem="ELi-W9-Q0x" secondAttribute="bottom" constant="10" id="hPQ-UR-4fs"/>
-                                                <constraint firstAttribute="trailing" secondItem="ELi-W9-Q0x" secondAttribute="trailing" constant="10" id="hgr-AN-tKa"/>
-                                                <constraint firstItem="art-Fa-eqr" firstAttribute="top" secondItem="0ec-aU-IeI" secondAttribute="bottom" constant="5" id="jyg-LV-wSQ"/>
-                                                <constraint firstAttribute="bottom" secondItem="art-Fa-eqr" secondAttribute="bottom" constant="10" id="mxi-jA-ATW"/>
-                                                <constraint firstItem="ELi-W9-Q0x" firstAttribute="top" secondItem="0ec-aU-IeI" secondAttribute="bottom" constant="5" id="qol-W4-fga"/>
-                                                <constraint firstItem="0ec-aU-IeI" firstAttribute="leading" secondItem="V1b-g1-NPJ" secondAttribute="leading" constant="10" id="sGR-pQ-aJx"/>
-                                                <constraint firstItem="0ec-aU-IeI" firstAttribute="top" secondItem="V1b-g1-NPJ" secondAttribute="top" constant="10" id="v3d-fY-dNq"/>
-                                                <constraint firstItem="ELi-W9-Q0x" firstAttribute="width" secondItem="art-Fa-eqr" secondAttribute="width" id="y55-Ew-nSa"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        <connections>
-                                            <outlet property="prayedCountLabel" destination="ELi-W9-Q0x" id="xUX-Hl-lv0"/>
-                                            <outlet property="prayedLastLabel" destination="art-Fa-eqr" id="DNQ-Yz-eou"/>
-                                            <outlet property="prayerTextView" destination="0ec-aU-IeI" id="4WL-cF-5Ox"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="cQs-b5-hFa" id="a3V-Sx-GxH"/>
-                                    <outlet property="delegate" destination="cQs-b5-hFa" id="7UR-Og-dpz"/>
-                                </connections>
-                            </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nws-Sc-CqS">
                                 <rect key="frame" x="0.0" y="20" width="320" height="40"/>
                                 <subviews>
@@ -881,6 +819,153 @@
                                     <constraint firstItem="6eS-h4-o2K" firstAttribute="centerY" secondItem="jie-h7-wBL" secondAttribute="centerY" id="l4p-XE-n3j"/>
                                 </constraints>
                             </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pQ6-x9-G1q">
+                                <rect key="frame" x="0.0" y="90" width="320" height="478"/>
+                                <color key="backgroundColor" red="0.92920595407485962" green="0.9334074854850769" blue="0.93326789140701294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" red="0.20755016800000001" green="0.2154294252" blue="0.23204407099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <inset key="separatorInset" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="answeredPrayerCell" rowHeight="142" id="jnC-ni-tAr" customClass="AnsweredPrayerTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="142"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jnC-ni-tAr" id="Sj3-Px-4Ep">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="141.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="trs-5r-hRA">
+                                                    <rect key="frame" x="165" y="111" width="140" height="15"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="15" id="NSX-IO-ECO"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                    <color key="textColor" red="0.64313725489999995" green="0.64705882349999999" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O6W-pd-aVc">
+                                                    <rect key="frame" x="15" y="111" width="140" height="15"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="15" id="sBA-FG-gJQ"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                    <color key="textColor" red="0.64313725489999995" green="0.64705882349999999" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How It Was Answered" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qS0-tw-u9F">
+                                                    <rect key="frame" x="15" y="56" width="125.5" height="14"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="14" id="JUX-Te-iEW"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="12"/>
+                                                    <color key="textColor" red="0.33329343795776367" green="0.33335629105567932" blue="0.33328947424888611" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prayer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xrL-bG-YvK">
+                                                    <rect key="frame" x="15" y="15" width="40.5" height="14"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="14" id="PkU-bz-h3X"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="13"/>
+                                                    <color key="textColor" red="0.33329343795776367" green="0.33335629105567932" blue="0.33328947424888611" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="awE-IY-NQW">
+                                                    <rect key="frame" x="15" y="34" width="290" height="7"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="248" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PsI-Gu-OTM">
+                                                    <rect key="frame" x="15" y="75" width="290" height="21"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="O6W-pd-aVc" firstAttribute="width" secondItem="trs-5r-hRA" secondAttribute="width" id="68I-Cu-yej"/>
+                                                <constraint firstItem="O6W-pd-aVc" firstAttribute="centerY" secondItem="trs-5r-hRA" secondAttribute="centerY" id="AhG-qc-kaz"/>
+                                                <constraint firstItem="PsI-Gu-OTM" firstAttribute="top" secondItem="qS0-tw-u9F" secondAttribute="bottom" constant="5" id="Hor-a6-FIx"/>
+                                                <constraint firstItem="qS0-tw-u9F" firstAttribute="top" secondItem="awE-IY-NQW" secondAttribute="bottom" constant="15" id="LJZ-qv-8zn"/>
+                                                <constraint firstItem="awE-IY-NQW" firstAttribute="leading" secondItem="Sj3-Px-4Ep" secondAttribute="leading" constant="15" id="Ntk-1b-yNw"/>
+                                                <constraint firstItem="trs-5r-hRA" firstAttribute="top" secondItem="PsI-Gu-OTM" secondAttribute="bottom" constant="15" id="OuD-cc-Bwm"/>
+                                                <constraint firstItem="trs-5r-hRA" firstAttribute="leading" secondItem="O6W-pd-aVc" secondAttribute="trailing" constant="10" id="Qed-Ls-bzc"/>
+                                                <constraint firstAttribute="trailing" secondItem="trs-5r-hRA" secondAttribute="trailing" constant="15" id="URe-vt-gQC"/>
+                                                <constraint firstItem="qS0-tw-u9F" firstAttribute="leading" secondItem="Sj3-Px-4Ep" secondAttribute="leading" constant="15" id="VY5-Ik-D1N"/>
+                                                <constraint firstItem="xrL-bG-YvK" firstAttribute="top" secondItem="Sj3-Px-4Ep" secondAttribute="top" constant="15" id="aV9-6p-pc8"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="trs-5r-hRA" secondAttribute="bottom" constant="5" id="cKz-hK-aAU"/>
+                                                <constraint firstAttribute="trailing" secondItem="PsI-Gu-OTM" secondAttribute="trailing" constant="15" id="cZw-vq-SfX"/>
+                                                <constraint firstItem="awE-IY-NQW" firstAttribute="top" secondItem="xrL-bG-YvK" secondAttribute="bottom" constant="5" id="d66-qN-f7Z"/>
+                                                <constraint firstItem="xrL-bG-YvK" firstAttribute="leading" secondItem="Sj3-Px-4Ep" secondAttribute="leading" constant="15" id="isE-8q-efN"/>
+                                                <constraint firstAttribute="trailing" secondItem="awE-IY-NQW" secondAttribute="trailing" constant="15" id="m41-hs-dEM"/>
+                                                <constraint firstItem="PsI-Gu-OTM" firstAttribute="leading" secondItem="Sj3-Px-4Ep" secondAttribute="leading" constant="15" id="tlg-e7-3Vi"/>
+                                                <constraint firstItem="O6W-pd-aVc" firstAttribute="leading" secondItem="Sj3-Px-4Ep" secondAttribute="leading" constant="15" id="xrG-ZM-mhK"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="howAnsweredLabel" destination="PsI-Gu-OTM" id="fan-8k-htO"/>
+                                            <outlet property="lastPrayedLabel" destination="O6W-pd-aVc" id="B4Z-nb-Te0"/>
+                                            <outlet property="prayerCountLabel" destination="trs-5r-hRA" id="qau-q9-mbV"/>
+                                            <outlet property="prayerLabel" destination="awE-IY-NQW" id="Mq4-Cu-ajA"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="prayerCell" rowHeight="134" id="Ems-1B-dTM" customClass="PrayerTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="170" width="320" height="134"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ems-1B-dTM" id="V1b-g1-NPJ">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="133.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ec-aU-IeI">
+                                                    <rect key="frame" x="10" y="10" width="300" height="94"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ELi-W9-Q0x">
+                                                    <rect key="frame" x="165" y="109" width="140" height="15"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="15" id="jgZ-sA-UF2"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                    <color key="textColor" red="0.64313725489999995" green="0.64705882349999999" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="art-Fa-eqr">
+                                                    <rect key="frame" x="15" y="109" width="140" height="15"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="15" id="IJN-yO-9wC"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                    <color key="textColor" red="0.64313725489999995" green="0.64705882349999999" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="0ec-aU-IeI" secondAttribute="trailing" constant="10" id="Ocs-V1-NMN"/>
+                                                <constraint firstItem="ELi-W9-Q0x" firstAttribute="leading" secondItem="art-Fa-eqr" secondAttribute="trailing" constant="10" id="Smh-eq-wez"/>
+                                                <constraint firstItem="art-Fa-eqr" firstAttribute="leading" secondItem="V1b-g1-NPJ" secondAttribute="leading" constant="15" id="clc-bn-QTA"/>
+                                                <constraint firstAttribute="bottom" secondItem="ELi-W9-Q0x" secondAttribute="bottom" constant="10" id="hPQ-UR-4fs"/>
+                                                <constraint firstAttribute="trailing" secondItem="ELi-W9-Q0x" secondAttribute="trailing" constant="15" id="hgr-AN-tKa"/>
+                                                <constraint firstItem="art-Fa-eqr" firstAttribute="top" secondItem="0ec-aU-IeI" secondAttribute="bottom" constant="5" id="jyg-LV-wSQ"/>
+                                                <constraint firstAttribute="bottom" secondItem="art-Fa-eqr" secondAttribute="bottom" constant="10" id="mxi-jA-ATW"/>
+                                                <constraint firstItem="ELi-W9-Q0x" firstAttribute="top" secondItem="0ec-aU-IeI" secondAttribute="bottom" constant="5" id="qol-W4-fga"/>
+                                                <constraint firstItem="0ec-aU-IeI" firstAttribute="leading" secondItem="V1b-g1-NPJ" secondAttribute="leading" constant="10" id="sGR-pQ-aJx"/>
+                                                <constraint firstItem="0ec-aU-IeI" firstAttribute="top" secondItem="V1b-g1-NPJ" secondAttribute="top" constant="10" id="v3d-fY-dNq"/>
+                                                <constraint firstItem="ELi-W9-Q0x" firstAttribute="width" secondItem="art-Fa-eqr" secondAttribute="width" id="y55-Ew-nSa"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="prayedCountLabel" destination="ELi-W9-Q0x" id="xUX-Hl-lv0"/>
+                                            <outlet property="prayedLastLabel" destination="art-Fa-eqr" id="DNQ-Yz-eou"/>
+                                            <outlet property="prayerTextView" destination="0ec-aU-IeI" id="4WL-cF-5Ox"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="cQs-b5-hFa" id="a3V-Sx-GxH"/>
+                                    <outlet property="delegate" destination="cQs-b5-hFa" id="7UR-Og-dpz"/>
+                                </connections>
+                            </tableView>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vgB-m7-QmO">
                                 <rect key="frame" x="0.0" y="-50" width="320" height="668"/>
                                 <subviews>
@@ -908,7 +993,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How was this prayer answered?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AVt-EU-Qlo">
-                                                        <rect key="frame" x="15" y="47" width="177" height="17"/>
+                                                        <rect key="frame" x="10" y="47" width="177" height="17"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="17" id="wyP-R2-HjX"/>
                                                         </constraints>
@@ -932,7 +1017,7 @@
                                                     <constraint firstAttribute="bottom" secondItem="gDc-bh-zeK" secondAttribute="bottom" constant="10" id="JON-ib-4br"/>
                                                     <constraint firstItem="OCN-4E-8vo" firstAttribute="top" secondItem="tk6-ex-1ge" secondAttribute="top" constant="10" id="Uhk-xj-sjQ"/>
                                                     <constraint firstItem="OCN-4E-8vo" firstAttribute="centerX" secondItem="tk6-ex-1ge" secondAttribute="centerX" id="ge0-ni-hOo"/>
-                                                    <constraint firstItem="AVt-EU-Qlo" firstAttribute="leading" secondItem="tk6-ex-1ge" secondAttribute="leading" constant="15" id="nD5-bc-iMu"/>
+                                                    <constraint firstItem="AVt-EU-Qlo" firstAttribute="leading" secondItem="tk6-ex-1ge" secondAttribute="leading" constant="10" id="nD5-bc-iMu"/>
                                                     <constraint firstAttribute="height" constant="197" id="nWI-rv-hQr"/>
                                                     <constraint firstItem="gDc-bh-zeK" firstAttribute="top" secondItem="AVt-EU-Qlo" secondAttribute="bottom" constant="2" id="wxz-mu-Jq3"/>
                                                     <constraint firstAttribute="trailing" secondItem="gDc-bh-zeK" secondAttribute="trailing" constant="10" id="zLo-ws-6v7"/>

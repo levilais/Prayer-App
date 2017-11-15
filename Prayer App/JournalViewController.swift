@@ -41,14 +41,21 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         let fetchRequest: NSFetchRequest<Prayer> = Prayer.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "prayerCategory", ascending: true)]
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.persistentContainer.viewContext, sectionNameKeyPath: #keyPath(Prayer.prayerCategory), cacheName: nil)
+        
         let predicate = NSPredicate(format: "isAnswered = \(NSNumber(value:false))")
         fetchedResultsController.fetchRequest.predicate = predicate
+        
         fetchedResultsController.delegate = self
+        
         return fetchedResultsController
     } ()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        markAnsweredTextView.layer.borderColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0).cgColor
+        markAnsweredTextView.layer.borderWidth = 1.0
+        
         persistentContainer.loadPersistentStores { (persistentStoreDescription, error) in
             if let error = error {
                 print("Unable to Load Persistent Store")
@@ -100,6 +107,16 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         activeButton.titleLabel?.font = UIFont(name: "Baskerville", size: 17)
         toggleButton.setBackgroundImage(UIImage(named: "tableToggleRightSelected.pdf"), for: .normal)
         answeredShowing = true
+        
+        let predicate = NSPredicate(format: "isAnswered = \(NSNumber(value:true))")
+        fetchedResultsController.fetchRequest.predicate = predicate
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("fetch wasn't performed")
+        }
+        
+        tableView.reloadData()
     }
     
     func showActive() {
@@ -107,6 +124,15 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         activeButton.titleLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 17)
         toggleButton.setBackgroundImage(UIImage(named: "tableToggleLeftSelected.pdf"), for: .normal)
         answeredShowing = false
+        
+        let predicate = NSPredicate(format: "isAnswered = \(NSNumber(value:false))")
+        fetchedResultsController.fetchRequest.predicate = predicate
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("fetch wasn't performed")
+        }
+        tableView.reloadData()
     }
     
     @IBAction func timerButtonDidPress(_ sender: Any) {
@@ -137,10 +163,8 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     fileprivate func updateView() {
         var hasPrayers = false
         if let prayers = fetchedResultsController.fetchedObjects {
-            print("prayers.count: \(prayers.count)")
             hasPrayers = prayers.count > 0
         }
-    
         tableView.isHidden = !hasPrayers
         messageLabel.isHidden = hasPrayers
     }
@@ -180,9 +204,16 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             }
             break
         case .update:
-            if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) as? PrayerTableViewCell {
-                configure(cell, at: indexPath)
+            if !answeredShowing {
+                if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) as? PrayerTableViewCell {
+                    configureUnanswered(cell, at: indexPath)
+                }
+            } else {
+                if let indexPath = indexPath, let cell = tableView.cellForRow(at: indexPath) as? AnsweredPrayerTableViewCell {
+                    configureAnswered(cell, at: indexPath)
+                }
             }
+           
             break
         case .move:
             if let indexPath = indexPath {
@@ -242,19 +273,38 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as? PrayerTableViewCell else {
-            fatalError("Unexpected Index Path")
+        if !answeredShowing {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as? PrayerTableViewCell else {
+                fatalError("Unexpected Index Path")
+            }
+            configureUnanswered(cell, at: indexPath)
+            return cell
+        } else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "answeredPrayerCell", for: indexPath) as? AnsweredPrayerTableViewCell else {
+                fatalError("Unexpected Index Path")
+            }
+            configureAnswered(cell, at: indexPath)
+            return cell
         }
-        configure(cell, at: indexPath)
-        return cell
     }
     
-    func configure(_ cell: PrayerTableViewCell, at indexPath: IndexPath) {
+    func configureUnanswered(_ cell: PrayerTableViewCell, at indexPath: IndexPath) {
         let prayer = fetchedResultsController.object(at: indexPath)
         cell.prayerTextView.text = prayer.prayerText
         
-        let daysAgoString = Utilities().dayDifference(from: (prayer.timeStamp?.timeIntervalSince1970)!)
-        cell.prayedLastLabel.text = "Last prayed \(daysAgoString)"
+        var lastPrayerString = String()
+        if !answeredShowing {
+            print("!answerdShowing called during cell configure")
+            lastPrayerString = Utilities().dayDifference(from: (prayer.timeStamp?.timeIntervalSince1970)!)
+            cell.prayedLastLabel.text = "Last prayed \(lastPrayerString)"
+        } else {
+            print("answerdShowing called during cell configure")
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .short
+            if let date = prayer.timeStamp{
+                cell.prayedLastLabel.text = "Answered on \(dateFormatter.string(from: date))"
+            }
+        }
         
         var timeVsTimesString = ""
         if prayer.prayerCount == 1 {
@@ -263,7 +313,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             timeVsTimesString = "times"
         }
         
-        print("isAnswered: \(prayer.isAnswered) for index: \(indexPath)")
         if let how = prayer.howAnswered {
             print("howAnswered: \(how) for index: \(indexPath)")
         }
@@ -271,7 +320,40 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.prayedCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
         cell.selectionStyle = .none
         
-        markRecentlyPrayed(cell: cell, lastPrayedString: daysAgoString)
+        markRecentlyPrayed(cell: cell, lastPrayedString: lastPrayerString)
+    }
+    
+    func configureAnswered(_ cell: AnsweredPrayerTableViewCell, at indexPath: IndexPath) {
+        let prayer = fetchedResultsController.object(at: indexPath)
+        cell.prayerLabel.text = prayer.prayerText
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        if let date = prayer.timeStamp{
+            cell.lastPrayedLabel.text = "Answered on \(dateFormatter.string(from: date))"
+        }
+        
+        if let answeredPrayer = prayer.howAnswered {
+            cell.howAnsweredLabel.text = answeredPrayer
+        }
+        
+        var timeVsTimesString = ""
+        if prayer.prayerCount == 1 {
+            timeVsTimesString = "time"
+        } else {
+            timeVsTimesString = "times"
+        }
+        cell.prayerCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
+        
+        if let how = prayer.howAnswered {
+            print("howAnswered: \(how) for index: \(indexPath)")
+        }
+
+        cell.selectionStyle = .none
+    }
+    
+    func setAttributedActionTitle(string: String) {
+        
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -291,23 +373,29 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         delete.backgroundColor = UIColor(red:0.65, green:0.23, blue:0.31, alpha:1.0)
         
-        let more = UITableViewRowAction(style: .default, title: "Answered") { (action:UITableViewRowAction, indexPath:IndexPath) in
-            self.indexPathToMarkAnswered = indexPath
-            Animations().animateMarkAnsweredPopup(view: self.markAnsweredPopoverView, backgroundButton: self.markAnsweredBackgroundButton, subView: self.markAnsweredSubview, viewController: self, textView: self.markAnsweredTextView)
-        }
-        more.backgroundColor = UIColor(red:0.00, green:0.15, blue:0.26, alpha:1.0)
-        
-        return [delete, more]
+        if !answeredShowing {
+            let more = UITableViewRowAction(style: .default, title: "Answered") { (action:UITableViewRowAction, indexPath:IndexPath) in
+                self.indexPathToMarkAnswered = indexPath
+                Animations().animateMarkAnsweredPopup(view: self.markAnsweredPopoverView, backgroundButton: self.markAnsweredBackgroundButton, subView: self.markAnsweredSubview, viewController: self, textView: self.markAnsweredTextView)
+            }
+            more.backgroundColor = UIColor(red:0.00, green:0.15, blue:0.26, alpha:1.0)
+                return [delete, more]
+            
+            }
+        return [delete]
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        var amenAction = UIContextualAction()
-        amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-            self.markPrayed(indexPath: indexPath)
-            success(true)
-        })
-        amenAction.backgroundColor = UIColor(red:0.58, green:0.66, blue:0.67, alpha:1.0)
-        return UISwipeActionsConfiguration(actions: [amenAction])
+        if !answeredShowing {
+            var amenAction = UIContextualAction()
+            amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+                self.markPrayed(indexPath: indexPath)
+                success(true)
+            })
+            amenAction.backgroundColor = UIColor(red:0.58, green:0.66, blue:0.67, alpha:1.0)
+            return UISwipeActionsConfiguration(actions: [amenAction])
+            }
+        return nil
     }
     
     func markRecentlyPrayed(cell: PrayerTableViewCell, lastPrayedString: String) {
@@ -335,7 +423,16 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     func markAnswered() {
         let prayer = fetchedResultsController.object(at: indexPathToMarkAnswered)
         prayer.setValue(true, forKey: "isAnswered")
-        prayer.setValue(markAnsweredTextView.text, forKey: "howAnswered")
+        var howAnswered = String()
+        if let answeredPrayer = prayer.howAnswered {
+            var trimmedText = answeredPrayer.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmedText == "" {
+                trimmedText = "Undisclosed"
+            }
+            howAnswered = trimmedText
+        }
+        prayer.setValue(howAnswered, forKey: "howAnswered")
+        
         do {
             try prayer.managedObjectContext?.save()
         } catch let error as NSError  {

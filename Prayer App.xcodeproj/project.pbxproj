@@ -16,6 +16,7 @@
 		044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */; };
 		044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */; };
 		046203301FA39ACE00BDF8ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */; };
+		047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */; };
 		0474DD6C1F9FE7B4008D79E3 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474DD6B1F9FE7B4008D79E3 /* Animations.swift */; };
 		04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */; };
 		04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */; };
@@ -39,6 +40,7 @@
 		044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnsweredPrayerTableViewCell.swift; sourceTree = "<group>"; };
 		0474DD6B1F9FE7B4008D79E3 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalViewController.swift; sourceTree = "<group>"; };
 		04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */,
 				043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */,
 				042FCA861FAF7BC500545786 /* PrayerTableViewCell.swift */,
+				047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */,
 				0474DD6B1F9FE7B4008D79E3 /* Animations.swift */,
 				04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */,
 				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
@@ -194,6 +197,7 @@
 				04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */,
 				042FCA871FAF7BC500545786 /* PrayerTableViewCell.swift in Sources */,
 				04F0E4DF1FA1271E006D1244 /* UserDefaultsHelper.swift in Sources */,
+				047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */,
 				044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */,
 				043520BA1FAB90E400CFD0C1 /* TimerStruct.swift in Sources */,
 				0474DD6C1F9FE7B4008D79E3 /* Animations.swift in Sources */,
