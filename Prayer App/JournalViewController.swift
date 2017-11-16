@@ -53,6 +53,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         markAnsweredTextView.layer.borderColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0).cgColor
         markAnsweredTextView.layer.borderWidth = 1.0
         
@@ -117,6 +118,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         tableView.reloadData()
+        updateView()
     }
     
     func showActive() {
@@ -133,6 +135,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             print("fetch wasn't performed")
         }
         tableView.reloadData()
+        updateView()
     }
     
     @IBAction func timerButtonDidPress(_ sender: Any) {
@@ -161,12 +164,40 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     fileprivate func updateView() {
-        var hasPrayers = false
-        if let prayers = fetchedResultsController.fetchedObjects {
-            hasPrayers = prayers.count > 0
+        if !answeredShowing {
+            
+            let predicate = NSPredicate(format: "isAnswered = \(NSNumber(value:false))")
+            fetchedResultsController.fetchRequest.predicate = predicate
+            do {
+                try fetchedResultsController.performFetch()
+            } catch {
+                print("fetch wasn't performed")
+            }
+            
+            var hasPrayers = false
+            if let prayers = fetchedResultsController.fetchedObjects {
+                hasPrayers = prayers.count > 0
+            }
+            messageLabel.text = "There are no saved active prayers"
+            tableView.isHidden = !hasPrayers
+            messageLabel.isHidden = hasPrayers
+        } else {
+            let predicate = NSPredicate(format: "isAnswered = \(NSNumber(value:true))")
+            fetchedResultsController.fetchRequest.predicate = predicate
+            do {
+                try fetchedResultsController.performFetch()
+            } catch {
+                print("fetch wasn't performed")
+            }
+            
+            var hasPrayers = false
+            if let prayers = fetchedResultsController.fetchedObjects {
+                hasPrayers = prayers.count > 0
+            }
+            messageLabel.text = "There are no saved answered prayers"
+            tableView.isHidden = !hasPrayers
+            messageLabel.isHidden = hasPrayers
         }
-        tableView.isHidden = !hasPrayers
-        messageLabel.isHidden = hasPrayers
     }
     
     @objc func applicationDidEnterBackground(_ notification: Notification) {
@@ -294,17 +325,16 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         
         var lastPrayerString = String()
         if !answeredShowing {
-            print("!answerdShowing called during cell configure")
             lastPrayerString = Utilities().dayDifference(from: (prayer.timeStamp?.timeIntervalSince1970)!)
             cell.prayedLastLabel.text = "Last prayed \(lastPrayerString)"
-        } else {
-            print("answerdShowing called during cell configure")
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .short
-            if let date = prayer.timeStamp{
-                cell.prayedLastLabel.text = "Answered on \(dateFormatter.string(from: date))"
-            }
         }
+//        else {
+//            let dateFormatter = DateFormatter()
+//            dateFormatter.dateStyle = .short
+//            if let date = prayer.timeStamp{
+//                cell.prayedLastLabel.text = "Answered on \(dateFormatter.string(from: date))"
+//            }
+//        }
         
         var timeVsTimesString = ""
         if prayer.prayerCount == 1 {
@@ -313,9 +343,9 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             timeVsTimesString = "times"
         }
         
-        if let how = prayer.howAnswered {
-            print("howAnswered: \(how) for index: \(indexPath)")
-        }
+//        if let how = prayer.howAnswered {
+//            print("howAnswered: \(how) for index: \(indexPath)")
+//        }
         
         cell.prayedCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
         cell.selectionStyle = .none
@@ -335,6 +365,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if let answeredPrayer = prayer.howAnswered {
             cell.howAnsweredLabel.text = answeredPrayer
+            print("howAnswered: \(answeredPrayer) for index: \(indexPath)")
         }
         
         var timeVsTimesString = ""
@@ -344,16 +375,8 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             timeVsTimesString = "times"
         }
         cell.prayerCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
-        
-        if let how = prayer.howAnswered {
-            print("howAnswered: \(how) for index: \(indexPath)")
-        }
 
         cell.selectionStyle = .none
-    }
-    
-    func setAttributedActionTitle(string: String) {
-        
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -424,7 +447,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         let prayer = fetchedResultsController.object(at: indexPathToMarkAnswered)
         prayer.setValue(true, forKey: "isAnswered")
         var howAnswered = String()
-        if let answeredPrayer = prayer.howAnswered {
+        if let answeredPrayer = markAnsweredTextView.text {
             var trimmedText = answeredPrayer.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmedText == "" {
                 trimmedText = "Undisclosed"
