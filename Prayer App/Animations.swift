@@ -87,7 +87,7 @@ class Animations {
         })
     }
     
-    func AnimateLabels(labelArrays: [Array<UILabel>], viewController: UIViewController, textView: UITextView) {
+    func AnimateLabels(labelArrays: [Array<UILabel>], viewController: UIViewController, textView: UITextView, touchToPrayButton: UIButton) {
         var delay1 = 0.0
         textView.resignFirstResponder()
         

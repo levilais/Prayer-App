@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = Utilities().setTabbar()
         self.window?.makeKeyAndVisible()
         window?.backgroundColor=UIColor.white
+        UITextView.appearance().tintColor = UIColor.StyleFile.DarkGrayColor
         
         return true
     }

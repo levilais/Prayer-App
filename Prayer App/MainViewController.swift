@@ -36,12 +36,15 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBOutlet weak var toolbarView: UIView!
     @IBOutlet weak var toolbarBottomLayoutConstraint: NSLayoutConstraint!
     @IBOutlet weak var timerIcon: UIButton!
+    @IBOutlet weak var undoButtonBottomLayoutConstraint: NSLayoutConstraint!
     var toolbarBottomConstraintInitialValue: CGFloat?
+    var undoButtonBottomLayoutConstraintInitialValue: CGFloat?
     
     // Timer & Popup
     @IBOutlet weak var timerPreferencesSelectionView: UIView!
     @IBOutlet var timerButtons: [UIButton]!
     @IBOutlet weak var timerHeaderButton: UIButton!
+    @IBOutlet weak var timerPreferencesBackgroundButton: UIButton!
     var timerChanged = false
     var timerPopupShowing = false
     
@@ -86,6 +89,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         self.toolbarBottomConstraintInitialValue = toolbarBottomLayoutConstraint.constant
+        self.undoButtonBottomLayoutConstraintInitialValue = undoButtonBottomLayoutConstraint.constant
         
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(normalTap(_:)))
         tapGesture.numberOfTapsRequired = 1
@@ -121,6 +125,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     override func viewWillAppear(_ animated: Bool) {
+
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         
@@ -182,6 +187,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
     }
     @IBAction func doneDidPress(_ sender: Any) {
+        if touchToPrayButton.isHidden == true {
+            touchToPrayButton.isHidden = false
+        }
         textField.resignFirstResponder()
     }
     
@@ -330,6 +338,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         if sender.state == .ended {
         }
         else if sender.state == .began {
+            self.view.bringSubview(toFront: timerPreferencesSelectionView)
             timerPopupShowing = true
             TimerStruct().updateTimerPreferencesDisplay(buttons: timerButtons)
             self.swipeLeft.isEnabled = false
@@ -417,7 +426,12 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         
         self.toolbarBottomLayoutConstraint.constant = keyboardFrame.size.height - view.safeAreaInsets.bottom
         self.view.layoutIfNeeded()
-       
+        
+        if let constraint2 = undoButtonBottomLayoutConstraintInitialValue {
+            self.undoButtonBottomLayoutConstraint.constant = constraint2
+            self.view.layoutIfNeeded()
+        }
+      
         textField.contentInset = textViewInset
         scrollView.contentInset = contentInset
         
@@ -437,6 +451,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             self.toolbarBottomLayoutConstraint.constant = constraint
             self.view.layoutIfNeeded()
         }
+        
+        self.undoButtonBottomLayoutConstraint.constant = undoButtonBottomLayoutConstraint.constant - self.toolbarView.frame.height
+        self.view.layoutIfNeeded()
         
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
@@ -521,6 +538,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 let cgRect = CGRect(x: rect!.minX, y: rect!.minY - 1.3, width: rect!.width + 3, height: rect!.height)
                 let label = UILabel(frame: cgRect)
                 label.text = String(character)
+                label.textColor = UIColor.StyleFile.DarkGrayColor
                 label.alpha = 1
                 scrollView.addSubview(label)
                 labels.append(label)
@@ -529,8 +547,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             undoSendString = textField.text
             textField.text = ""
             textField.isHidden = true
+            touchToPrayButton.isHidden = true
             let arrayOfLabelArrays = splitLabelsIntoQuadrants(labels: labels, vc: self)
-            Animations().AnimateLabels(labelArrays: arrayOfLabelArrays, viewController: self, textView: textField)
+            Animations().AnimateLabels(labelArrays: arrayOfLabelArrays, viewController: self, textView: textField, touchToPrayButton: touchToPrayButton)
             showUndoButton(undoButton: undoSendPopupButton, undoCountdownLabel: undoSendPopupCountdownLabel)
         } else {
             let alert = UIAlertController(title: "Nothing To Send", message: "Please enter text and try again.", preferredStyle: .alert)
