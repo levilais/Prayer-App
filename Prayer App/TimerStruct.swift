@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 class TimerStruct {
-    
     static var timer = Timer()
     static var timerIsRunning = false
     static var preferredTimerDuration = Int()
@@ -61,7 +60,7 @@ class TimerStruct {
         TimerStruct.timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(TimerStruct.updateTimer)), userInfo: nil, repeats: true)
     }
     
-    func stopTimer(timerButton: UIButton, titleImageView: UIImageView) {
+    @objc func stopTimer(timerButton: UIButton, titleImageView: UIImageView) {
         titleImageView.isHidden = false
         timerButton.isHidden = true
         TimerStruct.timerIsRunning = false
@@ -85,8 +84,12 @@ class TimerStruct {
     func showTimerIfRunning(timerHeaderButton: UIButton, titleImage: UIImageView) {
         if TimerStruct.timerIsRunning {
             titleImage.isHidden = true
-            timerHeaderButton.setTitle(TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds)), for: .normal)
-            timerHeaderButton.isHidden = false
+            UIView.performWithoutAnimation {
+                timerHeaderButton.setTitle(TimerStruct().timeString(time: TimeInterval(TimerStruct.seconds)), for: .normal)
+                timerHeaderButton.isHidden = false
+                timerHeaderButton.layoutIfNeeded()
+            }
+            
         } else {
             titleImage.isHidden = false
             timerHeaderButton.isHidden = true

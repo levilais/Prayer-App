@@ -28,6 +28,7 @@ extension UIFont {
         static let SectionHeaderFont = UIFont(name: "Baskerville-SemiBold", size: 20)
         static let ToggleActiveFont = UIFont(name: "Baskerville-SemiBold", size: 17)
         static let ToggleInactiveFont = UIFont(name: "Baskerville", size: 17)
+        static let ButtonTimerFont = UIFont(name: "HelveticaNeue-Thin", size: 20)
     }
 }
 

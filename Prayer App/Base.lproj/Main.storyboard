@@ -562,6 +562,7 @@
                     <tabBarItem key="tabBarItem" title="Item" id="H3T-Yh-gvO"/>
                     <navigationItem key="navigationItem" id="xis-ht-8Ph"/>
                     <connections>
+                        <outlet property="headerView" destination="Ra6-Wx-3Yj" id="ScZ-4E-sMp"/>
                         <outlet property="timerHeaderButton" destination="mMl-wt-aC5" id="hDg-iO-CJr"/>
                         <outlet property="titleImage" destination="9HK-nk-lcW" id="GQ6-3B-EBa"/>
                     </connections>
@@ -741,6 +742,7 @@
                     <tabBarItem key="tabBarItem" title="Item" id="lsQ-yy-AQd"/>
                     <navigationItem key="navigationItem" id="IFv-2T-3Zl"/>
                     <connections>
+                        <outlet property="headerView" destination="Gmd-C3-RpW" id="bUu-bK-V9M"/>
                         <outlet property="tableView" destination="sVK-Yk-svL" id="clS-CV-Pwx"/>
                         <outlet property="timerHeaderButton" destination="4M6-Tw-nRq" id="QhJ-Ub-tBh"/>
                         <outlet property="titleImage" destination="iTV-P6-qvg" id="8cv-j3-Uv1"/>
@@ -813,6 +815,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="rjn-uy-lsZ"/>
                     <connections>
+                        <outlet property="headerView" destination="9u0-0B-sBe" id="VGM-jU-RlX"/>
                         <outlet property="timerHeaderButton" destination="BE6-7F-B5k" id="7uH-D2-8Ey"/>
                         <outlet property="titleImage" destination="h9c-5U-ebE" id="CMv-VS-gV7"/>
                     </connections>
@@ -1216,6 +1219,7 @@
                     <connections>
                         <outlet property="activeButton" destination="m7y-UJ-aTv" id="Sh8-AW-tGg"/>
                         <outlet property="answerButton" destination="T1s-0h-LTq" id="5yH-un-Agi"/>
+                        <outlet property="headerView" destination="nws-Sc-CqS" id="jDq-bU-8jJ"/>
                         <outlet property="markAnsweredBackgroundButton" destination="bf5-0M-Mzx" id="IK2-Bz-4wL"/>
                         <outlet property="markAnsweredPopoverView" destination="vgB-m7-QmO" id="TWN-X8-wvg"/>
                         <outlet property="markAnsweredSubview" destination="adZ-yQ-1mt" id="UpF-1e-o54"/>

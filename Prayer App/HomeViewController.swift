@@ -12,9 +12,11 @@ class HomeViewController: UIViewController {
 
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var timerHeaderButton: UIButton!
+    @IBOutlet weak var headerView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -29,6 +31,7 @@ class HomeViewController: UIViewController {
     
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
+        print("Home timer update called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {

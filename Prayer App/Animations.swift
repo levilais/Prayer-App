@@ -85,12 +85,12 @@ class Animations {
     
     func AnimateLabels(labelArrays: [Array<UILabel>], viewController: UIViewController, textView: UITextView) {
         var delay1 = 0.0
-//        textView.resignFirstResponder()
+        textView.resignFirstResponder()
         
         CATransaction.begin()
         CATransaction.setCompletionBlock {
             textView.isHidden = false
-//            textView.becomeFirstResponder()
+            textView.becomeFirstResponder()
         }
         
         for i in 0..<labelArrays.count {

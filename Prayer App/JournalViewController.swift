@@ -15,6 +15,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var timerHeaderButton: UIButton!
+    @IBOutlet weak var headerView: UIView!
     
     // SUBHEADER VIEW
     @IBOutlet weak var activeButton: UIButton!
@@ -54,6 +55,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         
         
+        
         markAnsweredTextView.layer.borderColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0).cgColor
         markAnsweredTextView.layer.borderWidth = 1.0
         
@@ -84,6 +86,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         tableView.estimatedRowHeight = 40
         tableView.rowHeight = UITableViewAutomaticDimension
+        
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
     }
     
@@ -466,12 +469,11 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
-        print("timerUpdate on JournalViewController called")
+         print("Journal timer update called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {
         Animations().endTimerAnimation(timerButton: timerHeaderButton, titleImage: titleImage)
-        print("endTimerAnimation on JournalViewController called")
     }
     
     override func viewWillDisappear(_ animated: Bool) {

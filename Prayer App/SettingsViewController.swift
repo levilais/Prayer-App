@@ -11,6 +11,7 @@ import StoreKit
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
@@ -19,6 +20,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -109,6 +111,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
+         print("Settings timer update called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {

@@ -75,12 +75,11 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         textField.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         
         self.toolbarBottomConstraintInitialValue = toolbarBottomLayoutConstraint.constant
         
@@ -649,13 +648,12 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         if newLength <= characterLimit {
             self.countLabel.text = "\(charactersLeft)"
             for button in categoryButtons {
-                button.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
+                button.backgroundColor = UIColor.StyleFile.LightGrayColor
                 categoryInputIsTextfield = true
             }
             if charactersLeft <= 5 {
                 self.countLabel.textColor = UIColor.StyleFile.WineColor
 
-//                self.countLabel.textColor = UIColor(red:0.65, green:0.23, blue:0.31, alpha:1.0)
             } else {
                 self.countLabel.textColor = UIColor.gray
             }
@@ -667,6 +665,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
+         print("Main timer update called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {
