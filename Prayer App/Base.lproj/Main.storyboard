@@ -134,7 +134,7 @@
                                 <color key="textColor" red="0.64313725489999995" green="0.64705882349999999" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1M3-r6-N83">
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1M3-r6-N83">
                                 <rect key="frame" x="0.0" y="479" width="320" height="40"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleAspectFit" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="TTZ-mg-c0N">
@@ -293,7 +293,7 @@
                                                         <color key="textColor" red="0.33329343795776367" green="0.33335629105567932" blue="0.33328947424888611" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Create New Category" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dRS-LV-T1O">
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Create A New Topic" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dRS-LV-T1O">
                                                         <rect key="frame" x="10" y="66" width="280" height="30"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="Dde-1p-niW"/>
@@ -301,8 +301,8 @@
                                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="alphabet" keyboardAppearance="alert"/>
                                                     </textField>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Assign A Prayer Category" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lq4-r3-kVr">
-                                                        <rect key="frame" x="10" y="47" width="142.5" height="17"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Assign A Topic" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lq4-r3-kVr">
+                                                        <rect key="frame" x="10" y="47" width="82" height="17"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="17" id="Nkl-bm-Xpb"/>
                                                         </constraints>
@@ -496,9 +496,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="606" y="827"/>
+            <point key="canvasLocation" x="606" y="825"/>
         </scene>
-        <!--Circles View Controller-->
+        <!--Item-->
         <scene sceneID="GUw-ys-mhk">
             <objects>
                 <viewController storyboardIdentifier="CirclesViewController" id="OMC-xO-wJs" customClass="CirclesViewController" customModule="Prayer_App" customModuleProvider="target" sceneMemberID="viewController">
@@ -559,6 +559,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="nj5-qD-2tq"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="H3T-Yh-gvO"/>
                     <navigationItem key="navigationItem" id="xis-ht-8Ph"/>
                     <connections>
                         <outlet property="timerHeaderButton" destination="mMl-wt-aC5" id="hDg-iO-CJr"/>
@@ -567,7 +568,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OK7-NS-BwX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1421" y="1615"/>
+            <point key="canvasLocation" x="608" y="1573"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Bpc-Y0-TQd">
@@ -580,18 +581,18 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="zw3-mK-vhA" kind="relationship" relationship="viewControllers" id="lGs-Hl-5Nf"/>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="l68-oo-Vdh"/>
                         <segue destination="cQs-b5-hFa" kind="relationship" relationship="viewControllers" id="9X4-st-iTG"/>
-                        <segue destination="jQS-yM-nL0" kind="relationship" relationship="viewControllers" id="Vct-PZ-feT"/>
                         <segue destination="iFF-vl-6zk" kind="relationship" relationship="viewControllers" id="gW7-xH-JYU"/>
+                        <segue destination="OMC-xO-wJs" kind="relationship" relationship="viewControllers" id="ELp-Is-8LF"/>
+                        <segue destination="ZLf-i2-f6S" kind="relationship" relationship="viewControllers" id="i7L-dS-Km6"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pTk-Tc-8iE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-219" y="828"/>
+            <point key="canvasLocation" x="-219" y="826"/>
         </scene>
-        <!--Settings View Controller-->
+        <!--Item-->
         <scene sceneID="nQP-mg-9tw">
             <objects>
                 <viewController storyboardIdentifier="SettingsViewController" id="ZLf-i2-f6S" customClass="SettingsViewController" customModule="Prayer_App" customModuleProvider="target" sceneMemberID="viewController">
@@ -737,6 +738,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Dkm-95-fid"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="lsQ-yy-AQd"/>
                     <navigationItem key="navigationItem" id="IFv-2T-3Zl"/>
                     <connections>
                         <outlet property="tableView" destination="sVK-Yk-svL" id="clS-CV-Pwx"/>
@@ -746,7 +748,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n4f-cl-DOZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1419" y="2325"/>
+            <point key="canvasLocation" x="-219" y="1573"/>
         </scene>
         <!--Item-->
         <scene sceneID="dzg-OD-aEz">
@@ -817,7 +819,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jLu-ME-jMe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="609" y="-574"/>
+            <point key="canvasLocation" x="-219" y="112"/>
         </scene>
         <!--Item-->
         <scene sceneID="xSf-3N-KAc">
@@ -1230,42 +1232,6 @@
             </objects>
             <point key="canvasLocation" x="606" y="113"/>
         </scene>
-        <!--Item-->
-        <scene sceneID="DcP-j4-DiZ">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="zw3-mK-vhA" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="o9u-yT-sXm"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="zMY-7T-585">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="ZLf-i2-f6S" kind="relationship" relationship="rootViewController" id="3G8-7d-zFP"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jSn-Ct-uYf" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="606" y="2325"/>
-        </scene>
-        <!--Item-->
-        <scene sceneID="nNo-sL-bdg">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="jQS-yM-nL0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="eUg-YX-hAA"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="HWj-8J-9Gs">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="OMC-xO-wJs" kind="relationship" relationship="rootViewController" id="fVd-OH-Qih"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="X8m-df-LWz" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="608" y="1616"/>
-        </scene>
     </scenes>
     <resources>
         <image name="10Deselected" width="120" height="120"/>
@@ -1281,7 +1247,7 @@
         <image name="settingsTitleImage" width="372" height="60"/>
         <image name="shareIcon" width="48" height="58"/>
         <image name="spinner" width="120" height="120"/>
-        <image name="tableToggleLeftSelected" width="216" height="216"/>
+        <image name="tableToggleLeftSelected" width="36" height="36"/>
         <image name="timerIcon" width="58" height="58"/>
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>

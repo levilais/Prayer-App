@@ -129,7 +129,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             SKStoreReviewController.requestReview()
             passFirstResponder = false
         } else {
-            textField.becomeFirstResponder()
+            UIView.animate(withDuration: 0.0, delay: 0.5, options: [], animations: {
+                self.textField.becomeFirstResponder()
+            }, completion: nil)
         }
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
@@ -395,6 +397,10 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
        
         textField.contentInset = textViewInset
         scrollView.contentInset = contentInset
+        
+        UIView.animate(withDuration: 0.33) {
+            self.toolbarView.alpha = 1
+        }
     }
     
     @objc func keyboardWillHide(notification:NSNotification){
@@ -409,6 +415,10 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
+        
+        UIView.animate(withDuration: 0.33) {
+            self.toolbarView.alpha = 0
+        }
     }
     
     func savePrayer(prayerText: UITextView, prayerHeader: UITextField) {
@@ -654,7 +664,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             return false
         }
     }
-
+    
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
     }

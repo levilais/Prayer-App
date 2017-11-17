@@ -286,7 +286,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if (view is UITableViewHeaderFooterView) {
             if let tableViewHeaderFooterView = view as? UITableViewHeaderFooterView {
-                tableViewHeaderFooterView.contentView.backgroundColor = UIColor.StyleFile.BackgroundColor
+                tableViewHeaderFooterView.contentView.backgroundColor = UIColor.StyleFile.LightGrayColor
                 tableViewHeaderFooterView.textLabel?.font = UIFont.StyleFile.SectionHeaderFont
                 tableViewHeaderFooterView.textLabel?.textColor = UIColor.StyleFile.DarkGrayColor
             }
