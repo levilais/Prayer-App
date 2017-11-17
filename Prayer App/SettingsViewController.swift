@@ -122,10 +122,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    @IBAction func settingsButtonDidPress(_ sender: Any) {
-        _ = navigationController?.popViewController(animated: false)
-    }
-    
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
     }

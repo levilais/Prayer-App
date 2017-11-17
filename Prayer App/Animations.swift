@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class Animations {
-    func animateFirstLoad(journalIcon: UIButton, settingsIcon: UIButton, timerIcon: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView) {
+    func animateFirstLoad(timerIcon: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView) {
         view.layoutIfNeeded()
         
         let titleImageStartingPoint = CGPoint(x: titleImage.center.x, y: titleImage.center.y)
@@ -21,11 +21,8 @@ class Animations {
         titleImage.alpha = 0
         toolbarView.alpha = 0
         timerIcon.alpha = 0
-        settingsIcon.alpha = 0
-        journalIcon.alpha = 0
         
         titleImage.isHidden = false
-        settingsIcon.isHidden = false
         
         UIView.animate(withDuration: 1.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
             titleImage.alpha = 1
@@ -55,8 +52,6 @@ class Animations {
                                     UIView.animate(withDuration: 1.5, delay: 1.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
                                         toolbarView.alpha = 1
                                         timerIcon.alpha = 1
-                                        settingsIcon.alpha = 1
-                                        journalIcon.alpha = 1
                                     })
                                 })
                             })
@@ -67,15 +62,12 @@ class Animations {
         })
     }
     
-    func animateLoad(journalIcon: UIButton, settingsIcon: UIButton, timerIcon: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView) {
+    func animateLoad(timerIcon: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView) {
         view.layoutIfNeeded()
         titleImage.alpha = 0
         titleImage.isHidden = false
-        settingsIcon.alpha = 0
-        settingsIcon.isHidden = false
         toolbarView.alpha = 0
         timerIcon.alpha = 0
-        journalIcon.alpha = 0
         
         UIView.animate(withDuration: 0.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
             titleImage.image = UIImage(named: "prayerTitle.pdf")
@@ -86,8 +78,6 @@ class Animations {
                 UIView.animate(withDuration: 1.0, delay: 1.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
                     toolbarView.alpha = 1
                     timerIcon.alpha = 1
-                    settingsIcon.alpha = 1
-                    journalIcon.alpha = 1
                 }, completion: nil)
             })
         })

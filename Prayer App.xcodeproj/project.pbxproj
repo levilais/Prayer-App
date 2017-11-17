@@ -28,6 +28,9 @@
 		04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */; };
 		04F0E4DF1FA1271E006D1244 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */; };
 		04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4E01FA12762006D1244 /* LoadsStruct.swift */; };
+		04FE7CDA1FBE074A00E500A5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE7CD91FBE074A00E500A5 /* HomeViewController.swift */; };
+		04FE7CDC1FBE077C00E500A5 /* CirclesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE7CDB1FBE077C00E500A5 /* CirclesViewController.swift */; };
+		04FE7CDE1FBE5EA700E500A5 /* StyleFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE7CDD1FBE5EA700E500A5 /* StyleFile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +57,9 @@
 		04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIScrollView.swift; sourceTree = "<group>"; };
 		04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
 		04F0E4E01FA12762006D1244 /* LoadsStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadsStruct.swift; sourceTree = "<group>"; };
+		04FE7CD91FBE074A00E500A5 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		04FE7CDB1FBE077C00E500A5 /* CirclesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclesViewController.swift; sourceTree = "<group>"; };
+		04FE7CDD1FBE5EA700E500A5 /* StyleFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleFile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,9 +93,11 @@
 			isa = PBXGroup;
 			children = (
 				04D3251F1F9E8EA700EC615D /* AppDelegate.swift */,
-				04D325311F9EA88400EC615D /* MainViewController.swift */,
-				0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */,
+				04FE7CD91FBE074A00E500A5 /* HomeViewController.swift */,
 				04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */,
+				04D325311F9EA88400EC615D /* MainViewController.swift */,
+				04FE7CDB1FBE077C00E500A5 /* CirclesViewController.swift */,
+				0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */,
 				044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */,
 				044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */,
 				043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */,
@@ -103,6 +111,7 @@
 				043520B91FAB90E400CFD0C1 /* TimerStruct.swift */,
 				04F0E4E01FA12762006D1244 /* LoadsStruct.swift */,
 				04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */,
+				04FE7CDD1FBE5EA700E500A5 /* StyleFile.swift */,
 				04D325231F9E8EA700EC615D /* Main.storyboard */,
 				04D325261F9E8EA700EC615D /* Assets.xcassets */,
 				04D325281F9E8EA700EC615D /* LaunchScreen.storyboard */,
@@ -186,6 +195,7 @@
 			files = (
 				042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */,
 				042FCA811FAE458500545786 /* Utilities.swift in Sources */,
+				04FE7CDA1FBE074A00E500A5 /* HomeViewController.swift in Sources */,
 				04D325321F9EA88400EC615D /* MainViewController.swift in Sources */,
 				04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */,
 				04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */,
@@ -195,8 +205,10 @@
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */,
 				04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */,
+				04FE7CDE1FBE5EA700E500A5 /* StyleFile.swift in Sources */,
 				042FCA871FAF7BC500545786 /* PrayerTableViewCell.swift in Sources */,
 				04F0E4DF1FA1271E006D1244 /* UserDefaultsHelper.swift in Sources */,
+				04FE7CDC1FBE077C00E500A5 /* CirclesViewController.swift in Sources */,
 				047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */,
 				044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */,
 				043520BA1FAB90E400CFD0C1 /* TimerStruct.swift in Sources */,

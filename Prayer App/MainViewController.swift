@@ -28,9 +28,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     // Header
     @IBOutlet weak var headerView: UIView!
-    @IBOutlet weak var settingsIcon: UIButton!
     @IBOutlet weak var titleImage: UIImageView!
-    @IBOutlet weak var journalIcon: UIButton!
 
     // Toolbar
     @IBOutlet weak var toolbarView: UIView!
@@ -124,10 +122,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         
         titleImage.isHidden = true
-        settingsIcon.isHidden = true
         if !firstAppear {
             titleImage.isHidden = false
-            settingsIcon.isHidden = false
         }
         if Loads.loadCount == 3 && passFirstResponder == true {
             SKStoreReviewController.requestReview()
@@ -148,11 +144,11 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     override func viewDidAppear(_ animated: Bool) {
         if firstAppear {
             if Loads.loadCount == 1 {
-                Animations().animateFirstLoad(journalIcon: journalIcon, settingsIcon: settingsIcon, timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
+                Animations().animateFirstLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
             } else if Loads.loadCount == 3 {
-                Animations().animateLoad(journalIcon: journalIcon, settingsIcon: settingsIcon, timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
+                Animations().animateLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
             } else {
-                Animations().animateLoad(journalIcon: journalIcon, settingsIcon: settingsIcon, timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
+                Animations().animateLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
             }
         }
         firstAppear = false
@@ -161,6 +157,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBAction func timerHeaderButtonPressed(_ sender: Any) {
         TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
         timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
+    }
+    @IBAction func doneDidPress(_ sender: Any) {
+        textField.resignFirstResponder()
     }
     
     @IBAction func timerButtonTapped(_ sender: Any) {
