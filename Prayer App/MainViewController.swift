@@ -144,11 +144,11 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     override func viewDidAppear(_ animated: Bool) {
         if firstAppear {
             if Loads.loadCount == 1 {
-                Animations().animateFirstLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
+//                Animations().animateFirstLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
             } else if Loads.loadCount == 3 {
-                Animations().animateLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
+//                Animations().animateLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
             } else {
-                Animations().animateLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
+//                Animations().animateLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
             }
         }
         firstAppear = false
@@ -236,8 +236,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 button.frame = CGRect(x: xOffset, y: 0, width: buttonWidth, height: categoryLabelScrollView.frame.height)
                 button.tag = i
                 button.setTitle(prayerCategory, for: .normal)
-                button.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
-                button.titleLabel?.font = UIFont(name: "Baskerville", size: 15)
+                button.backgroundColor = UIColor.StyleFile.LightGrayColor
+                button.titleLabel?.font = UIFont.StyleFile.ButtonFont
                 button.setTitleColor(UIColor.black, for: .normal)
                 button.sizeToFit()
                 buttonWidth = button.frame.size.width + 10
@@ -255,8 +255,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 button.frame = CGRect(x: xOffset, y: 0, width: buttonWidth, height: categoryLabelScrollView.frame.height)
                 button.tag = 0
                 button.setTitle("General Prayers", for: .normal)
-                button.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
-                button.titleLabel?.font = UIFont(name: "Baskerville", size: 15)
+                button.backgroundColor = UIColor.StyleFile.LightGrayColor
+                button.titleLabel?.font = UIFont.StyleFile.ButtonFont
                 button.setTitleColor(UIColor.black, for: .normal)
                 button.sizeToFit()
                 buttonWidth = button.frame.size.width + 10
@@ -643,7 +643,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 categoryInputIsTextfield = true
             }
             if charactersLeft <= 5 {
-                self.countLabel.textColor = UIColor(red:0.65, green:0.23, blue:0.31, alpha:1.0)
+                self.countLabel.textColor = UIColor.StyleFile.WineColor
+
+//                self.countLabel.textColor = UIColor(red:0.65, green:0.23, blue:0.31, alpha:1.0)
             } else {
                 self.countLabel.textColor = UIColor.gray
             }

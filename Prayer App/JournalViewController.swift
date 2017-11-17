@@ -104,8 +104,8 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func showAnswered() {
-        answerButton.titleLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 17)
-        activeButton.titleLabel?.font = UIFont(name: "Baskerville", size: 17)
+        answerButton.titleLabel?.font = UIFont.StyleFile.ToggleActiveFont
+        activeButton.titleLabel?.font = UIFont.StyleFile.ToggleInactiveFont
         toggleButton.setBackgroundImage(UIImage(named: "tableToggleRightSelected.pdf"), for: .normal)
         answeredShowing = true
         
@@ -122,8 +122,8 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func showActive() {
-        answerButton.titleLabel?.font = UIFont(name: "Baskerville", size: 17)
-        activeButton.titleLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 17)
+        answerButton.titleLabel?.font = UIFont.StyleFile.ToggleInactiveFont
+        activeButton.titleLabel?.font = UIFont.StyleFile.ToggleActiveFont
         toggleButton.setBackgroundImage(UIImage(named: "tableToggleLeftSelected.pdf"), for: .normal)
         answeredShowing = false
         
@@ -286,9 +286,9 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if (view is UITableViewHeaderFooterView) {
             if let tableViewHeaderFooterView = view as? UITableViewHeaderFooterView {
-                tableViewHeaderFooterView.contentView.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
-                tableViewHeaderFooterView.textLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 20)
-                tableViewHeaderFooterView.textLabel?.textColor = UIColor(red:0.33, green:0.33, blue:0.33, alpha:1.0)
+                tableViewHeaderFooterView.contentView.backgroundColor = UIColor.StyleFile.BackgroundColor
+                tableViewHeaderFooterView.textLabel?.font = UIFont.StyleFile.SectionHeaderFont
+                tableViewHeaderFooterView.textLabel?.textColor = UIColor.StyleFile.DarkGrayColor
             }
         }
     }

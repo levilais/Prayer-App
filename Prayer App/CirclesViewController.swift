@@ -10,26 +10,33 @@ import UIKit
 
 class CirclesViewController: UIViewController {
 
+    @IBOutlet weak var titleImage: UIImageView!
+    @IBOutlet weak var timerHeaderButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
+        TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
     }
-    */
-
+    
+    @IBAction func timerButtonDidPress(_ sender: Any) {
+        TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
+    }
+    
+    @objc func handleNotification(_ notification: NSNotification) {
+        TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
+    }
+    
+    @objc func handleNotification2(_ notification: NSNotification) {
+        Animations().endTimerAnimation(timerButton: timerHeaderButton, titleImage: titleImage)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
+    }
 }

@@ -29,37 +29,34 @@ class Utilities {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let tabBarController = UITabBarController()
                 
-        let HomeViewController = storyboard.instantiateViewController(withIdentifier: "HomeViewController") // 1st tab bar viewcontroller
-        let JournalViewController = storyboard.instantiateViewController(withIdentifier: "JournalViewController") // 2nd tab bar viewcontroller
-        let MainViewController = storyboard.instantiateViewController(withIdentifier: "MainViewController") // 3rd tab bar viewcontroller
-        let CirclesViewController = storyboard.instantiateViewController(withIdentifier: "CirclesViewController") // 4th tab bar viewcontroller
-        let SettingsViewController = storyboard.instantiateViewController(withIdentifier: "SettingsViewController") // 5th tab bar viewcontroller
+        let HomeViewController = storyboard.instantiateViewController(withIdentifier: "HomeViewController")
+        let JournalViewController = storyboard.instantiateViewController(withIdentifier: "JournalViewController")
+        let MainViewController = storyboard.instantiateViewController(withIdentifier: "MainViewController")
+        let CirclesViewController = storyboard.instantiateViewController(withIdentifier: "CirclesViewController")
+        let SettingsViewController = storyboard.instantiateViewController(withIdentifier: "SettingsViewController")
         
-        // all viewcontroller embedded navigationbar
         let navHome = UINavigationController(rootViewController: HomeViewController)
         let navJournal = UINavigationController(rootViewController: JournalViewController)
         let navMain = UINavigationController(rootViewController: MainViewController)
         let navCircles = UINavigationController(rootViewController: CirclesViewController)
         let navSettings = UINavigationController(rootViewController: SettingsViewController)
         
-        // all viewcontroller navigationbar hidden
         navHome.setNavigationBarHidden(true, animated: false)
         navJournal.setNavigationBarHidden(true, animated: false)
         navMain.setNavigationBarHidden(true, animated: false)
         navCircles.setNavigationBarHidden(true, animated: false)
         navSettings.setNavigationBarHidden(true, animated: false)
         
-        
         tabBarController.viewControllers = [navHome,navJournal,navMain,navCircles,navSettings]
         
         let tabBar = tabBarController.tabBar
-        tabBar.barTintColor = UIColor.black
-        tabBar.backgroundColor = UIColor.black
-        tabBar.tintColor = UIColor(red: 43/255, green: 180/255, blue: 0/255, alpha: 1)
+        tabBar.barTintColor = UIColor.StyleFile.BackgroundColor
+        tabBar.backgroundColor = UIColor.StyleFile.BackgroundColor
+        tabBar.tintColor = UIColor.StyleFile.DarkGrayColor
         
-        //UITabBar.appearance().tintColor = UIColor.white
-        let attributes = [NSAttributedStringKey.font:UIFont(name: "Baskerville", size: 10)!,NSAttributedStringKey.foregroundColor:UIColor.white]
-        let attributes1 = [NSAttributedStringKey.font:UIFont(name: "Baskerville", size: 10)!,NSAttributedStringKey.foregroundColor:UIColor(red: 43/255, green: 180/255, blue: 0/255, alpha: 1)]
+        UITabBar.appearance().tintColor = UIColor.StyleFile.DarkGrayColor
+        let attributes = [NSAttributedStringKey.font:UIFont(name: "Baskerville", size: 12)!,NSAttributedStringKey.foregroundColor: UIColor.StyleFile.DarkGrayColor]
+        let attributes1 = [NSAttributedStringKey.font: UIFont(name: "Baskerville-SemiBold", size: 12)!,NSAttributedStringKey.foregroundColor: UIColor.StyleFile.DarkGrayColor]
         
         UITabBarItem.appearance().setTitleTextAttributes(attributes, for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes(attributes1, for: .selected)
@@ -67,33 +64,33 @@ class Utilities {
         
         let tabHome = tabBar.items![0]
         tabHome.title = "Home" // tabbar titlee
-        tabHome.image=UIImage(named: "homeIcon.pdf")?.withRenderingMode(.alwaysOriginal) // deselect image
-        tabHome.selectedImage = UIImage(named: "homeIconSelected.pdf")?.withRenderingMode(.alwaysOriginal) // select image
-        tabHome.titlePositionAdjustment.vertical = tabHome.titlePositionAdjustment.vertical-4 // title position change
+        tabHome.image=UIImage(named: "homeIcon.pdf")?.withRenderingMode(.alwaysOriginal)
+        tabHome.selectedImage = UIImage(named: "homeIconSelected.pdf")?.withRenderingMode(.alwaysOriginal)
+        tabHome.titlePositionAdjustment.vertical = tabHome.titlePositionAdjustment.vertical
         
         let tabJournal = tabBar.items![1]
         tabJournal.title = "Journal"
         tabJournal.image=UIImage(named: "journalIcon.pdf")?.withRenderingMode(.alwaysOriginal)
         tabJournal.selectedImage=UIImage(named: "journalIconSelected.pdf")?.withRenderingMode(.alwaysOriginal)
-        tabJournal.titlePositionAdjustment.vertical = tabJournal.titlePositionAdjustment.vertical-4
+        tabJournal.titlePositionAdjustment.vertical = tabJournal.titlePositionAdjustment.vertical
         
         let tabMain = tabBar.items![2]
         tabMain.title = "Prayer"
         tabMain.image=UIImage(named: "prayerIcon.pdf")?.withRenderingMode(.alwaysOriginal)
         tabMain.selectedImage=UIImage(named: "prayerIconSelected.pdf")?.withRenderingMode(.alwaysOriginal)
-        tabMain.titlePositionAdjustment.vertical = tabMain.titlePositionAdjustment.vertical-4
+        tabMain.titlePositionAdjustment.vertical = tabMain.titlePositionAdjustment.vertical
         
         let tabCircles = tabBar.items![3]
         tabCircles.title = "Circles"
         tabCircles.image=UIImage(named: "circlesIcon.pdf")?.withRenderingMode(.alwaysOriginal)
         tabCircles.selectedImage=UIImage(named: "circlesIconSelected.pdf")?.withRenderingMode(.alwaysOriginal)
-        tabCircles.titlePositionAdjustment.vertical = tabCircles.titlePositionAdjustment.vertical-4
+        tabCircles.titlePositionAdjustment.vertical = tabCircles.titlePositionAdjustment.vertical
         
         let tabSettings = tabBar.items![4]
         tabSettings.title = "Settings"
         tabSettings.image=UIImage(named: "settingsIcon.pdf")?.withRenderingMode(.alwaysOriginal)
         tabSettings.selectedImage=UIImage(named: "settingsIconSelected.pdf")?.withRenderingMode(.alwaysOriginal)
-        tabSettings.titlePositionAdjustment.vertical = tabSettings.titlePositionAdjustment.vertical-4
+        tabSettings.titlePositionAdjustment.vertical = tabSettings.titlePositionAdjustment.vertical
         
         return tabBarController
     }

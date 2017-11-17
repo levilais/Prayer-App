@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "tableToggleLeftSelected.pdf",
+      "filename" : "homeTitleImage.pdf",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tableToggleLeftSelected@2x.pdf",
+      "filename" : "homeTitleImage@2x.pdf",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "tableToggleLeftSelected@3x.pdf",
+      "filename" : "homeTitleImage@3x.pdf",
       "scale" : "3x"
     }
   ],

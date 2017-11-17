@@ -14,8 +14,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
-    var sectionHeaders = ["Timer Duration","How To","Review"]
-    var imageNames: [String] = ["swipeToSend.pdf","swipeToSave.pdf"]
+    var sectionHeaders = ["Timer Duration","Review"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,9 +43,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if (view is UITableViewHeaderFooterView) {
             if let tableViewHeaderFooterView = view as? UITableViewHeaderFooterView {
-                tableViewHeaderFooterView.contentView.backgroundColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
-                tableViewHeaderFooterView.textLabel?.font = UIFont(name: "Baskerville-SemiBold", size: 20)
-                tableViewHeaderFooterView.textLabel?.textColor = UIColor(red:0.33, green:0.33, blue:0.33, alpha:1.0)
+                tableViewHeaderFooterView.contentView.backgroundColor = UIColor.StyleFile.LightGrayColor
+                tableViewHeaderFooterView.textLabel?.font = UIFont.StyleFile.SectionHeaderFont
+                tableViewHeaderFooterView.textLabel?.textColor = UIColor.StyleFile.DarkGrayColor
             }
         }
     }
@@ -61,8 +60,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         case 0:
             numberOfRows = 1
         case 1:
-            numberOfRows = 2
-        case 2:
             numberOfRows = 1
         default:
             print("need to change number of sections")
@@ -76,18 +73,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             let cell = tableView.dequeueReusableCell(withIdentifier: "timerPreferenceCell", for: indexPath) as! TimerPreferenceTableViewCell
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-            switch indexPath.row {
-            case 0:
-                cell.customCellImageView.image = UIImage(named: imageNames[indexPath.row])
-            case 1:
-                cell.customCellImageView.image = UIImage(named: imageNames[indexPath.row])
-            default:
-                print("too many rows showed up in section 2")
-            }
-
-            return cell
-        case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
             cell.customCellImageView.image = UIImage(named: "reviewImage.pdf")
             cell.isUserInteractionEnabled = true
@@ -113,7 +98,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
-        case 2:
+        case 1:
             tableView.deselectRow(at: indexPath, animated: true)
             SKStoreReviewController.requestReview()
             print("Requesting Review")
