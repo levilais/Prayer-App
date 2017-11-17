@@ -397,14 +397,14 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             } catch {
             }
         }
-        delete.backgroundColor = UIColor(red:0.65, green:0.23, blue:0.31, alpha:1.0)
+        delete.backgroundColor = UIColor.StyleFile.WineColor
         
         if !answeredShowing {
             let more = UITableViewRowAction(style: .default, title: "Answered") { (action:UITableViewRowAction, indexPath:IndexPath) in
                 self.indexPathToMarkAnswered = indexPath
                 Animations().animateMarkAnsweredPopup(view: self.markAnsweredPopoverView, backgroundButton: self.markAnsweredBackgroundButton, subView: self.markAnsweredSubview, viewController: self, textView: self.markAnsweredTextView)
             }
-            more.backgroundColor = UIColor(red:0.00, green:0.15, blue:0.26, alpha:1.0)
+            more.backgroundColor = UIColor.StyleFile.DarkBlueColor
                 return [delete, more]
             
             }
@@ -418,7 +418,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.markPrayed(indexPath: indexPath)
                 success(true)
             })
-            amenAction.backgroundColor = UIColor(red:0.58, green:0.66, blue:0.67, alpha:1.0)
+            amenAction.backgroundColor = UIColor.StyleFile.TealColor
             return UISwipeActionsConfiguration(actions: [amenAction])
             }
         return nil
@@ -426,10 +426,12 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func markRecentlyPrayed(cell: PrayerTableViewCell, lastPrayedString: String) {
         if lastPrayedString == "today" {
-            cell.prayerTextView.textColor = UIColor(red:0.46, green:0.46, blue:0.46, alpha:1.0)
+            cell.prayedLastLabel.textColor = UIColor.StyleFile.TealColor
+            cell.prayedLastLabel.font = UIFont.StyleFile.LastPrayedBold
             cell.recentlyPrayed = true
         } else {
-            cell.prayerTextView.textColor = UIColor.black
+            cell.prayedLastLabel.textColor = UIColor.StyleFile.MediumGrayColor
+            cell.prayedLastLabel.font = UIFont.StyleFile.LastPrayedMedium
             cell.recentlyPrayed = false
         }
     }

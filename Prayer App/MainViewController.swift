@@ -29,7 +29,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     // Header
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var titleImage: UIImageView!
-
+    @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var touchToPrayButton: UIButton!
+    
     // Toolbar
     @IBOutlet weak var toolbarView: UIView!
     @IBOutlet weak var toolbarBottomLayoutConstraint: NSLayoutConstraint!
@@ -41,6 +43,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBOutlet var timerButtons: [UIButton]!
     @IBOutlet weak var timerHeaderButton: UIButton!
     var timerChanged = false
+    var timerPopupShowing = false
     
     // Save To Journal Popup
     @IBOutlet weak var categoryCreationTextField: UITextField!
@@ -77,6 +80,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         super.viewDidLoad()
         
         textField.delegate = self
+        touchToPrayButton.setTitleColor(UIColor.lightGray, for: .normal)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -120,6 +124,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         
+        touchToPrayButton.alpha = 0
+        
         titleImage.isHidden = true
         if !firstAppear {
             titleImage.isHidden = false
@@ -145,14 +151,30 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     override func viewDidAppear(_ animated: Bool) {
         if firstAppear {
             if Loads.loadCount == 1 {
-//                Animations().animateFirstLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
+                Animations().animateFirstLoad(doneButton: doneButton, titleImage: titleImage, toolbarView: toolbarView, view: self.view, textView: textField)
             } else if Loads.loadCount == 3 {
-//                Animations().animateLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
+                Animations().animateLoad(doneButton: doneButton, titleImage: titleImage, toolbarView: toolbarView, view: self.view, textView: textField)
             } else {
-//                Animations().animateLoad(timerIcon: timerIcon, titleImage: titleImage, toolbarView: toolbarView, view: self.view)
+                Animations().animateLoad(doneButton: doneButton, titleImage: titleImage, toolbarView: toolbarView, view: self.view, textView: textField)
             }
         }
         firstAppear = false
+    }
+    
+    @IBAction func doneButtonDidPress(_ sender: Any) {
+        if textField.isFirstResponder {
+            textField.resignFirstResponder()
+        } else {
+            textField.becomeFirstResponder()
+        }
+    }
+    
+    @IBAction func touchToPrayButtonDidPress(_ sender: Any) {
+        if textField.isFirstResponder {
+            textField.resignFirstResponder()
+        } else {
+            textField.becomeFirstResponder()
+        }
     }
     
     @IBAction func timerHeaderButtonPressed(_ sender: Any) {
@@ -239,7 +261,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 button.setTitle(prayerCategory, for: .normal)
                 button.backgroundColor = UIColor.StyleFile.LightGrayColor
                 button.titleLabel?.font = UIFont.StyleFile.ButtonFont
-                button.setTitleColor(UIColor.black, for: .normal)
+                button.setTitleColor(UIColor.StyleFile.DarkGrayColor, for: .normal)
                 button.sizeToFit()
                 buttonWidth = button.frame.size.width + 10
                 button.addTarget(self, action: #selector(categoryButtonTapped(sender:)), for: .touchUpInside)
@@ -258,7 +280,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                 button.setTitle("General Prayers", for: .normal)
                 button.backgroundColor = UIColor.StyleFile.LightGrayColor
                 button.titleLabel?.font = UIFont.StyleFile.ButtonFont
-                button.setTitleColor(UIColor.black, for: .normal)
+                button.setTitleColor(UIColor.StyleFile.DarkGrayColor, for: .normal)
                 button.sizeToFit()
                 buttonWidth = button.frame.size.width + 10
                 button.addTarget(self, action: #selector(categoryButtonTapped(sender:)), for: .touchUpInside)
@@ -308,6 +330,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         if sender.state == .ended {
         }
         else if sender.state == .began {
+            timerPopupShowing = true
             TimerStruct().updateTimerPreferencesDisplay(buttons: timerButtons)
             self.swipeLeft.isEnabled = false
             self.swipeRight.isEnabled = false
@@ -377,6 +400,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         self.timerPreferencesSelectionView.alpha = 0
         self.swipeLeft.isEnabled = true
         self.swipeRight.isEnabled = true
+        timerPopupShowing = false
         textField.becomeFirstResponder()
     }
     
@@ -397,8 +421,10 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         textField.contentInset = textViewInset
         scrollView.contentInset = contentInset
         
+        self.touchToPrayButton.alpha = 0
         UIView.animate(withDuration: 0.33) {
             self.toolbarView.alpha = 1
+            self.doneButton.alpha = 1
         }
     }
     
@@ -415,8 +441,15 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
         
+        if textField.text == "" && timerPopupShowing == false {
+            self.touchToPrayButton.alpha = 1
+        }
+        
+        print("timerPopupShowing: \(timerPopupShowing)")
+        
         UIView.animate(withDuration: 0.33) {
             self.toolbarView.alpha = 0
+            self.doneButton.alpha = 0
         }
     }
     
@@ -674,6 +707,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     override func viewWillDisappear(_ animated: Bool) {
         textField.resignFirstResponder()
+        if timerPopupShowing == true {
+            dismissTimerPopup()
+        }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
     }

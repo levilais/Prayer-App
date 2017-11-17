@@ -92,6 +92,8 @@ class Utilities {
         tabSettings.selectedImage=UIImage(named: "settingsIconSelected.pdf")?.withRenderingMode(.alwaysOriginal)
         tabSettings.titlePositionAdjustment.vertical = tabSettings.titlePositionAdjustment.vertical
         
+        tabBarController.selectedIndex = 2
+
         return tabBarController
     }
 }

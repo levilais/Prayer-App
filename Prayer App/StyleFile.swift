@@ -14,6 +14,7 @@ extension UIColor {
         static let BackgroundColor = UIColor(red:0.93, green:0.93, blue:0.93, alpha:1.0)
         static let CategoryButtonSelectedColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
         static let DarkGrayColor = UIColor(red:0.33, green:0.33, blue:0.33, alpha:1.0)
+        static let MediumGrayColor = UIColor(red:0.64, green:0.65, blue:0.65, alpha:1.0)
         static let LightGrayColor = UIColor(red:0.87, green:0.87, blue:0.87, alpha:1.0)
         static let GoldColor = UIColor(red:0.67, green:0.65, blue:0.58, alpha:1.0)
         static let TealColor = UIColor(red:0.58, green:0.66, blue:0.67, alpha:1.0)
@@ -29,6 +30,8 @@ extension UIFont {
         static let ToggleActiveFont = UIFont(name: "Baskerville-SemiBold", size: 17)
         static let ToggleInactiveFont = UIFont(name: "Baskerville", size: 17)
         static let ButtonTimerFont = UIFont(name: "HelveticaNeue-Thin", size: 20)
+        static let LastPrayedBold = UIFont(name: "HelveticaNeue-Bold", size: 12)
+        static let LastPrayedMedium = UIFont(name: "HelveticaNeue-Medium", size: 12)
     }
 }
 

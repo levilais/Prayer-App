@@ -19,6 +19,8 @@ class PrayerTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        let textColor = UIColor.StyleFile.DarkGrayColor
+        self.prayerTextView.textColor = textColor
         self.backgroundColor = .clear
     }
     

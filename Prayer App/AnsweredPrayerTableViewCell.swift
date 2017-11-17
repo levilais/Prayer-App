@@ -18,7 +18,7 @@ class AnsweredPrayerTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = .clear
-        let textColor = UIColor(red:0.46, green:0.46, blue:0.46, alpha:1.0)
+        let textColor = UIColor.StyleFile.DarkGrayColor
         self.prayerLabel.textColor = textColor
         self.howAnsweredLabel.textColor = textColor
         

@@ -10,20 +10,20 @@ import Foundation
 import UIKit
 
 class Animations {
-    func animateFirstLoad(timerIcon: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView) {
+    func animateFirstLoad(doneButton: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView, textView: UITextView) {
         view.layoutIfNeeded()
-        
+
         let titleImageStartingPoint = CGPoint(x: titleImage.center.x, y: titleImage.center.y)
         let dismissLeftPoint = CGPoint(x: view.frame.minX - titleImage.frame.width, y: titleImage.frame.width)
         let dismissRightPoint = CGPoint(x: view.frame.maxX + titleImage.frame.width, y: titleImage.frame.width)
-        
+
         titleImage.image = UIImage(named: "swipeToSave.pdf")
         titleImage.alpha = 0
         toolbarView.alpha = 0
-        timerIcon.alpha = 0
-        
+        doneButton.alpha = 0
+
         titleImage.isHidden = false
-        
+
         UIView.animate(withDuration: 1.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
             titleImage.alpha = 1
         }, completion: { finish in
@@ -50,8 +50,10 @@ class Animations {
                                     titleImage.alpha = 1
                                 }, completion: { finish in
                                     UIView.animate(withDuration: 1.5, delay: 1.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                                        toolbarView.alpha = 1
-                                        timerIcon.alpha = 1
+                                        if textView.isFirstResponder {
+                                            toolbarView.alpha = 1
+                                        }
+                                        doneButton.alpha = 1
                                     })
                                 })
                             })
@@ -62,12 +64,12 @@ class Animations {
         })
     }
     
-    func animateLoad(timerIcon: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView) {
+    func animateLoad(doneButton: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView, textView: UITextView) {
         view.layoutIfNeeded()
         titleImage.alpha = 0
         titleImage.isHidden = false
         toolbarView.alpha = 0
-        timerIcon.alpha = 0
+        doneButton.alpha = 0
         
         UIView.animate(withDuration: 0.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
             titleImage.image = UIImage(named: "prayerTitle.pdf")
@@ -76,8 +78,10 @@ class Animations {
                 titleImage.alpha = 1
             }, completion: { finish in
                 UIView.animate(withDuration: 1.0, delay: 1.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                    toolbarView.alpha = 1
-                    timerIcon.alpha = 1
+                    if textView.isFirstResponder {
+                        toolbarView.alpha = 1
+                    }
+                    doneButton.alpha = 1
                 }, completion: nil)
             })
         })
