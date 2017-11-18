@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import StoreKit
 import CoreData
+import Firebase
 
 class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
     
@@ -108,6 +109,13 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         self.view.addGestureRecognizer(swipeDown)
                 
         UserDefaultsHelper().getLoads()
+        if Loads.loadCount == 0 {
+            if Auth.auth().currentUser == nil {
+                if let vc = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") {
+                    self.navigationController?.present(vc, animated: true, completion: nil)
+                }
+            }
+        }
         Loads.loadCount += 1
         UserDefaultsHelper().saveLoad()
         
@@ -133,6 +141,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         if !firstAppear {
             titleImage.isHidden = false
         }
+        
         if Loads.loadCount == 3 && passFirstResponder == true {
             SKStoreReviewController.requestReview()
             passFirstResponder = false
@@ -201,6 +210,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBAction func undoSendDidPress(_ sender: Any) {
         textField.alpha = 0
         textField.text = undoSendString
+        if touchToPrayButton.alpha == 1 {
+            textField.becomeFirstResponder()
+        }
         stopUndoTimer()
     }
     

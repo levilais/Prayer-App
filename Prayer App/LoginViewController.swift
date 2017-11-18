@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginViewController: UIViewController {
     
@@ -21,9 +22,12 @@ class LoginViewController: UIViewController {
     
     var activeField: UITextField?
     var signupShowing = true
+    var consecutiveBadAttempts = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hideKeyboardWhenTappedAway()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
         Utilities().setupTextFieldLook(textField: emailTextField)
@@ -38,6 +42,8 @@ class LoginViewController: UIViewController {
     }
     
     func toggleLoginSignup() {
+        emailTextField.text = ""
+        passwordTextField.text = ""
         if signupShowing == true {
             signupShowing = false
             explanationLabel.text = "Please enter your login information below"
@@ -48,6 +54,8 @@ class LoginViewController: UIViewController {
             }
             forgotPasswordButton.isHidden = false
         } else {
+            consecutiveBadAttempts = 0
+            explanationLabel.textColor = UIColor.StyleFile.DarkGrayColor
             signupShowing = true
             explanationLabel.text = "In order to connect with others, you’ll need to create an account.  At this time, Prayer is an iPhone only application and invitations are sent via iMessage.  To create your account, please enter your information below."
             titleLabel.text = "Create Account"
@@ -72,6 +80,22 @@ class LoginViewController: UIViewController {
             print("sing up pressed")
         } else {
             print("log in pressed")
+            attemptLogin()
+        }
+    }
+    
+    func attemptLogin() {
+        if let email = emailTextField.text {
+            if let password = passwordTextField.text {
+                Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
+                    if let error = error {
+                        self.explanationLabel.text = error.localizedDescription
+                        self.explanationLabel.textColor = UIColor.StyleFile.WineColor
+                        self.consecutiveBadAttempts += 1
+                    }
+                    print("signed in")
+                })
+            }
         }
     }
     

@@ -127,3 +127,15 @@ extension UITextView {
         return adjustedRect
     }
 }
+
+extension UIViewController {
+    func hideKeyboardWhenTappedAway() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}

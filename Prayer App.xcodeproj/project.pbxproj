@@ -21,6 +21,7 @@
 		04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04933D601FBFA50C0023A6FA /* LoginViewController.swift */; };
 		04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */; };
 		04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */; };
+		04CDE8631FC0A74600F20EFB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */; };
 		04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3251F1F9E8EA700EC615D /* AppDelegate.swift */; };
 		04D325251F9E8EA700EC615D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04D325231F9E8EA700EC615D /* Main.storyboard */; };
 		04D325271F9E8EA700EC615D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04D325261F9E8EA700EC615D /* Assets.xcassets */; };
@@ -32,6 +33,7 @@
 		04FE7CDA1FBE074A00E500A5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE7CD91FBE074A00E500A5 /* HomeViewController.swift */; };
 		04FE7CDC1FBE077C00E500A5 /* CirclesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE7CDB1FBE077C00E500A5 /* CirclesViewController.swift */; };
 		04FE7CDE1FBE5EA700E500A5 /* StyleFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE7CDD1FBE5EA700E500A5 /* StyleFile.swift */; };
+		D4C32B1BC6D749FB5ADFA871 /* Pods_Prayer_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC19A3AF45BC4BF2A76EDC62 /* Pods_Prayer_App.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +51,7 @@
 		04933D601FBFA50C0023A6FA /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalViewController.swift; sourceTree = "<group>"; };
 		04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
+		04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		04D3251C1F9E8EA700EC615D /* Prayer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Prayer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D3251F1F9E8EA700EC615D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04D325241F9E8EA700EC615D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -62,6 +65,9 @@
 		04FE7CD91FBE074A00E500A5 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		04FE7CDB1FBE077C00E500A5 /* CirclesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclesViewController.swift; sourceTree = "<group>"; };
 		04FE7CDD1FBE5EA700E500A5 /* StyleFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleFile.swift; sourceTree = "<group>"; };
+		497C3C3D4813551A753D0055 /* Pods-Prayer App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Prayer App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Prayer App/Pods-Prayer App.debug.xcconfig"; sourceTree = "<group>"; };
+		CC19A3AF45BC4BF2A76EDC62 /* Pods_Prayer_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Prayer_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC6DAC97C1A9ACDEB535AC01 /* Pods-Prayer App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Prayer App.release.xcconfig"; path = "Pods/Target Support Files/Pods-Prayer App/Pods-Prayer App.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4C32B1BC6D749FB5ADFA871 /* Pods_Prayer_App.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +87,8 @@
 			children = (
 				04D3251E1F9E8EA700EC615D /* Prayer App */,
 				04D3251D1F9E8EA700EC615D /* Products */,
+				128C96B4FBCAE0C87DE46D2A /* Pods */,
+				BE21F68CE97717D6A89EFF74 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -119,9 +128,27 @@
 				04D325261F9E8EA700EC615D /* Assets.xcassets */,
 				04D325281F9E8EA700EC615D /* LaunchScreen.storyboard */,
 				04D3252B1F9E8EA700EC615D /* Info.plist */,
+				04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */,
 				042FCA7D1FAE26FB00545786 /* Prayer.xcdatamodeld */,
 			);
 			path = "Prayer App";
+			sourceTree = "<group>";
+		};
+		128C96B4FBCAE0C87DE46D2A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				497C3C3D4813551A753D0055 /* Pods-Prayer App.debug.xcconfig */,
+				CC6DAC97C1A9ACDEB535AC01 /* Pods-Prayer App.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		BE21F68CE97717D6A89EFF74 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CC19A3AF45BC4BF2A76EDC62 /* Pods_Prayer_App.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,9 +158,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04D3252E1F9E8EA700EC615D /* Build configuration list for PBXNativeTarget "Prayer App" */;
 			buildPhases = (
+				603D92EBB0DC356E4B854562 /* [CP] Check Pods Manifest.lock */,
 				04D325181F9E8EA700EC615D /* Sources */,
 				04D325191F9E8EA700EC615D /* Frameworks */,
 				04D3251A1F9E8EA700EC615D /* Resources */,
+				5E645C327F61A2809FC1191D /* [CP] Embed Pods Frameworks */,
+				BCB77306F394A19466666AD2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -184,12 +214,61 @@
 			buildActionMask = 2147483647;
 			files = (
 				04D3252A1F9E8EA700EC615D /* LaunchScreen.storyboard in Resources */,
+				04CDE8631FC0A74600F20EFB /* GoogleService-Info.plist in Resources */,
 				04D325271F9E8EA700EC615D /* Assets.xcassets in Resources */,
 				04D325251F9E8EA700EC615D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5E645C327F61A2809FC1191D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Prayer App/Pods-Prayer App-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		603D92EBB0DC356E4B854562 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		BCB77306F394A19466666AD2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Prayer App/Pods-Prayer App-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		04D325181F9E8EA700EC615D /* Sources */ = {
@@ -352,6 +431,7 @@
 		};
 		04D3252F1F9E8EA700EC615D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 497C3C3D4813551A753D0055 /* Pods-Prayer App.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -368,6 +448,7 @@
 		};
 		04D325301F9E8EA700EC615D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC6DAC97C1A9ACDEB535AC01 /* Pods-Prayer App.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

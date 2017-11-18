@@ -49,16 +49,10 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         fetchedResultsController.delegate = self
         
         return fetchedResultsController
-    } ()
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
-        markAnsweredTextView.layer.borderColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0).cgColor
-        markAnsweredTextView.layer.borderWidth = 1.0
-        
         persistentContainer.loadPersistentStores { (persistentStoreDescription, error) in
             if let error = error {
                 print("Unable to Load Persistent Store")
@@ -75,18 +69,19 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.updateView()
             }
         }
-        
+        markAnsweredTextView.layer.borderColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0).cgColor
+        markAnsweredTextView.layer.borderWidth = 1.0
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground(_:)), name: Notification.Name.UIApplicationDidEnterBackground, object: nil)
         
         tableView.tableFooterView = UIView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        showActive()
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         tableView.estimatedRowHeight = 40
         tableView.rowHeight = UITableViewAutomaticDimension
-        
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
     }
     
@@ -168,7 +163,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     fileprivate func updateView() {
         if !answeredShowing {
-            
             let predicate = NSPredicate(format: "isAnswered = \(NSNumber(value:false))")
             fetchedResultsController.fetchRequest.predicate = predicate
             do {
@@ -201,6 +195,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.isHidden = !hasPrayers
             messageLabel.isHidden = hasPrayers
         }
+        tableView.reloadData()
     }
     
     @objc func applicationDidEnterBackground(_ notification: Notification) {

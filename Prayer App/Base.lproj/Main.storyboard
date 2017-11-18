@@ -630,7 +630,7 @@
         <!--Login View Controller-->
         <scene sceneID="3RJ-ih-A2Z">
             <objects>
-                <viewController id="e92-fH-MMI" customClass="LoginViewController" customModule="Prayer_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="e92-fH-MMI" customClass="LoginViewController" customModule="Prayer_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uyu-6R-nfG">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
