@@ -18,6 +18,7 @@
 		046203301FA39ACE00BDF8ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */; };
 		047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */; };
 		0474DD6C1F9FE7B4008D79E3 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474DD6B1F9FE7B4008D79E3 /* Animations.swift */; };
+		04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04933D601FBFA50C0023A6FA /* LoginViewController.swift */; };
 		04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */; };
 		04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */; };
 		04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3251F1F9E8EA700EC615D /* AppDelegate.swift */; };
@@ -45,6 +46,7 @@
 		0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnsweredPrayerTableViewCell.swift; sourceTree = "<group>"; };
 		0474DD6B1F9FE7B4008D79E3 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
+		04933D601FBFA50C0023A6FA /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalViewController.swift; sourceTree = "<group>"; };
 		04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		04D3251C1F9E8EA700EC615D /* Prayer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Prayer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +100,7 @@
 				04D325311F9EA88400EC615D /* MainViewController.swift */,
 				04FE7CDB1FBE077C00E500A5 /* CirclesViewController.swift */,
 				0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */,
+				04933D601FBFA50C0023A6FA /* LoginViewController.swift */,
 				044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */,
 				044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */,
 				043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */,
@@ -203,6 +206,7 @@
 				044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */,
 				04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
+				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,
 				043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */,
 				04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */,
 				04FE7CDE1FBE5EA700E500A5 /* StyleFile.swift in Sources */,

@@ -25,6 +25,15 @@ class Utilities {
         }
     }
     
+    func setupTextFieldLook(textField: UITextField) {
+        let myColor: UIColor = UIColor.lightGray
+        textField.layer.borderColor = myColor.cgColor
+        textField.layer.borderWidth = 0.5
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: textField.frame.height))
+        textField.leftView = paddingView
+        textField.leftViewMode = UITextFieldViewMode.always
+    }
+    
     func setTabbar() -> UITabBarController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let tabBarController = UITabBarController()

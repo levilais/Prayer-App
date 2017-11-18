@@ -85,9 +85,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         textField.delegate = self
         touchToPrayButton.setTitleColor(UIColor.lightGray, for: .normal)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
         self.toolbarBottomConstraintInitialValue = toolbarBottomLayoutConstraint.constant
         self.undoButtonBottomLayoutConstraintInitialValue = undoButtonBottomLayoutConstraint.constant
         
@@ -118,14 +115,15 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         
         TimerStruct().resetSeconds()
         TimerStruct().updateTimerPreferencesDisplay(buttons: timerButtons)
-        setupPopupTextField(popupTextField: categoryCreationTextField)
+        Utilities().setupTextFieldLook(textField: categoryCreationTextField)
         
         self.countLabel.text = String(categoryTextfieldCharacterLimit)
         self.categoryCreationTextField.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         
@@ -462,8 +460,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             self.touchToPrayButton.alpha = 1
         }
         
-        print("timerPopupShowing: \(timerPopupShowing)")
-        
         UIView.animate(withDuration: 0.33) {
             self.toolbarView.alpha = 0
             self.doneButton.alpha = 0
@@ -602,15 +598,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         undoTimer.invalidate()
     }
     
-    func setupPopupTextField(popupTextField: UITextField) {
-        let myColor: UIColor = UIColor.lightGray
-        categoryCreationTextField.layer.borderColor = myColor.cgColor
-        categoryCreationTextField.layer.borderWidth = 0.5
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: categoryCreationTextField.frame.height))
-        categoryCreationTextField.leftView = paddingView
-        categoryCreationTextField.leftViewMode = UITextFieldViewMode.always
-    }
-    
     func splitLabelsIntoQuadrants(labels: [UILabel], vc: UIViewController) -> [Array<UILabel>] {
         var arrayOfLabels = [Array<UILabel>]()
         let height = vc.view.frame.height / 3
@@ -731,5 +718,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
 }
