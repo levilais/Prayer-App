@@ -19,10 +19,13 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var forgotPasswordButton: UIButton!
     @IBOutlet weak var loginSignupButton: UIButton!
+    @IBOutlet weak var confirmPasswordBackgroundButton: UIButton!
+    @IBOutlet weak var confirmPasswordTextField: UITextField!
+    @IBOutlet weak var confirmPasswordSubview: UIView!
+    @IBOutlet weak var confirmPasswordView: UIView!
     
     var activeField: UITextField?
     var signupShowing = true
-    var consecutiveBadAttempts = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,11 +33,15 @@ class LoginViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
         Utilities().setupTextFieldLook(textField: emailTextField)
         Utilities().setupTextFieldLook(textField: passwordTextField)
+        Utilities().setupTextFieldLook(textField: confirmPasswordTextField)
         
         forgotPasswordButton.setTitleColor(UIColor.StyleFile.TealColor, for: .normal)
         switchToLoginButton.setTitleColor(UIColor.StyleFile.TealColor, for: .normal)
+        
+        emailTextField.autocorrectionType = .no
     }
     
     @IBAction func switchDidPress(_ sender: Any) {
@@ -44,6 +51,8 @@ class LoginViewController: UIViewController {
     func toggleLoginSignup() {
         emailTextField.text = ""
         passwordTextField.text = ""
+        explanationLabel.textColor = UIColor.StyleFile.DarkGrayColor
+        
         if signupShowing == true {
             signupShowing = false
             explanationLabel.text = "Please enter your login information below"
@@ -54,8 +63,6 @@ class LoginViewController: UIViewController {
             }
             forgotPasswordButton.isHidden = false
         } else {
-            consecutiveBadAttempts = 0
-            explanationLabel.textColor = UIColor.StyleFile.DarkGrayColor
             signupShowing = true
             explanationLabel.text = "In order to connect with others, you’ll need to create an account.  At this time, Prayer is an iPhone only application and invitations are sent via iMessage.  To create your account, please enter your information below."
             titleLabel.text = "Create Account"
@@ -78,26 +85,62 @@ class LoginViewController: UIViewController {
     @IBAction func loginSignupDidPress(_ sender: Any) {
         if signupShowing == true {
             print("sing up pressed")
+            attemptSignup()
         } else {
             print("log in pressed")
             attemptLogin()
         }
     }
     
-    func attemptLogin() {
-        if let email = emailTextField.text {
-            if let password = passwordTextField.text {
-                Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
-                    if let error = error {
-                        self.explanationLabel.text = error.localizedDescription
-                        self.explanationLabel.textColor = UIColor.StyleFile.WineColor
-                        self.consecutiveBadAttempts += 1
+    func attemptSignup() {
+        let email = Utilities().formattedEmailString(emailTextFieldString: emailTextField.text)
+        if let passwordCheck = passwordTextField.text {
+            if passwordCheck.count < 6 {
+                self.explanationLabel.textColor = UIColor.StyleFile.WineColor
+                self.explanationLabel.text = "Please enter a valid email and make sure that your password is more than 5 characters in length."
+                self.passwordTextField.text = ""
+            } else {
+                Animations().animateCustomAlertPopup(view: confirmPasswordView, backgroundButton: confirmPasswordBackgroundButton, subView: confirmPasswordSubview, viewController: self, textField: confirmPasswordTextField, textView: UITextView())
+                if let password = confirmPasswordTextField.text {
+                    if password == passwordCheck {
+                        Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
+                            if let error = error {
+                                self.explanationLabel.text = error.localizedDescription
+                                self.explanationLabel.textColor = UIColor.StyleFile.WineColor
+                                return
+                            }
+                            print("signed in")
+                            // NOTICE: Right now we're dismissing the view controller.  In the future, we will navigate to Circle user flow (adding contacts, etc)
+                            self.dismiss(animated: true, completion: nil)
+                        })
                     }
-                    print("signed in")
-                })
+                } else {
+                    self.passwordTextField.text = ""
+                    self.explanationLabel.text = "The passwords that you entered were not the same.  Please enter a password below and try again."
+                    self.explanationLabel.textColor = UIColor.StyleFile.WineColor
+                }
             }
         }
     }
+    
+    func attemptLogin() {
+        let email = Utilities().formattedEmailString(emailTextFieldString: emailTextField.text)
+        if let password = passwordTextField.text {
+            Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
+                if let error = error {
+                    self.explanationLabel.text = error.localizedDescription
+                    self.explanationLabel.textColor = UIColor.StyleFile.WineColor
+                    self.passwordTextField.text = ""
+                    return
+                }
+                print("signed in")
+                // NOTE: Right now we're just returning - but in the future, we'll check to see if the user has added access to Contacts yet.
+                self.dismiss(animated: true, completion: nil)
+            })
+        }
+    }
+    
+    
     
     @objc func keyboardWillShow(notification: NSNotification){
         var userInfo = notification.userInfo!
@@ -108,6 +151,11 @@ class LoginViewController: UIViewController {
         scrollView.contentInset = contentInset
     }
     
+    @IBAction func confirmPasswordDidPress(_ sender: Any) {
+    }
+    @IBAction func cancelConfirmPasswordDidPress(_ sender: Any) {
+        
+    }
     @objc func keyboardWillHide(notification: NSNotification){
         var userInfo = notification.userInfo!
         var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue

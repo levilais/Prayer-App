@@ -130,6 +130,13 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+            Utilities().showAlert(title: "Error", message: signOutError.localizedDescription, vc: self)
+        }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
@@ -246,7 +253,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     func launchAddButtonPressed() {
         if textField.text != "" {
-            Animations().animateSaveToJournalPopup(view: saveToJournalView, backgroundButton: saveToJournalBackgroundButton, subView: saveToJournalSubview, viewController: self, textField: categoryCreationTextField, textView: textField)
+            Animations().animateCustomAlertPopup(view: saveToJournalView, backgroundButton: saveToJournalBackgroundButton, subView: saveToJournalSubview, viewController: self, textField: categoryCreationTextField, textView: textField)
             createCategoryButtons()
         } else {
             let alert = UIAlertController(title: "Nothing To Save", message: "Please enter text and try again.", preferredStyle: .alert)

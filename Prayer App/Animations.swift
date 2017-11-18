@@ -194,7 +194,7 @@ class Animations {
         CATransaction.commit()
     }
     
-    func animateSaveToJournalPopup(view: UIView, backgroundButton: UIButton, subView: UIView, viewController: UIViewController, textField: UITextField, textView: UITextView) {
+    func animateCustomAlertPopup(view: UIView, backgroundButton: UIButton, subView: UIView, viewController: UIViewController, textField: UITextField, textView: UITextView) {
         textView.resignFirstResponder()
         UIView.animate(withDuration: 0.33, animations: {
              backgroundButton.alpha = 0.66

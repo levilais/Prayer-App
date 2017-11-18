@@ -20,6 +20,7 @@
 		0474DD6C1F9FE7B4008D79E3 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474DD6B1F9FE7B4008D79E3 /* Animations.swift */; };
 		04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04933D601FBFA50C0023A6FA /* LoginViewController.swift */; };
 		04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */; };
+		04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B636321FC0DEB700113FE8 /* CustomTabBarController.swift */; };
 		04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */; };
 		04CDE8631FC0A74600F20EFB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */; };
 		04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3251F1F9E8EA700EC615D /* AppDelegate.swift */; };
@@ -50,6 +51,7 @@
 		0474DD6B1F9FE7B4008D79E3 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		04933D601FBFA50C0023A6FA /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalViewController.swift; sourceTree = "<group>"; };
+		04B636321FC0DEB700113FE8 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		04D3251C1F9E8EA700EC615D /* Prayer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Prayer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +117,8 @@
 				043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */,
 				042FCA861FAF7BC500545786 /* PrayerTableViewCell.swift */,
 				047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */,
+				04B636321FC0DEB700113FE8 /* CustomTabBarController.swift */,
+				04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */,
 				0474DD6B1F9FE7B4008D79E3 /* Animations.swift */,
 				04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */,
 				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
@@ -122,7 +126,6 @@
 				043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */,
 				043520B91FAB90E400CFD0C1 /* TimerStruct.swift */,
 				04F0E4E01FA12762006D1244 /* LoadsStruct.swift */,
-				04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */,
 				04FE7CDD1FBE5EA700E500A5 /* StyleFile.swift */,
 				04D325231F9E8EA700EC615D /* Main.storyboard */,
 				04D325261F9E8EA700EC615D /* Assets.xcassets */,
@@ -286,6 +289,7 @@
 				04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,
+				04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */,
 				043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */,
 				04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */,
 				04FE7CDE1FBE5EA700E500A5 /* StyleFile.swift in Sources */,
