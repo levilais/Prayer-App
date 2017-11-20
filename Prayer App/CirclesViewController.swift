@@ -14,6 +14,8 @@ class CirclesViewController: UIViewController {
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var userNotLoggedInView: UIView!
+    @IBOutlet weak var userLoggedInLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,13 @@ class CirclesViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
+        if Auth.auth().currentUser != nil {
+            userNotLoggedInView.isHidden = true
+            userLoggedInLabel.isHidden = false
+        } else {
+            userNotLoggedInView.isHidden = false
+            userLoggedInLabel.isHidden = true
+        }
     }
     
     @IBAction func timerButtonDidPress(_ sender: Any) {

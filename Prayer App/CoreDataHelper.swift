@@ -20,16 +20,13 @@ class CoreDataHelper {
 //                print("levil Core Data Fine")
 //            }
 //        }
-//
 //    }
-//
     
     func getContext () -> NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }
     
-//
 //    func storePrayer(prayerCategory: UITextField, prayerText: UITextView) {
 //        // Create a NSManagedObjectContext object from the getContext() function
 //        let context = getContext()
@@ -57,7 +54,38 @@ class CoreDataHelper {
 //            }
 //        }
 //    }
-
+    
+//    func updateUserIsLoggedIn(isLoggedIn: Bool) {
+//        let context = getContext()
+//        if let entity = NSEntityDescription.entity(forEntityName: "User", in: context) {
+//            let user = NSManagedObject(entity: entity, insertInto: context)
+//            user.setValue(isLoggedIn, forKey: "isLoggedIn")
+//            do {
+//                try context.save()
+//                print("levil saved")
+//            } catch {
+//                print("couldn't update isLoggedIn")
+//            }
+//        }
+//    }
+//    
+//    func checkIsLoggedIn() -> Bool? {
+//        var isLoggedIn = false
+//        let fetchRequest: NSFetchRequest<User> = User.fetchRequest()
+//        do {
+//            let searchResults = try getContext().fetch(fetchRequest)
+//            for result in searchResults as [NSManagedObject] {
+//                if let isLoggedInCheck = result.value(forKey: "isLoggedIn") as? Bool {
+//                    isLoggedIn = isLoggedInCheck
+//                }
+//            }
+//        } catch {
+//            print("couldn't update isLoggedIn")
+//        }
+//        print("isLoggedIn: \(isLoggedIn)")
+//        return isLoggedIn
+//    }
+    
     func getPrayersCategories() -> [String]? {
         var categoryHeaders: [String] = [String]()
         let fetchRequest: NSFetchRequest<Prayer> = Prayer.fetchRequest()
