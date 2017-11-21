@@ -29,4 +29,10 @@ class UserDefaultsHelper {
             TimerStruct.preferredTimerDuration = 60
         }
     }
+    
+    enum Key: String {
+        case loads = "loads"
+        case preferredTimerDuration = "preferredTimerDuration"
+        case hasAllowedContacts = "hasAllowedContacts"
+    }
 }

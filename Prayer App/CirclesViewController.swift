@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import Contacts
+import ContactsUI
 
 class CirclesViewController: UIViewController {
 
@@ -15,11 +17,17 @@ class CirclesViewController: UIViewController {
     @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var userNotLoggedInView: UIView!
+    @IBOutlet weak var explanationLabel: UILabel!
+    
+    // testing outlets
     @IBOutlet weak var userLoggedInLabel: UILabel!
+    @IBOutlet weak var userLoggedInView: UIView!
+    
+    var hasContactAccess = false
+    var showSignUp = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -28,17 +36,38 @@ class CirclesViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
+        
         if Auth.auth().currentUser != nil {
+            print("Logged in and has has contacts access")
             userNotLoggedInView.isHidden = true
-            userLoggedInLabel.isHidden = false
+            userLoggedInView.isHidden = false
+            // present loggin in screen showing circles and posts
         } else {
             userNotLoggedInView.isHidden = false
-            userLoggedInLabel.isHidden = true
+            userLoggedInView.isHidden = true
+            print("Not logged in and doesn't have contacts access")
         }
     }
     
     @IBAction func timerButtonDidPress(_ sender: Any) {
         TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
+    }
+    
+    @IBAction func loginButtonDidPress(_ sender: Any) {
+        showSignUp = false
+        performSegue(withIdentifier: "loginSignUpSegue", sender: sender)
+    }
+    
+    @IBAction func createAccountButtonDidPress(_ sender: Any) {
+        showSignUp = true
+        performSegue(withIdentifier: "loginSignUpSegue", sender: sender)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "loginSignUpSegue") {
+            let loginViewController = segue.destination as! LoginViewController
+            loginViewController.signupShowing = showSignUp
+        }
     }
     
     @objc func handleNotification(_ notification: NSNotification) {

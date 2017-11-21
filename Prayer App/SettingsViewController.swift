@@ -17,6 +17,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     var sectionHeaders = ["Timer Duration","Review The Prayer App","Settings"]
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()

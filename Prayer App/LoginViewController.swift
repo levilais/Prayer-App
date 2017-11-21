@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import Contacts
+import ContactsUI
 
 class LoginViewController: UIViewController {
     
@@ -30,10 +32,11 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginSignupButtonTopContraint2: NSLayoutConstraint!
     
     var activeField: UITextField?
-    var signupShowing = true
+    var signupShowing = Bool()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.hideKeyboardWhenTappedAway()
         setupTextFields()
         
@@ -42,6 +45,14 @@ class LoginViewController: UIViewController {
         
         forgotPasswordButton.setTitleColor(UIColor.StyleFile.TealColor, for: .normal)
         switchToLoginButton.setTitleColor(UIColor.StyleFile.TealColor, for: .normal)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if Auth.auth().currentUser != nil {
+            self.dismiss(animated: false, completion: nil)
+        } else {
+            showLoginSignup()
+        }
     }
     
     func setupTextFields() {
@@ -72,6 +83,38 @@ class LoginViewController: UIViewController {
         toggleLoginSignup()
     }
     
+    func showLoginSignup() {
+        if signupShowing == true {
+            showSignUp()
+        } else {
+            showLogIn()
+        }
+    }
+    
+    func showSignUp() {
+        signupView.isHidden = false
+        loginView.isHidden = true
+        explanationLabel.text = "In order to connect with others, you’ll need to create an account.  At this time, Prayer is an iPhone only application and invitations are sent via iMessage.  To create your account, please enter your information below."
+        titleLabel.text = "Create Account"
+        UIView.performWithoutAnimation {
+            loginSignupButton.setBackgroundImage(UIImage(named: "signUpButton.pdf"), for: .normal)
+            switchToLoginButton.setTitle("Switch To Login", for: .normal)
+        }
+    }
+    
+    func showLogIn() {
+        signupView.isHidden = true
+        loginView.isHidden = false
+        explanationLabel.text = "Please enter your login information below"
+        titleLabel.text = "Login To Prayer"
+        loginSignupButtonTopConstraint.constant -= 123
+        loginSignupButtonTopContraint2.constant -= 123
+        UIView.performWithoutAnimation {
+            loginSignupButton.setBackgroundImage(UIImage(named: "logInButton.pdf"), for: .normal)
+            switchToLoginButton.setTitle("Switch To Sign Up", for: .normal)
+        }
+    }
+    
     func toggleLoginSignup() {
         explanationLabel.textColor = UIColor.StyleFile.DarkGrayColor
         
@@ -82,35 +125,19 @@ class LoginViewController: UIViewController {
             firstNameTextField.text = ""
             lastNameTextField.text = ""
             signupShowing = false
-            signupView.isHidden = true
-            loginView.isHidden = false
-            loginSignupButtonTopConstraint.constant -= 123
-            loginSignupButtonTopContraint2.constant -= 123
-            explanationLabel.text = "Please enter your login information below"
-            titleLabel.text = "Login To Prayer"
-            UIView.performWithoutAnimation {
-                loginSignupButton.setBackgroundImage(UIImage(named: "logInButton.pdf"), for: .normal)
-                switchToLoginButton.setTitle("Switch To Sign Up", for: .normal)
-            }
+            showLogIn()
         } else {
             loginPasswordTextField.text = ""
             loginEmailTextField.text = ""
             signupShowing = true
-            signupView.isHidden = false
-            loginView.isHidden = true
             loginSignupButtonTopConstraint.constant += 123
             loginSignupButtonTopContraint2.constant += 123
-            explanationLabel.text = "In order to connect with others, you’ll need to create an account.  At this time, Prayer is an iPhone only application and invitations are sent via iMessage.  To create your account, please enter your information below."
-            titleLabel.text = "Create Account"
-            UIView.performWithoutAnimation {
-                loginSignupButton.setBackgroundImage(UIImage(named: "signUpButton.pdf"), for: .normal)
-                switchToLoginButton.setTitle("Switch To Login", for: .normal)
-            }
+            showSignUp()
         }
     }
     
     @IBAction func maybeLaterDidPress(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func forgotPasswordDidPress(_ sender: Any) {
@@ -253,9 +280,12 @@ class LoginViewController: UIViewController {
                 }
                 print("signed in")
                 // NOTICE: Right now we're dismissing the view controller.  In the future, we will navigate to Circle user flow (adding contacts, etc)
-//                CoreDataHelper().updateUserIsLoggedIn(isLoggedIn: true)
-//                CurrentUser.isLoggedIn = true
-                self.dismiss(animated: true, completion: nil)
+                
+//                if CNAuthorizationStatus.denied || CNAuthorizationStatus.restricted {
+                    self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
+//                } else  {
+//                    self.dismiss(animated: true, completion: nil)
+//                }
             })
         }
     }
@@ -272,9 +302,9 @@ class LoginViewController: UIViewController {
                     }
                     print("signed in")
                     // NOTE: Right now we're just returning - but in the future, we'll check to see if the user has added access to Contacts yet.
-//                    CoreDataHelper().updateUserIsLoggedIn(isLoggedIn: true)
-//                    CurrentUser.isLoggedIn = true
-                    self.dismiss(animated: true, completion: nil)
+//                    self.dismiss(animated: true, completion: nil)
+                    self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
+
                 })
             }
         }

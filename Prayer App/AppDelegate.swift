@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().clipsToBounds = true
         
         FirebaseApp.configure()
+        
         return true
     }
 

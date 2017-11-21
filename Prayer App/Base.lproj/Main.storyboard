@@ -513,7 +513,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="606" y="1573"/>
+            <point key="canvasLocation" x="-219" y="1573"/>
         </scene>
         <!--Item-->
         <scene sceneID="GUw-ys-mhk">
@@ -523,15 +523,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User is logged in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AeE-bm-BdT">
-                                <rect key="frame" x="96" y="254.5" width="128" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="NLj-gC-NCq"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ra6-Wx-3Yj">
                                 <rect key="frame" x="0.0" y="20" width="320" height="40"/>
                                 <subviews>
@@ -572,7 +563,7 @@
                                 <rect key="frame" x="0.0" y="60" width="320" height="459"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Introducing Prayer Circles" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aYW-jg-VLS">
-                                        <rect key="frame" x="10" y="4" width="246" height="24"/>
+                                        <rect key="frame" x="10" y="4" width="300" height="24"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="24" id="1fT-bv-Q0O"/>
                                         </constraints>
@@ -581,21 +572,34 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RlZ-FP-bRk">
-                                        <rect key="frame" x="10" y="38" width="300" height="208"/>
-                                        <string key="text">Prayer isn’t like other social applications. In order to foster an environment initmacy and accountability, your Prayer Circle is limited to just 5 others.  This is your personal prayer circle that only you will post prayers to so that your Circle can agree with you in prayer. In addition to your own Prayer Circle, upon invitation, you may be a part of an unlimited number of other’s Prayer Circles.  You will need a free Prayer account to access Prayer Circles.</string>
+                                        <rect key="frame" x="10" y="38" width="300" height="94.5"/>
+                                        <string key="text">In order to add people to your Prayer Circle, accept invites to other Prayer Circles, and receive notifications when others have agreed with you in prayer, you’ll need a free Prayer account.</string>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="16"/>
                                         <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BKm-ht-BMk">
-                                        <rect key="frame" x="92.5" y="266" width="135" height="30"/>
+                                        <rect key="frame" x="92.5" y="152.5" width="135" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="135" id="Bv0-Qf-PZZ"/>
                                             <constraint firstAttribute="height" constant="30" id="mw9-bl-Wr5"/>
                                         </constraints>
                                         <state key="normal" backgroundImage="createAccountButton"/>
                                         <connections>
-                                            <segue destination="e92-fH-MMI" kind="presentation" modalTransitionStyle="flipHorizontal" id="I72-a1-ZBr"/>
+                                            <action selector="createAccountButtonDidPress:" destination="OMC-xO-wJs" eventType="touchUpInside" id="8jT-DY-o36"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WEX-bH-LBM">
+                                        <rect key="frame" x="135" y="192" width="50" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="Q3a-bf-3bN"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="12"/>
+                                        <state key="normal" title="Or Log In">
+                                            <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="loginButtonDidPress:" destination="OMC-xO-wJs" eventType="touchUpInside" id="n00-Zw-BAS"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -606,19 +610,51 @@
                                     <constraint firstAttribute="trailing" secondItem="RlZ-FP-bRk" secondAttribute="trailing" constant="10" id="96e-zO-fon"/>
                                     <constraint firstItem="RlZ-FP-bRk" firstAttribute="centerX" secondItem="Haa-ha-WPG" secondAttribute="centerX" id="N6m-HP-hTT"/>
                                     <constraint firstItem="RlZ-FP-bRk" firstAttribute="leading" secondItem="Haa-ha-WPG" secondAttribute="leading" constant="10" id="NDm-SQ-Rez"/>
+                                    <constraint firstAttribute="trailing" secondItem="aYW-jg-VLS" secondAttribute="trailing" constant="10" id="PZf-wA-Ojd"/>
                                     <constraint firstItem="aYW-jg-VLS" firstAttribute="leading" secondItem="Haa-ha-WPG" secondAttribute="leading" constant="10" id="QRD-2E-2ea"/>
+                                    <constraint firstItem="WEX-bH-LBM" firstAttribute="top" secondItem="BKm-ht-BMk" secondAttribute="bottom" constant="10" id="dep-tW-NCC"/>
                                     <constraint firstItem="BKm-ht-BMk" firstAttribute="top" secondItem="RlZ-FP-bRk" secondAttribute="bottom" constant="20" id="gU8-kh-snb"/>
                                     <constraint firstItem="aYW-jg-VLS" firstAttribute="top" secondItem="Haa-ha-WPG" secondAttribute="top" constant="4" id="qGd-Gb-4Sx"/>
+                                    <constraint firstItem="WEX-bH-LBM" firstAttribute="centerX" secondItem="Haa-ha-WPG" secondAttribute="centerX" id="xPp-86-A4B"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EGJ-57-cAE">
+                                <rect key="frame" x="0.0" y="54" width="320" height="459"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User is logged in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AeE-bm-BdT">
+                                        <rect key="frame" x="96" y="214" width="128" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="NLj-gC-NCq"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X7j-3G-79W">
+                                        <rect key="frame" x="84" y="252" width="153" height="30"/>
+                                        <state key="normal" title="Allow Contacts Button"/>
+                                        <connections>
+                                            <segue destination="n3B-qY-OVx" kind="presentation" id="pY6-gm-vmg"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="AeE-bm-BdT" firstAttribute="centerX" secondItem="EGJ-57-cAE" secondAttribute="centerX" id="4tM-cV-gDy"/>
+                                    <constraint firstItem="X7j-3G-79W" firstAttribute="centerX" secondItem="EGJ-57-cAE" secondAttribute="centerX" id="DIc-W8-F8R"/>
+                                    <constraint firstItem="X7j-3G-79W" firstAttribute="top" secondItem="AeE-bm-BdT" secondAttribute="bottom" constant="8" id="Ntf-9S-LgV"/>
+                                    <constraint firstItem="AeE-bm-BdT" firstAttribute="centerY" secondItem="EGJ-57-cAE" secondAttribute="centerY" id="fNs-ca-sTv"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="0.92920595407485962" green="0.9334074854850769" blue="0.93326789140701294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="AeE-bm-BdT" firstAttribute="centerX" secondItem="nj5-qD-2tq" secondAttribute="centerX" id="F83-S0-MUg"/>
                             <constraint firstItem="Haa-ha-WPG" firstAttribute="top" secondItem="Ra6-Wx-3Yj" secondAttribute="bottom" id="I6L-si-iIs"/>
-                            <constraint firstItem="AeE-bm-BdT" firstAttribute="centerY" secondItem="nj5-qD-2tq" secondAttribute="centerY" id="JkE-jE-Mwf"/>
                             <constraint firstItem="nj5-qD-2tq" firstAttribute="trailing" secondItem="Ra6-Wx-3Yj" secondAttribute="trailing" id="JxY-4Q-rJ5"/>
                             <constraint firstItem="Haa-ha-WPG" firstAttribute="leading" secondItem="nj5-qD-2tq" secondAttribute="leading" id="PuF-Bp-80U"/>
+                            <constraint firstItem="EGJ-57-cAE" firstAttribute="top" secondItem="Ra6-Wx-3Yj" secondAttribute="bottom" constant="-6" id="XJB-Ki-xaH"/>
+                            <constraint firstItem="nj5-qD-2tq" firstAttribute="bottom" secondItem="EGJ-57-cAE" secondAttribute="bottom" constant="6" id="XKq-KI-MlV"/>
+                            <constraint firstItem="nj5-qD-2tq" firstAttribute="trailing" secondItem="EGJ-57-cAE" secondAttribute="trailing" id="ahZ-cS-BFR"/>
+                            <constraint firstItem="EGJ-57-cAE" firstAttribute="leading" secondItem="nj5-qD-2tq" secondAttribute="leading" id="fNX-HQ-Isf"/>
                             <constraint firstItem="Ra6-Wx-3Yj" firstAttribute="top" secondItem="nj5-qD-2tq" secondAttribute="top" id="hfb-Rt-ZrK"/>
                             <constraint firstItem="nj5-qD-2tq" firstAttribute="bottom" secondItem="Haa-ha-WPG" secondAttribute="bottom" id="lVj-6d-Rqg"/>
                             <constraint firstItem="nj5-qD-2tq" firstAttribute="trailing" secondItem="Haa-ha-WPG" secondAttribute="trailing" id="p7V-rK-snd"/>
@@ -629,16 +665,19 @@
                     <tabBarItem key="tabBarItem" title="Item" id="H3T-Yh-gvO"/>
                     <navigationItem key="navigationItem" id="xis-ht-8Ph"/>
                     <connections>
+                        <outlet property="explanationLabel" destination="RlZ-FP-bRk" id="gaR-fy-PBe"/>
                         <outlet property="headerView" destination="Ra6-Wx-3Yj" id="ScZ-4E-sMp"/>
                         <outlet property="timerHeaderButton" destination="mMl-wt-aC5" id="hDg-iO-CJr"/>
                         <outlet property="titleImage" destination="9HK-nk-lcW" id="GQ6-3B-EBa"/>
                         <outlet property="userLoggedInLabel" destination="AeE-bm-BdT" id="AkN-sg-y4B"/>
+                        <outlet property="userLoggedInView" destination="EGJ-57-cAE" id="X12-IX-boc"/>
                         <outlet property="userNotLoggedInView" destination="Haa-ha-WPG" id="Pup-zo-Q3N"/>
+                        <segue destination="e92-fH-MMI" kind="presentation" identifier="loginSignUpSegue" modalTransitionStyle="flipHorizontal" id="s97-uR-UlF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OK7-NS-BwX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="606" y="825"/>
+            <point key="canvasLocation" x="605.625" y="825"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="3RJ-ih-A2Z">
@@ -808,7 +847,7 @@
                                                 <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="e.g. johndoe@gmail.com" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0fX-sK-Ony">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="levilais@gmail.com" placeholder="e.g. johndoe@gmail.com" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0fX-sK-Ony">
                                                 <rect key="frame" x="10" y="30" width="300" height="30"/>
                                                 <color key="tintColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -827,7 +866,7 @@
                                                 <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="A9e-PB-XNu">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="12345678" placeholder="Enter Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="A9e-PB-XNu">
                                                 <rect key="frame" x="10" y="90" width="300" height="30"/>
                                                 <color key="tintColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -977,11 +1016,120 @@
                         <outlet property="signupView" destination="hiu-Wf-uVt" id="izJ-np-04K"/>
                         <outlet property="switchToLoginButton" destination="H7d-Kb-T1e" id="fbU-3W-IC9"/>
                         <outlet property="titleLabel" destination="2Ya-DK-r4I" id="IJZ-ed-OLn"/>
+                        <segue destination="n3B-qY-OVx" kind="presentation" identifier="connectToContactsSegue" modalTransitionStyle="flipHorizontal" id="O3R-Xk-xiP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fa1-6K-Wkm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1428.75" y="494.36619718309862"/>
+            <point key="canvasLocation" x="1403" y="1573"/>
+        </scene>
+        <!--Allow Contacts View Controller-->
+        <scene sceneID="e4H-Vp-JbK">
+            <objects>
+                <viewController id="n3B-qY-OVx" customClass="AllowContactsViewController" customModule="Prayer_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yhe-gZ-LgH">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p5r-vi-LlE">
+                                <rect key="frame" x="0.0" y="20" width="320" height="40"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circlesTitleImage" translatesAutoresizingMaskIntoConstraints="NO" id="9vx-39-G7J">
+                                        <rect key="frame" x="67" y="5" width="186" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="186" id="F8p-CE-7L3"/>
+                                            <constraint firstAttribute="height" constant="30" id="bvn-2Z-mDc"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7oB-oc-hc1">
+                                        <rect key="frame" x="67" y="0.0" width="186" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="186" id="Fmg-md-ZuL"/>
+                                            <constraint firstAttribute="height" constant="40" id="jZJ-vR-C7V"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="22"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="timerButtonDidPress:" destination="ZLf-i2-f6S" eventType="touchUpInside" id="Gxd-9N-TpV"/>
+                                            <action selector="timerButtonDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="efS-en-ceh"/>
+                                            <action selector="timerButtonDidPress:" destination="OMC-xO-wJs" eventType="touchUpInside" id="qpC-6h-zuP"/>
+                                            <action selector="timerHeaderButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fyX-XC-iiS"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="7oB-oc-hc1" firstAttribute="centerY" secondItem="p5r-vi-LlE" secondAttribute="centerY" id="ISb-ZO-GIk"/>
+                                    <constraint firstAttribute="height" constant="40" id="bDN-pi-Rvy"/>
+                                    <constraint firstItem="9vx-39-G7J" firstAttribute="centerX" secondItem="p5r-vi-LlE" secondAttribute="centerX" id="e0K-OH-bOp"/>
+                                    <constraint firstItem="9vx-39-G7J" firstAttribute="centerY" secondItem="p5r-vi-LlE" secondAttribute="centerY" id="htI-qB-uuD"/>
+                                    <constraint firstItem="7oB-oc-hc1" firstAttribute="centerX" secondItem="p5r-vi-LlE" secondAttribute="centerX" id="iH3-qg-I1O"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Introducing Prayer Circles" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jt1-Rs-1hn">
+                                <rect key="frame" x="10" y="64" width="300" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="ghf-Wz-oeI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Baskerville-SemiBold" family="Baskerville" pointSize="20"/>
+                                <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="atS-Iy-1py">
+                                <rect key="frame" x="10" y="98" width="300" height="151.5"/>
+                                <string key="text">Prayer isn’t like other social applications. In order to foster an environment intimacy and accountability, your Prayer Circle is limited to just 5 others.  This is your personal prayer circle that only you will post prayers to so that your Circle can agree with you in prayer. You’ll need to allow Prayer to access your Contacts in order to connect with others.</string>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="16"/>
+                                <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RXM-dS-pAw">
+                                <rect key="frame" x="72.5" y="269.5" width="175" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="175" id="0xb-xn-mNP"/>
+                                    <constraint firstAttribute="height" constant="30" id="N9b-Sd-Oz4"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="connectToContacts"/>
+                                <connections>
+                                    <action selector="connectToContactsDidPress:" destination="n3B-qY-OVx" eventType="touchUpInside" id="LEU-xe-9LO"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nH6-e1-uHa">
+                                <rect key="frame" x="129" y="309.5" width="63" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="kTN-F9-qSv"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="12"/>
+                                <state key="normal" title="Maybe Later">
+                                    <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="maybeLaterButtonDidPress:" destination="n3B-qY-OVx" eventType="touchUpInside" id="h7l-WR-DmZ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.92920595409999995" green="0.93340748549999997" blue="0.93326789139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="nH6-e1-uHa" firstAttribute="centerX" secondItem="yhe-gZ-LgH" secondAttribute="centerX" id="3v8-MV-naz"/>
+                            <constraint firstItem="jt1-Rs-1hn" firstAttribute="leading" secondItem="PAZ-qH-WdJ" secondAttribute="leading" constant="10" id="751-Yy-sYD"/>
+                            <constraint firstItem="p5r-vi-LlE" firstAttribute="leading" secondItem="PAZ-qH-WdJ" secondAttribute="leading" id="93h-0p-L9k"/>
+                            <constraint firstItem="PAZ-qH-WdJ" firstAttribute="trailing" secondItem="jt1-Rs-1hn" secondAttribute="trailing" constant="10" id="DxA-jd-J9F"/>
+                            <constraint firstItem="RXM-dS-pAw" firstAttribute="top" secondItem="atS-Iy-1py" secondAttribute="bottom" constant="20" id="M2L-3b-C9a"/>
+                            <constraint firstItem="atS-Iy-1py" firstAttribute="leading" secondItem="PAZ-qH-WdJ" secondAttribute="leading" constant="10" id="Pab-sD-g6r"/>
+                            <constraint firstItem="PAZ-qH-WdJ" firstAttribute="trailing" secondItem="atS-Iy-1py" secondAttribute="trailing" constant="10" id="c9e-sQ-xIJ"/>
+                            <constraint firstItem="RXM-dS-pAw" firstAttribute="centerX" secondItem="yhe-gZ-LgH" secondAttribute="centerX" id="fWo-7K-nfC"/>
+                            <constraint firstItem="p5r-vi-LlE" firstAttribute="trailing" secondItem="PAZ-qH-WdJ" secondAttribute="trailing" id="juO-z8-aDV"/>
+                            <constraint firstItem="nH6-e1-uHa" firstAttribute="top" secondItem="RXM-dS-pAw" secondAttribute="bottom" constant="10" id="mT5-54-h42"/>
+                            <constraint firstItem="atS-Iy-1py" firstAttribute="top" secondItem="jt1-Rs-1hn" secondAttribute="bottom" constant="10" id="rtZ-CM-HCo"/>
+                            <constraint firstItem="jt1-Rs-1hn" firstAttribute="top" secondItem="p5r-vi-LlE" secondAttribute="bottom" constant="4" id="rxJ-cq-H7R"/>
+                            <constraint firstItem="p5r-vi-LlE" firstAttribute="top" secondItem="PAZ-qH-WdJ" secondAttribute="top" id="yG9-6L-jV8"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="PAZ-qH-WdJ"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OHE-0n-Kfp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2145" y="1573"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Bpc-Y0-TQd">
@@ -1132,6 +1280,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="peA-Cx-Hpw" secondAttribute="trailing" constant="10" id="xz9-Bp-oCT"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
                                             <outlet property="button" destination="peA-Cx-Hpw" id="giF-Q3-Ro2"/>
                                             <outlet property="label" destination="8lI-l0-vsX" id="4Q1-fm-Fb9"/>
@@ -1203,7 +1352,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n4f-cl-DOZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-219" y="1573"/>
+            <point key="canvasLocation" x="606" y="1573"/>
         </scene>
         <!--Item-->
         <scene sceneID="dzg-OD-aEz">
@@ -1285,13 +1434,28 @@
                                         </constraints>
                                         <state key="normal" backgroundImage="createAccountButton"/>
                                         <connections>
-                                            <segue destination="e92-fH-MMI" kind="presentation" modalTransitionStyle="flipHorizontal" id="0B9-bu-BSO"/>
+                                            <action selector="signUpDidPress:" destination="iFF-vl-6zk" eventType="touchUpInside" id="hgV-Yz-scv"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Ze-qe-Olp">
+                                        <rect key="frame" x="135" y="189.5" width="50" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="RMH-Sm-tAH"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="12"/>
+                                        <state key="normal" title="Or Log In">
+                                            <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="loginDidPress:" destination="iFF-vl-6zk" eventType="touchUpInside" id="Yvr-ye-Jdp"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.92920595409999995" green="0.93340748549999997" blue="0.93326789139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="P7b-oV-BmV" firstAttribute="centerX" secondItem="hBH-YD-bWE" secondAttribute="centerX" id="2Rh-2L-0YX"/>
+                                    <constraint firstItem="5Ze-qe-Olp" firstAttribute="top" secondItem="o1p-Ss-xqq" secondAttribute="bottom" constant="10" id="4UJ-cF-eCP"/>
+                                    <constraint firstItem="5Ze-qe-Olp" firstAttribute="centerX" secondItem="hBH-YD-bWE" secondAttribute="centerX" id="I8A-1h-CI9"/>
                                     <constraint firstItem="o1p-Ss-xqq" firstAttribute="centerX" secondItem="hBH-YD-bWE" secondAttribute="centerX" id="Mf2-HX-kmJ"/>
                                     <constraint firstItem="ONU-Co-qbY" firstAttribute="leading" secondItem="hBH-YD-bWE" secondAttribute="leading" constant="10" id="TFe-BR-ANi"/>
                                     <constraint firstItem="o1p-Ss-xqq" firstAttribute="top" secondItem="P7b-oV-BmV" secondAttribute="bottom" constant="20" id="ZaP-6S-R4r"/>
@@ -1323,6 +1487,7 @@
                         <outlet property="titleImage" destination="h9c-5U-ebE" id="CMv-VS-gV7"/>
                         <outlet property="userLoggedInLabel" destination="Ggw-Hx-see" id="GZr-jb-5P8"/>
                         <outlet property="userNotLoggedInView" destination="hBH-YD-bWE" id="4qd-Yz-bql"/>
+                        <segue destination="e92-fH-MMI" kind="presentation" identifier="loginSignUpSegue" modalTransitionStyle="flipHorizontal" id="gID-Hk-yCK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jLu-ME-jMe" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1747,6 +1912,7 @@
         <image name="1Selected" width="120" height="120"/>
         <image name="5Deselected" width="120" height="120"/>
         <image name="circlesTitleImage" width="372" height="60"/>
+        <image name="connectToContacts" width="350" height="60"/>
         <image name="createAccountButton" width="270" height="60"/>
         <image name="homeTitleImage" width="365" height="59"/>
         <image name="ideaIcon" width="38" height="58"/>
@@ -1764,6 +1930,7 @@
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SGb-SQ-zKh"/>
+        <segue reference="O3R-Xk-xiP"/>
+        <segue reference="s97-uR-UlF"/>
     </inferredMetricsTieBreakers>
 </document>
