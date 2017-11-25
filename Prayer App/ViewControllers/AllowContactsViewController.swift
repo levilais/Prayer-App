@@ -23,21 +23,22 @@ class AllowContactsViewController: UIViewController {
     }
     
     @IBAction func connectToContactsDidPress(_ sender: Any) {
-        
+        requestContactsAccess()
     }
     
     @IBAction func maybeLaterButtonDidPress(_ sender: Any) {
         self.dismiss(animated: false, completion: nil)
     }
     
-//    func requestContactsAccess() {
-//        let contactStore = CNContactStore()
-//        contactStore.requestAccess(for: .contacts) { (granted, error) in
-//            if error != nil {
-//                print(error!.localizedDescription)
-//            } else {
-//                print("access granted")
-//            }
-//        }
-//    }
+    func requestContactsAccess() {
+        let contactStore = CNContactStore()
+        contactStore.requestAccess(for: .contacts) { (granted, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            } else {
+                print("access granted")
+                self.dismiss(animated: false, completion: nil)
+            }
+        }
+    }
 }

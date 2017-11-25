@@ -26,6 +26,7 @@ extension UIColor {
 extension UIFont {
     struct StyleFile {
         static let ButtonFont = UIFont(name: "Baskerville", size: 15)
+        static let BorderedButtonFont = UIFont(name: "Baskerville-Semibold", size: 16)
         static let SectionHeaderFont = UIFont(name: "Baskerville-SemiBold", size: 20)
         static let ToggleActiveFont = UIFont(name: "Baskerville-SemiBold", size: 17)
         static let ToggleInactiveFont = UIFont(name: "Baskerville", size: 17)

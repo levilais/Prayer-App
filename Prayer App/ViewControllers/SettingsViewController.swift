@@ -8,7 +8,7 @@
 
 import UIKit
 import StoreKit
-import Firebase
+//import Firebase
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -16,8 +16,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
+    
     var sectionHeaders = ["Timer Duration","Review The Prayer App","Settings"]
-   
+    var selectedRow = Int()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +68,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         case 1:
             numberOfRows = 1
         case 2:
-            numberOfRows = 1
+            numberOfRows = Settings().settingsCategories.count
         default:
             print("need to change number of sections")
         }
@@ -86,14 +87,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as! SettingsTableViewCell
-            cell.isUserInteractionEnabled = true
-            cell.button.addTarget(self, action: #selector(logInLogOut), for: .touchUpInside)
-            if Auth.auth().currentUser != nil {
-                cell.button.setBackgroundImage(UIImage(named: "logOutButton.pdf"), for: .normal)
-                cell.label.text = "Log Out Of Prayer"
-            } else {
-                cell.button.setBackgroundImage(UIImage(named: "logInButton.pdf"), for: .normal)
-                cell.label.text = "Log In or Sign Up"
+            if let label = Settings().settingsCategories[indexPath.row]["title"] as? String {
+                cell.label.text = label
             }
             return cell
         default:
@@ -122,23 +117,18 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             SKStoreReviewController.requestReview()
             print("Requesting Review")
         case 2:
+            selectedRow = indexPath.row
+            performSegue(withIdentifier: "settingsToDetailSettings", sender: self)
             tableView.deselectRow(at: indexPath, animated: true)
         default:
             break
         }
     }
     
-    @objc func logInLogOut() {
-        if Auth.auth().currentUser != nil {
-            let firebaseAuth = Auth.auth()
-            do {
-                try firebaseAuth.signOut()
-                tableView.reloadData()
-            } catch let signOutError as NSError {
-                Utilities().showAlert(title: "Error", message: signOutError.localizedDescription, vc: self)
-            }
-        } else {
-            performSegue(withIdentifier: "settingsToLoginSegue", sender: nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "settingsToDetailSettings" {
+            let destinationVC = segue.destination as? SettingsDetailViewController
+            destinationVC?.chosenSection = selectedRow
         }
     }
     

@@ -947,9 +947,8 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H7d-Kb-T1e">
-                                        <rect key="frame" x="10" y="33" width="120" height="20"/>
+                                        <rect key="frame" x="10" y="33" width="90" height="20"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="120" id="Jyq-uY-FIR"/>
                                             <constraint firstAttribute="height" constant="20" id="PcA-n9-tbS"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Baskerville-SemiBold" family="Baskerville" pointSize="12"/>
@@ -1021,7 +1020,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fa1-6K-Wkm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1403" y="1573"/>
+            <point key="canvasLocation" x="606" y="2311"/>
         </scene>
         <!--Allow Contacts View Controller-->
         <scene sceneID="e4H-Vp-JbK">
@@ -1129,7 +1128,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OHE-0n-Kfp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2145" y="1573"/>
+            <point key="canvasLocation" x="1346" y="2311"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Bpc-Y0-TQd">
@@ -1167,8 +1166,103 @@
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="timerPreferenceCell" id="McV-5I-ELY" customClass="TimerPreferenceTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingsCell" id="jKU-wa-mW2" customClass="SettingsTableViewCell" customModule="Prayer_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jKU-wa-mW2" id="YUb-G1-VKR">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log In or Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dkg-Jc-cQ4">
+                                                    <rect key="frame" x="15" y="13" width="118" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="detailArrow" translatesAutoresizingMaskIntoConstraints="NO" id="jXc-AF-exF">
+                                                    <rect key="frame" x="290" y="12" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="R1a-Io-Ww0"/>
+                                                        <constraint firstAttribute="width" constant="20" id="Wku-8k-bi2"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="jXc-AF-exF" secondAttribute="trailing" constant="10" id="0bh-83-jne"/>
+                                                <constraint firstItem="dkg-Jc-cQ4" firstAttribute="centerY" secondItem="YUb-G1-VKR" secondAttribute="centerY" id="PaQ-eu-s5e"/>
+                                                <constraint firstItem="jXc-AF-exF" firstAttribute="centerY" secondItem="YUb-G1-VKR" secondAttribute="centerY" id="SLa-rL-Yzj"/>
+                                                <constraint firstItem="dkg-Jc-cQ4" firstAttribute="leading" secondItem="YUb-G1-VKR" secondAttribute="leadingMargin" id="dB4-hi-pa2"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="detailImage" destination="jXc-AF-exF" id="JBo-Ts-aZs"/>
+                                            <outlet property="label" destination="dkg-Jc-cQ4" id="FPj-TS-Eo6"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingsToggleCell" id="vPA-wf-hCE" customClass="SettingsToggleTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vPA-wf-hCE" id="03n-kP-2KX">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log In or Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hXf-jZ-iv2">
+                                                    <rect key="frame" x="15" y="13" width="118" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g4c-qe-2Qi">
+                                                    <rect key="frame" x="261" y="6" width="51" height="31"/>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="g4c-qe-2Qi" secondAttribute="trailing" constant="10" id="VFW-h9-pwg"/>
+                                                <constraint firstItem="hXf-jZ-iv2" firstAttribute="centerY" secondItem="03n-kP-2KX" secondAttribute="centerY" id="eb4-Y2-fC7"/>
+                                                <constraint firstItem="hXf-jZ-iv2" firstAttribute="leading" secondItem="03n-kP-2KX" secondAttribute="leadingMargin" id="lDl-dF-nw8"/>
+                                                <constraint firstItem="g4c-qe-2Qi" firstAttribute="centerY" secondItem="03n-kP-2KX" secondAttribute="centerY" id="qHf-Bp-k00"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="label" destination="hXf-jZ-iv2" id="hNh-G6-VPw"/>
+                                            <outlet property="settingsToggle" destination="g4c-qe-2Qi" id="leQ-5V-mLD"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingsButtonCell" id="lPj-iT-KsR" customClass="SettingsButtonTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="116" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lPj-iT-KsR" id="T6J-bI-izI">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log In or Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Nd-cF-MzE">
+                                                    <rect key="frame" x="15" y="13" width="118" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="809-R2-EfL" customClass="CustomUIButton" customModule="Prayer_App" customModuleProvider="target">
+                                                    <rect key="frame" x="265" y="6" width="45" height="30"/>
+                                                    <state key="normal" title="Delete"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="809-R2-EfL" secondAttribute="trailing" constant="10" id="6uP-Pd-lit"/>
+                                                <constraint firstItem="2Nd-cF-MzE" firstAttribute="centerY" secondItem="T6J-bI-izI" secondAttribute="centerY" id="IMd-ta-2ol"/>
+                                                <constraint firstItem="2Nd-cF-MzE" firstAttribute="leading" secondItem="T6J-bI-izI" secondAttribute="leadingMargin" id="IeT-RI-AXL"/>
+                                                <constraint firstItem="809-R2-EfL" firstAttribute="centerY" secondItem="T6J-bI-izI" secondAttribute="centerY" id="dYS-LZ-jKh"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="actionButton" destination="809-R2-EfL" id="G7M-ZI-eol"/>
+                                            <outlet property="label" destination="2Nd-cF-MzE" id="hKd-2h-Tss"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="timerPreferenceCell" id="McV-5I-ELY" customClass="TimerPreferenceTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="160" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="McV-5I-ELY" id="I2v-ag-7uh">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -1221,7 +1315,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="cell" id="1MI-Pa-iMM" customClass="CustomTableViewCell" customModule="Prayer_App" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="72" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="204" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1MI-Pa-iMM" id="mja-qk-Y0c">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -1243,47 +1337,6 @@
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
                                             <outlet property="customCellImageView" destination="q6E-TY-koU" id="WvL-Ns-zsP"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingsCell" id="crG-OE-CQR" customClass="SettingsTableViewCell" customModule="Prayer_App" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="116" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="crG-OE-CQR" id="9aC-YK-DSq">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="peA-Cx-Hpw">
-                                                    <rect key="frame" x="235" y="6" width="75" height="30"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="30" id="qJc-SH-4fr"/>
-                                                        <constraint firstAttribute="width" constant="75" id="rc3-SH-XaL"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
-                                                    <state key="normal" backgroundImage="logInButton">
-                                                        <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="buttonDidPress:" destination="crG-OE-CQR" eventType="touchUpInside" id="jTx-CC-DvO"/>
-                                                    </connections>
-                                                </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log In or Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8lI-l0-vsX">
-                                                    <rect key="frame" x="15" y="13" width="118" height="17.5"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="peA-Cx-Hpw" firstAttribute="centerY" secondItem="9aC-YK-DSq" secondAttribute="centerY" id="23N-3y-4rW"/>
-                                                <constraint firstItem="8lI-l0-vsX" firstAttribute="leading" secondItem="9aC-YK-DSq" secondAttribute="leadingMargin" id="DHK-b5-lX2"/>
-                                                <constraint firstItem="8lI-l0-vsX" firstAttribute="centerY" secondItem="9aC-YK-DSq" secondAttribute="centerY" id="hd6-gs-ayN"/>
-                                                <constraint firstAttribute="trailing" secondItem="peA-Cx-Hpw" secondAttribute="trailing" constant="10" id="xz9-Bp-oCT"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        <connections>
-                                            <outlet property="button" destination="peA-Cx-Hpw" id="giF-Q3-Ro2"/>
-                                            <outlet property="label" destination="8lI-l0-vsX" id="4Q1-fm-Fb9"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1347,12 +1400,209 @@
                         <outlet property="tableView" destination="sVK-Yk-svL" id="clS-CV-Pwx"/>
                         <outlet property="timerHeaderButton" destination="4M6-Tw-nRq" id="QhJ-Ub-tBh"/>
                         <outlet property="titleImage" destination="iTV-P6-qvg" id="8cv-j3-Uv1"/>
-                        <segue destination="e92-fH-MMI" kind="presentation" identifier="settingsToLoginSegue" modalTransitionStyle="flipHorizontal" id="SGb-SQ-zKh"/>
+                        <segue destination="Eke-2p-avC" kind="show" identifier="settingsToDetailSettings" id="Ek1-ww-bI9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n4f-cl-DOZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="606" y="1573"/>
+            <point key="canvasLocation" x="605.625" y="1572.8873239436621"/>
+        </scene>
+        <!--Settings Detail View Controller-->
+        <scene sceneID="znQ-gx-48o">
+            <objects>
+                <viewController id="Eke-2p-avC" customClass="SettingsDetailViewController" customModule="Prayer_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="JB9-ZX-BCS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Sn-6m-NCZ">
+                                <rect key="frame" x="0.0" y="20" width="320" height="40"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsTitleImage" translatesAutoresizingMaskIntoConstraints="NO" id="mht-p3-07I">
+                                        <rect key="frame" x="67" y="5" width="186" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Mni-mv-7eM"/>
+                                            <constraint firstAttribute="width" constant="186" id="Pdd-s9-8La"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LQB-c6-XJ3">
+                                        <rect key="frame" x="67" y="0.0" width="186" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="186" id="ux4-J5-Qoq"/>
+                                            <constraint firstAttribute="height" constant="40" id="zkd-gW-mWD"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="22"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="timerButtonDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="MBd-3I-gzM"/>
+                                            <action selector="timerButtonDidPress:" destination="ZLf-i2-f6S" eventType="touchUpInside" id="TSW-CU-EEh"/>
+                                            <action selector="timerHeaderButtonDidPress:" destination="Eke-2p-avC" eventType="touchUpInside" id="3KJ-YI-syy"/>
+                                            <action selector="timerHeaderButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qWT-Q3-dbQ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fs3-yU-6LF">
+                                        <rect key="frame" x="10" y="6" width="42" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="28" id="y6h-tN-hNF"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Baskerville-SemiBold" family="Baskerville" pointSize="17"/>
+                                        <state key="normal" title="Done">
+                                            <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="doneButtonDidPress:" destination="Eke-2p-avC" eventType="touchUpInside" id="mkw-Im-VJJ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="mht-p3-07I" firstAttribute="centerX" secondItem="2Sn-6m-NCZ" secondAttribute="centerX" id="4YK-mi-hFf"/>
+                                    <constraint firstItem="fs3-yU-6LF" firstAttribute="centerY" secondItem="2Sn-6m-NCZ" secondAttribute="centerY" id="L4n-iI-Dfn"/>
+                                    <constraint firstItem="fs3-yU-6LF" firstAttribute="leading" secondItem="2Sn-6m-NCZ" secondAttribute="leading" constant="10" id="OGk-FH-ZFk"/>
+                                    <constraint firstItem="mht-p3-07I" firstAttribute="centerY" secondItem="2Sn-6m-NCZ" secondAttribute="centerY" id="V4p-on-cYA"/>
+                                    <constraint firstAttribute="height" constant="40" id="jM6-pm-HiW"/>
+                                    <constraint firstItem="LQB-c6-XJ3" firstAttribute="centerX" secondItem="2Sn-6m-NCZ" secondAttribute="centerX" id="o0j-ZZ-4yd"/>
+                                    <constraint firstItem="LQB-c6-XJ3" firstAttribute="centerY" secondItem="2Sn-6m-NCZ" secondAttribute="centerY" id="xwa-TP-Gvj"/>
+                                </constraints>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nXE-y2-2Kj">
+                                <rect key="frame" x="0.0" y="60" width="320" height="508"/>
+                                <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingsToggleCell" id="z6B-ci-GuQ" customClass="SettingsToggleTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="z6B-ci-GuQ" id="fMY-T4-xN9">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log In or Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="El4-5X-G0L">
+                                                    <rect key="frame" x="15" y="13" width="118" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZOW-cq-lZw">
+                                                    <rect key="frame" x="261" y="6" width="51" height="31"/>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="El4-5X-G0L" firstAttribute="centerY" secondItem="fMY-T4-xN9" secondAttribute="centerY" id="ZfG-1L-uTi"/>
+                                                <constraint firstItem="ZOW-cq-lZw" firstAttribute="centerY" secondItem="fMY-T4-xN9" secondAttribute="centerY" id="lOm-z2-ciQ"/>
+                                                <constraint firstAttribute="trailing" secondItem="ZOW-cq-lZw" secondAttribute="trailing" constant="10" id="qgL-3c-t6D"/>
+                                                <constraint firstItem="El4-5X-G0L" firstAttribute="leading" secondItem="fMY-T4-xN9" secondAttribute="leadingMargin" id="rMy-Z6-H57"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="label" destination="El4-5X-G0L" id="g2Y-1n-y0s"/>
+                                            <outlet property="settingsToggle" destination="ZOW-cq-lZw" id="2KT-6F-Ts4"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingsButtonCell" id="gTn-wA-JcA" customClass="SettingsButtonTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gTn-wA-JcA" id="xes-wE-DcP">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log In or Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mGN-Hi-RFd">
+                                                    <rect key="frame" x="15" y="13" width="118" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MfW-bf-gHa" customClass="CustomUIButton" customModule="Prayer_App" customModuleProvider="target">
+                                                    <rect key="frame" x="265" y="6" width="45" height="30"/>
+                                                    <state key="normal" title="Delete"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="MfW-bf-gHa" firstAttribute="centerY" secondItem="xes-wE-DcP" secondAttribute="centerY" id="A7S-1G-O6V"/>
+                                                <constraint firstItem="mGN-Hi-RFd" firstAttribute="centerY" secondItem="xes-wE-DcP" secondAttribute="centerY" id="Khm-WR-6VZ"/>
+                                                <constraint firstAttribute="trailing" secondItem="MfW-bf-gHa" secondAttribute="trailing" constant="10" id="gAQ-G7-AsV"/>
+                                                <constraint firstItem="mGN-Hi-RFd" firstAttribute="leading" secondItem="xes-wE-DcP" secondAttribute="leadingMargin" id="x9d-eo-PlC"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="actionButton" destination="MfW-bf-gHa" id="uxK-G6-EdU"/>
+                                            <outlet property="label" destination="mGN-Hi-RFd" id="DA9-Lu-peE"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingsCell" id="4NP-7I-zX3" customClass="SettingsTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="116" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4NP-7I-zX3" id="c9B-e7-D9E">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log In or Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuy-6G-o8I">
+                                                    <rect key="frame" x="15" y="13" width="118" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="detailArrow" translatesAutoresizingMaskIntoConstraints="NO" id="dxh-jE-Lgt">
+                                                    <rect key="frame" x="290" y="12" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="lJs-RG-RjJ"/>
+                                                        <constraint firstAttribute="width" constant="20" id="lSU-FO-oXd"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="zuy-6G-o8I" firstAttribute="leading" secondItem="c9B-e7-D9E" secondAttribute="leadingMargin" id="Ali-t5-aoF"/>
+                                                <constraint firstItem="dxh-jE-Lgt" firstAttribute="centerY" secondItem="c9B-e7-D9E" secondAttribute="centerY" id="QZx-d1-BrH"/>
+                                                <constraint firstAttribute="trailing" secondItem="dxh-jE-Lgt" secondAttribute="trailing" constant="10" id="VbL-Jq-23z"/>
+                                                <constraint firstItem="zuy-6G-o8I" firstAttribute="centerY" secondItem="c9B-e7-D9E" secondAttribute="centerY" id="oCw-cw-LuY"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="detailImage" destination="dxh-jE-Lgt" id="wOF-v3-Kus"/>
+                                            <outlet property="label" destination="zuy-6G-o8I" id="kGt-Nt-OLv"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="gCv-90-feM">
+                                        <rect key="frame" x="0.0" y="160" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gCv-90-feM" id="45s-tz-tQa">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Eke-2p-avC" id="1PH-EQ-wbU"/>
+                                    <outlet property="delegate" destination="Eke-2p-avC" id="YyZ-AM-KxI"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.92920595409999995" green="0.93340748549999997" blue="0.93326789139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="nXE-y2-2Kj" firstAttribute="leading" secondItem="FYd-dw-rfV" secondAttribute="leading" id="5QX-bZ-6wl"/>
+                            <constraint firstItem="nXE-y2-2Kj" firstAttribute="bottom" secondItem="FYd-dw-rfV" secondAttribute="bottom" id="5eD-HL-bI8"/>
+                            <constraint firstItem="2Sn-6m-NCZ" firstAttribute="leading" secondItem="FYd-dw-rfV" secondAttribute="leading" id="IPP-fC-PSV"/>
+                            <constraint firstItem="nXE-y2-2Kj" firstAttribute="top" secondItem="2Sn-6m-NCZ" secondAttribute="bottom" id="KHK-7C-Rch"/>
+                            <constraint firstItem="2Sn-6m-NCZ" firstAttribute="top" secondItem="FYd-dw-rfV" secondAttribute="top" id="ecs-cb-aRc"/>
+                            <constraint firstItem="2Sn-6m-NCZ" firstAttribute="trailing" secondItem="FYd-dw-rfV" secondAttribute="trailing" id="uCR-oy-7a4"/>
+                            <constraint firstItem="nXE-y2-2Kj" firstAttribute="trailing" secondItem="FYd-dw-rfV" secondAttribute="trailing" id="vMj-GU-KNn"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="FYd-dw-rfV"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="nXE-y2-2Kj" id="28M-PL-1be"/>
+                        <outlet property="timerHeaderButton" destination="LQB-c6-XJ3" id="CJ3-lI-ZjE"/>
+                        <outlet property="titleImage" destination="mht-p3-07I" id="Rrw-Rp-sU6"/>
+                        <segue destination="e92-fH-MMI" kind="presentation" identifier="settingsToLoginSegue" id="gPu-UL-IfP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ml4-gE-qMD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1342.5" y="1572.8873239436621"/>
         </scene>
         <!--Item-->
         <scene sceneID="dzg-OD-aEz">
@@ -1914,10 +2164,10 @@
         <image name="circlesTitleImage" width="372" height="60"/>
         <image name="connectToContacts" width="350" height="60"/>
         <image name="createAccountButton" width="270" height="60"/>
+        <image name="detailArrow" width="40" height="40"/>
         <image name="homeTitleImage" width="365" height="59"/>
         <image name="ideaIcon" width="38" height="58"/>
         <image name="journalTitleImage" width="372" height="60"/>
-        <image name="logInButton" width="150" height="60"/>
         <image name="prayerTitle" width="372" height="60"/>
         <image name="saveIcon" width="52" height="58"/>
         <image name="sendIcon" width="52" height="56"/>
@@ -1931,6 +2181,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="O3R-Xk-xiP"/>
-        <segue reference="s97-uR-UlF"/>
+        <segue reference="gID-Hk-yCK"/>
     </inferredMetricsTieBreakers>
 </document>

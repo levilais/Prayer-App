@@ -9,20 +9,21 @@
 import UIKit
 
 class SettingsTableViewCell: UITableViewCell {
-
-    @IBOutlet weak var button: UIButton!
+    
     @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var detailImage: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = .clear
-        self.selectionStyle = .none
-    }
-
-    @IBAction func buttonDidPress(_ sender: Any) {
-        print("button pressed")
+        self.isUserInteractionEnabled = true
+        self.selectionStyle = .default
     }
     
+    
+
+
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
