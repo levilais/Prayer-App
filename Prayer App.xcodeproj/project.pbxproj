@@ -13,6 +13,8 @@
 		043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */; };
 		043520BA1FAB90E400CFD0C1 /* TimerStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043520B91FAB90E400CFD0C1 /* TimerStruct.swift */; };
 		043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */; };
+		04410F181FCA2BC5002EC8F9 /* CircleUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04410F171FCA2BC5002EC8F9 /* CircleUsers.swift */; };
+		04410F1A1FCA398F002EC8F9 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04410F191FCA398F002EC8F9 /* CurrentUser.swift */; };
 		044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */; };
 		044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */; };
 		046203301FA39ACE00BDF8ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */; };
@@ -36,8 +38,7 @@
 		04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4E01FA12762006D1244 /* LoadsStruct.swift */; };
 		04F2255D1FC50337000549D5 /* SettingsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F2255C1FC50337000549D5 /* SettingsDetailViewController.swift */; };
 		04F2255F1FC505BB000549D5 /* SettingsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F2255E1FC505BB000549D5 /* SettingsClass.swift */; };
-		04FA1FEF1FC38FB800234033 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FA1FEE1FC38FB800234033 /* UserInfo.swift */; };
-		04FA1FF11FC3906500234033 /* AllowContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FA1FF01FC3906500234033 /* AllowContactsViewController.swift */; };
+		04FA1FF11FC3906500234033 /* SelectContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FA1FF01FC3906500234033 /* SelectContactsViewController.swift */; };
 		04FA1FF31FC4A77B00234033 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FA1FF21FC4A77B00234033 /* ContactsController.swift */; };
 		04FCD4FA1FC269DD0030557B /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCD4F91FC269DD0030557B /* SettingsTableViewCell.swift */; };
 		04FE7CDA1FBE074A00E500A5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FE7CD91FBE074A00E500A5 /* HomeViewController.swift */; };
@@ -53,6 +54,8 @@
 		043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicIdeasClass.swift; sourceTree = "<group>"; };
 		043520B91FAB90E400CFD0C1 /* TimerStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerStruct.swift; sourceTree = "<group>"; };
 		043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPreferenceTableViewCell.swift; sourceTree = "<group>"; };
+		04410F171FCA2BC5002EC8F9 /* CircleUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleUsers.swift; sourceTree = "<group>"; };
+		04410F191FCA398F002EC8F9 /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
 		044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -78,8 +81,7 @@
 		04F0E4E01FA12762006D1244 /* LoadsStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadsStruct.swift; sourceTree = "<group>"; };
 		04F2255C1FC50337000549D5 /* SettingsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDetailViewController.swift; sourceTree = "<group>"; };
 		04F2255E1FC505BB000549D5 /* SettingsClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsClass.swift; sourceTree = "<group>"; };
-		04FA1FEE1FC38FB800234033 /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
-		04FA1FF01FC3906500234033 /* AllowContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllowContactsViewController.swift; sourceTree = "<group>"; };
+		04FA1FF01FC3906500234033 /* SelectContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectContactsViewController.swift; sourceTree = "<group>"; };
 		04FA1FF21FC4A77B00234033 /* ContactsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsController.swift; sourceTree = "<group>"; };
 		04FCD4F91FC269DD0030557B /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		04FE7CD91FBE074A00E500A5 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -121,7 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				04933D601FBFA50C0023A6FA /* LoginViewController.swift */,
-				04FA1FF01FC3906500234033 /* AllowContactsViewController.swift */,
+				04FA1FF01FC3906500234033 /* SelectContactsViewController.swift */,
 				04FE7CD91FBE074A00E500A5 /* HomeViewController.swift */,
 				04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */,
 				04D325311F9EA88400EC615D /* MainViewController.swift */,
@@ -151,9 +153,10 @@
 				043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */,
 				04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */,
 				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
-				04FA1FEE1FC38FB800234033 /* UserInfo.swift */,
 				04F0E4E01FA12762006D1244 /* LoadsStruct.swift */,
 				04FA1FF21FC4A77B00234033 /* ContactsController.swift */,
+				04410F171FCA2BC5002EC8F9 /* CircleUsers.swift */,
+				04410F191FCA398F002EC8F9 /* CurrentUser.swift */,
 			);
 			path = DataControllers;
 			sourceTree = "<group>";
@@ -348,9 +351,9 @@
 				042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */,
 				042FCA811FAE458500545786 /* Utilities.swift in Sources */,
 				04FE7CDA1FBE074A00E500A5 /* HomeViewController.swift in Sources */,
-				04FA1FF11FC3906500234033 /* AllowContactsViewController.swift in Sources */,
+				04410F181FCA2BC5002EC8F9 /* CircleUsers.swift in Sources */,
+				04FA1FF11FC3906500234033 /* SelectContactsViewController.swift in Sources */,
 				049E04D81FC6A40800705766 /* SettingsButtonTableViewCell.swift in Sources */,
-				04FA1FEF1FC38FB800234033 /* UserInfo.swift in Sources */,
 				04D325321F9EA88400EC615D /* MainViewController.swift in Sources */,
 				04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */,
 				04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */,
@@ -372,6 +375,7 @@
 				04FE7CDC1FBE077C00E500A5 /* CirclesViewController.swift in Sources */,
 				047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */,
 				04F2255F1FC505BB000549D5 /* SettingsClass.swift in Sources */,
+				04410F1A1FCA398F002EC8F9 /* CurrentUser.swift in Sources */,
 				04FA1FF31FC4A77B00234033 /* ContactsController.swift in Sources */,
 				044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */,
 				043520BA1FAB90E400CFD0C1 /* TimerStruct.swift in Sources */,

@@ -326,13 +326,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             lastPrayerString = Utilities().dayDifference(from: (prayer.timeStamp?.timeIntervalSince1970)!)
             cell.prayedLastLabel.text = "Last prayed \(lastPrayerString)"
         }
-//        else {
-//            let dateFormatter = DateFormatter()
-//            dateFormatter.dateStyle = .short
-//            if let date = prayer.timeStamp{
-//                cell.prayedLastLabel.text = "Answered on \(dateFormatter.string(from: date))"
-//            }
-//        }
         
         var timeVsTimesString = ""
         if prayer.prayerCount == 1 {
@@ -340,10 +333,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         } else {
             timeVsTimesString = "times"
         }
-        
-//        if let how = prayer.howAnswered {
-//            print("howAnswered: \(how) for index: \(indexPath)")
-//        }
         
         cell.prayedCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
         cell.selectionStyle = .none
