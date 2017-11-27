@@ -34,6 +34,7 @@
 		04D3252A1F9E8EA700EC615D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04D325281F9E8EA700EC615D /* LaunchScreen.storyboard */; };
 		04D325321F9EA88400EC615D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D325311F9EA88400EC615D /* MainViewController.swift */; };
 		04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */; };
+		04EFA65F1FCB3058001C291D /* AddCircleMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EFA65E1FCB3058001C291D /* AddCircleMemberTableViewCell.swift */; };
 		04F0E4DF1FA1271E006D1244 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */; };
 		04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4E01FA12762006D1244 /* LoadsStruct.swift */; };
 		04F2255D1FC50337000549D5 /* SettingsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F2255C1FC50337000549D5 /* SettingsDetailViewController.swift */; };
@@ -77,6 +78,7 @@
 		04D3252B1F9E8EA700EC615D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04D325311F9EA88400EC615D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIScrollView.swift; sourceTree = "<group>"; };
+		04EFA65E1FCB3058001C291D /* AddCircleMemberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCircleMemberTableViewCell.swift; sourceTree = "<group>"; };
 		04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
 		04F0E4E01FA12762006D1244 /* LoadsStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadsStruct.swift; sourceTree = "<group>"; };
 		04F2255C1FC50337000549D5 /* SettingsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDetailViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				043520BB1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift */,
 				042FCA861FAF7BC500545786 /* PrayerTableViewCell.swift */,
 				047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */,
+				04EFA65E1FCB3058001C291D /* AddCircleMemberTableViewCell.swift */,
 			);
 			path = CustomTableViewCells;
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 				04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */,
 				044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */,
 				04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */,
+				04EFA65F1FCB3058001C291D /* AddCircleMemberTableViewCell.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,
 				04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */,

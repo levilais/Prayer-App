@@ -38,10 +38,10 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableFooterView = UIView()
         for circleButton in circleProfileImageButtons {
             circleButton.addTarget(self, action: #selector(circleProfileButtonDidPress(sender:)), for: .touchUpInside)
         }
+        tableView.tableFooterView = UIView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
