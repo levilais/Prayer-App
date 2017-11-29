@@ -46,43 +46,37 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        getCircleData()
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         
         if Auth.auth().currentUser != nil {
-            print("Logged in and has has contacts access")
             userNotLoggedInView.isHidden = true
             userLoggedInView.isHidden = false
-            // present loggin in screen showing circles and posts
+            getCircleData()
         } else {
             userNotLoggedInView.isHidden = false
             userLoggedInView.isHidden = true
-            print("Not logged in and doesn't have contacts access")
         }
-        
     }
     
     @objc func circleProfileButtonDidPress(sender: UIButton) {
         let tag = sender.tag
         if tag < 5 {
-//            ContactsHandler().launchPickerView(vc: self)
             self.performSegue(withIdentifier: "selectCircleMembersSegue", sender: self)
         }
     }
     
     func getCircleData() {
-        print("tried to get circle data")
         let circleUsers = CurrentUser.circleMembers
-        print("was able to get users array")
-        print(circleUsers)
+        // this is where we'll unpack the data for names, prayercount, images, et al for circle users
         for circleUser in circleUsers {
             if let firstName = circleUser.firstName {
                 print(firstName)
             }
         }
+        tableView.reloadData()
     }
     
     @IBAction func timerButtonDidPress(_ sender: Any) {

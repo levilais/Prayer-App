@@ -281,11 +281,11 @@ class LoginViewController: UIViewController {
                 print("signed in")
                 // NOTICE: Right now we're dismissing the view controller.  In the future, we will navigate to Circle user flow (adding contacts, etc)
                 
-//                if CNAuthorizationStatus.denied || CNAuthorizationStatus.restricted {
+                if ContactsHandler().contactsAuthStatus() != ".authorized"  {
                     self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
-//                } else  {
-//                    self.dismiss(animated: true, completion: nil)
-//                }
+                } else  {
+                    self.dismiss(animated: true, completion: nil)
+                }
             })
         }
     }
@@ -301,10 +301,11 @@ class LoginViewController: UIViewController {
                         return
                     }
                     print("signed in")
-                    // NOTE: Right now we're just returning - but in the future, we'll check to see if the user has added access to Contacts yet.
-//                    self.dismiss(animated: true, completion: nil)
-                    self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
-
+                    if ContactsHandler().contactsAuthStatus() != ".authorized"  {
+                        self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
+                    } else  {
+                        self.dismiss(animated: true, completion: nil)
+                    }
                 })
             }
         }

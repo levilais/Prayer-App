@@ -16,77 +16,64 @@ import ContactsUI
 
 class ContactsHandler: NSObject,CNContactPickerDelegate {
     static let sharedInstance = ContactsHandler()
+    static var contactAuthStatusChanged = false
+    static var lastContactAuthStatus = ".notDetermined"
+    static var currentAuthStatus = String() {
+        didSet {
+            if ContactsHandler.currentAuthStatus != ContactsHandler.lastContactAuthStatus {
+                ContactsHandler.contactAuthStatusChanged = true
+                lastContactAuthStatus = currentAuthStatus
+                UserDefaultsHelper().saveContactAuthStatus()
+                let contactAuthStatusChangedDict:[String: Bool] = ["contactAuthStatusDidChange": ContactsHandler.contactAuthStatusChanged]
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil, userInfo: contactAuthStatusChangedDict)
+            }
+        }
+    }
     
     var contactStore = CNContactStore()
     var parentVC: UIViewController!
     
-
-    
-    func hasContactsAccess() -> Bool {
-        var accessGranted = false
+    func contactsAuthStatus() -> String {
+        var authStatus = String()
         let authorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
         switch authorizationStatus {
         case .authorized:
-            accessGranted = true
+            authStatus = ".authorized"
             print("already has access")
-        case .denied, .notDetermined:
-            print("has already denied access or is undetermined")
-            accessGranted = false
-        default:
-            print("doesn't have access - hasn't requested access before")
-            accessGranted = false
+        case .denied:
+            print("status has already been denied")
+            authStatus = ".denied"
+        case .notDetermined:
+            print("status has not been determined")
+            authStatus = ".notDetermined"
+        case .restricted:
+            print("status has been restricted")
+            authStatus = ".restricted"
         }
-        return accessGranted
+        return authStatus
     }
     
-    func requestAccess(vc: UIViewController) {
+    func requestAccess() {
         let authorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
         switch authorizationStatus {
         case .authorized:
-            print("already has access")
-        case .denied, .notDetermined:
+            // this is unlikely to ever be the result
+            print("already has access - this shouldn't be called")
+        case .notDetermined:
             self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (access, accessError) -> Void in
                 if access {
                     print("access granted")
-                    vc.dismiss(animated: false, completion: nil)
-                }
-                else {
+                    ContactsHandler.currentAuthStatus = ".authorized"
+                } else {
                     if authorizationStatus == CNAuthorizationStatus.denied {
-                        let message = "\(accessError!.localizedDescription)\n\nPlease allow the app to access your contacts through the Settings."
-                        print(message);
+                        ContactsHandler.currentAuthStatus = ".denied"
                     }
                 }
             })
+        case .denied:
+            ContactsHandler.currentAuthStatus = ".denied"
         default:
             print("default called - doesn't have access and didn't request.")
-        }
-    }
-    
-    func launchPickerView(vc: UIViewController) {
-        self.parentVC = vc;
-        let controller = CNContactPickerViewController()
-        controller.delegate = self
-        vc.present(controller,animated: true, completion: nil)
-    }
-    
-    func contactPicker(picker: CNContactPickerViewController,
-                       didSelectContact contact: CNContact) {
-        
-        if contact.isKeyAvailable(CNContactPhoneNumbersKey){
-            // handle the selected contact
-            print("picked a contact")
-        }
-    }
-    
-    func contactPickerDidCancel(picker: CNContactPickerViewController) {
-        print("Cancelled picking a contact")
-    }
-    
-    func contactPicker(picker: CNContactPickerViewController, didSelectContacts contacts: [CNContact]){
-        for contact in contacts {
-            if contact.isKeyAvailable(CNContactPhoneNumbersKey){
-                // handle contacts here
-            }
         }
     }
 }

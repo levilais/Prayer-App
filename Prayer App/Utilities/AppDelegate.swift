@@ -29,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UISwitch.appearance().thumbTintColor = UIColor.StyleFile.GoldColor
         
         FirebaseApp.configure()
+        UserDefaultsHelper().getLastContactAuthStatus()
         
         print("launched")
         

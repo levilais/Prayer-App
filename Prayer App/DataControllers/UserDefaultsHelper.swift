@@ -18,6 +18,16 @@ class UserDefaultsHelper {
         }
     }
     
+    func saveContactAuthStatus() {
+        UserDefaults.standard.set(ContactsHandler.lastContactAuthStatus, forKey: "lastContactAuthStatus")
+    }
+    
+    func getLastContactAuthStatus() {
+        if let lastContactAuthStatusCheck = UserDefaults.standard.object(forKey: "lastContactAuthStatus") as? String {
+            ContactsHandler.lastContactAuthStatus = lastContactAuthStatusCheck
+        }
+    }
+    
     func savePreferredTimerDuration() {
         UserDefaults.standard.set(TimerStruct.preferredTimerDuration, forKey: "preferredTimerDuration")
     }
@@ -34,5 +44,6 @@ class UserDefaultsHelper {
         case loads = "loads"
         case preferredTimerDuration = "preferredTimerDuration"
         case hasAllowedContacts = "hasAllowedContacts"
+        case lastContactAuthStatus = "lastContactAuthStatus"
     }
 }

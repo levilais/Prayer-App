@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import Contacts
+import ContactsUI
 
 class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -76,7 +78,17 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                         labelString = "Log In To Prayer"
                         cell.settingsToggle.setOn(false, animated: true)
                     }
+                } else if labelText == "Connect To Contacts" {
+                    cell.settingsToggle.addTarget(self, action: #selector(allowContactsAccess(toggleSwitch:)), for: .touchUpInside)
+                    if ContactsHandler().contactsAuthStatus() == ".authorized" {
+                        labelString = "Connected To Contacts"
+                        cell.settingsToggle.setOn(true, animated: true)
+                    } else {
+                        labelString = "Connect To Contacts"
+                        cell.settingsToggle.setOn(false, animated: true)
+                    }
                 }
+                
                 cell.label.text = labelString
                 cellToReturn = cell
             }
@@ -106,7 +118,6 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     @objc func logInLogOut() {
-        print("logInLogOut fired")
         if Auth.auth().currentUser != nil {
             let firebaseAuth = Auth.auth()
             do {
@@ -121,10 +132,27 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
         self.tableView.reloadData()
     }
     
-    @objc func allowContactsAccess() {
-        print("allow contacts access switched")
+    @objc func allowContactsAccess(toggleSwitch: UISwitch) {
+        if ContactsHandler().contactsAuthStatus() == ".authorized" {
+            let alert = UIAlertController(title: "Instructions", message: "In order to disconnect the Prayer app from your Contacts, you'll need to go to Settings > Privacy > Contacts > Prayer", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: {
+                toggleSwitch.setOn(true, animated: true)
+            })
+        } else {
+            performSegue(withIdentifier: "settingsDetailToContactsAuth", sender: self)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "settingsDetailToContactsAuth" {
+            let toViewController = segue.destination as! SelectContactsViewController
+            toViewController.segueFromSettings = true
+        }
     }
 
+    
     
     @IBAction func timerHeaderButtonDidPress(_ sender: Any) {
         TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)

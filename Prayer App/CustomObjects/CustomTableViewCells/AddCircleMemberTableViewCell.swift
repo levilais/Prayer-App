@@ -20,6 +20,13 @@ class AddCircleMemberTableViewCell: UITableViewCell {
         self.selectionStyle = .none
         self.backgroundColor = .clear
         self.isUserInteractionEnabled = true
+        self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.width / 2
+        self.profileImageView.clipsToBounds = true
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -27,5 +34,4 @@ class AddCircleMemberTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
 }
