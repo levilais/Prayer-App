@@ -14,26 +14,26 @@ import Firebase
 
 class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
 
-    func createCircleUser1() -> CircleUser {
-        let user = CircleUser()
-        user.firstName = "John"
-        user.lastName = "Deer"
-        return user
-    }
-
-    func createCircleUser2() -> CircleUser {
-        let user = CircleUser()
-        user.firstName = "Bill"
-        user.lastName = "Johnson"
-        return user
-    }
-
-    func createCircleUser3() -> CircleUser {
-        let user = CircleUser()
-        user.firstName = "Gary"
-        user.lastName = "Garison"
-        return user
-    }
+//    func createCircleUser1() -> CircleUser {
+//        let user = CircleUser()
+//        user.firstName = "John"
+//        user.lastName = "Deer"
+//        return user
+//    }
+//
+//    func createCircleUser2() -> CircleUser {
+//        let user = CircleUser()
+//        user.firstName = "Bill"
+//        user.lastName = "Johnson"
+//        return user
+//    }
+//
+//    func createCircleUser3() -> CircleUser {
+//        let user = CircleUser()
+//        user.firstName = "Gary"
+//        user.lastName = "Garison"
+//        return user
+//    }
     
     // Main View
     @IBOutlet weak var textField: UITextView!
@@ -104,13 +104,13 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let user1 = createCircleUser1()
-        let user2 = createCircleUser2()
-        let user3 = createCircleUser3()
-        
-        CurrentUser.circleMembers.append(user1)
-        CurrentUser.circleMembers.append(user2)
-        CurrentUser.circleMembers.append(user3)
+//        let user1 = createCircleUser1()
+//        let user2 = createCircleUser2()
+//        let user3 = createCircleUser3()
+//        
+//        CurrentUser.circleMembers.append(user1)
+//        CurrentUser.circleMembers.append(user2)
+//        CurrentUser.circleMembers.append(user3)
         
         textField.delegate = self
         touchToPrayButton.setTitleColor(UIColor.lightGray, for: .normal)

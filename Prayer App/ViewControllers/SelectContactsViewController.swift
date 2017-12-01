@@ -21,6 +21,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var spotsLeftLabel: UILabel!
+    var circleUserSpotsUsed = Int()
     var cnContacts = [CNContact]()
     var cleanContactsAsCircleUsers = [CircleUser]()
     var segueFromSettings = false
@@ -34,6 +35,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         super.viewWillAppear(true)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
+        updateSpotsLeftLabel()
         loadCorrectView()
     }
     
@@ -93,6 +95,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             }
             
             for contact in self.cnContacts {
+                var append = true
                 let user = CircleUser().setFromCnContact(cnContact: contact)
                 
                 var fullName = ""
@@ -108,15 +111,65 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                     fullName = lastName
                 } else if fullName == "" && lastName == "" {
                     // this should never be called
-                    
+                    append = false
                 } else {
                     fullName = firstName + " " + lastName
                 }
-                if fullName != "" {
-                    self.cleanContactsAsCircleUsers.append(user)
+                if append == true {
+                    print("append true")
+                    let userWithStatus = CircleUser().getRelationshipStatus(userToCheck: user)
+//                    var circleMemberEmails = [CNLabeledValue<NSString>]()
+//                    var userEmails = [CNLabeledValue<NSString>]()
+//                    var circleMemberPhonenumbers = [CNLabeledValue<CNPhoneNumber>]()
+//                    var userPhoneNumbers = [CNLabeledValue<CNPhoneNumber>]()
+//                    
+//                    var matchFound = false
+//                    while matchFound == false {
+////                        print("started while loop")
+//                        for circleMember in CurrentUser.circleMembers {
+//                            if let circleMemberEmailCheck = circleMember.circleMemberEmails {
+//                                circleMemberEmails = circleMemberEmailCheck
+//                            }
+//                            for circleMemberEmail in circleMemberEmails {
+//                                print("circleMemberEmail: \(circleMemberEmail)")
+//                                if let userEmailsCheck = user.circleMemberEmails {
+//                                    userEmails = userEmailsCheck
+//                                }
+//                                for userEmail in userEmails {
+//                                    print("userEmail: \(userEmail)")
+//                                    if circleMemberEmail == userEmail {
+//                                        print("match found")
+//                                        user = circleMember
+//                                        matchFound = true
+//                                    }
+//                                }
+//                            }
+//                            
+//                            if let circleMemberPhoneNumbersCheck = circleMember.circleMemberPhoneNumbers {
+//                                circleMemberPhonenumbers = circleMemberPhoneNumbersCheck
+//                            }
+//                            if let userPhoneNumbersCheck = user.circleMemberPhoneNumbers {
+//                                userPhoneNumbers = userPhoneNumbersCheck
+//                            }
+//                            for circleMemberPhoneNumber in circleMemberPhonenumbers {
+//                                for userPhoneNumber in userPhoneNumbers {
+//                                    if circleMemberPhoneNumber == userPhoneNumber {
+//                                        user = circleMember
+//                                        print("match found")
+//                                        matchFound = true
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        matchFound = true
+//                    }
+                    if let relationship = userWithStatus.userRelationshipToCurrentUser {
+                        print("userRelationship \(relationship)")
+                    }
+                    print("while loop finished")
+                    self.cleanContactsAsCircleUsers.append(userWithStatus)
                 }
             }
-            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -177,8 +230,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "addCircleMemberCell", for: indexPath) as! AddCircleMemberTableViewCell
         
-//        cell.prepareForReuse()
-        
         let user = cleanContactsAsCircleUsers[indexPath.row]
         
         var fullName = ""
@@ -193,12 +244,10 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         if firstName == "" && lastName != "" {
             fullName = lastName
         } else if fullName == "" && lastName == "" {
-            // this should never be called
+            fullName = "this should never be called"
         } else {
             fullName = firstName + " " + lastName
         }
-        
-        print("fullName: \(fullName)")
         
         if let profileImageData = user.profileImage {
             if let profileImage = UIImage(data: profileImageData) {
@@ -206,12 +255,21 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             }
         }
         
-        if user.hasBeenInvited == true {
-            cell.inviteButton.isHidden = true
-            cell.inviteSentButton.isHidden = false
-        } else {
-            cell.inviteButton.isHidden = false
-            cell.inviteSentButton.isHidden = true
+        if let userRelationship = user.userRelationshipToCurrentUser {
+            switch userRelationship {
+            case CircleUser.userRelationshipToCurrentUser.invited:
+                print("relationship for \(fullName) was invited")
+                cell.inviteButton.isHidden = true
+                cell.inviteSentButton.isHidden = false
+            case CircleUser.userRelationshipToCurrentUser.nonMember:
+                print("relationship for \(fullName) was nonMember")
+                cell.inviteButton.isHidden = false
+                cell.inviteSentButton.isHidden = true
+            default:
+                print("relationship for \(fullName) was default")
+                cell.inviteButton.isHidden = false
+                cell.inviteSentButton.isHidden = true
+            }
         }
         
         cell.fullNameLabel.text = fullName
@@ -222,17 +280,29 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     @objc func sendInvite(sender: UIButton){
-        let buttonTag = sender.tag
-        let indexPath = NSIndexPath(row: buttonTag, section: 0)
-        let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
-        let user = cleanContactsAsCircleUsers[indexPath.row]
-        user.hasBeenInvited = true
-        CurrentUser.circleMembers.append(user)
-        cell.inviteButton.isHidden = true
-        cell.inviteSentButton.isHidden = false
+        if CurrentUser.circleMembers.count < 5 {
+            let buttonTag = sender.tag
+            let indexPath = NSIndexPath(row: buttonTag, section: 0)
+            let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
+            let user = cleanContactsAsCircleUsers[indexPath.row]
+            user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
+            CurrentUser.circleMembers.append(user)
+            updateSpotsLeftLabel()
+            cell.inviteButton.isHidden = true
+            cell.inviteSentButton.isHidden = false
+            
+            print("row number: \(buttonTag)")
+            print("CurrentUser.circleMembers.count: \(CurrentUser.circleMembers.count)")
+        }
+    }
     
-        print("row number: \(buttonTag)")
-        print("CurrentUser.circleMembers.count: \(CurrentUser.circleMembers.count)")
+    func updateSpotsLeftLabel() {
+        circleUserSpotsUsed = CurrentUser.circleMembers.count
+        if circleUserSpotsUsed < 5 {
+            spotsLeftLabel.text = "You still have \(5 - circleUserSpotsUsed) out of 5 Circle Member spots available."
+        } else {
+            spotsLeftLabel.text = "You have used all 5 of your Circle Member spots. Uninvite or remove someone from your circle if you would like to invite someone else."
+        }
     }
     
     @objc func handleNotification(_ notification: NSNotification) {

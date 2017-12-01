@@ -25,6 +25,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     var showSignUp = true
     
     // LOGGED IN VIEW
+    @IBOutlet var circleProfileImages: [UIImageView]!
     @IBOutlet var circleProfileImageButtons: [UIButton]!
     @IBOutlet weak var circleNameLabel: UILabel!
     @IBOutlet weak var circleJoinedLabel: UILabel!
@@ -34,13 +35,15 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var userLoggedInView: UIView!
     @IBOutlet weak var tableView: UITableView!
     
-    var circleSpotFilled = [Bool]()
+    var circleSpotFilled = [false,false,false,false,false]
+    var selectedCircleMember = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         for circleButton in circleProfileImageButtons {
             circleButton.addTarget(self, action: #selector(circleProfileButtonDidPress(sender:)), for: .touchUpInside)
         }
+
         tableView.tableFooterView = UIView()
     }
     
@@ -54,7 +57,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         if Auth.auth().currentUser != nil {
             userNotLoggedInView.isHidden = true
             userLoggedInView.isHidden = false
-            getCircleData()
+            setCircleData()
         } else {
             userNotLoggedInView.isHidden = false
             userLoggedInView.isHidden = true
@@ -63,20 +66,87 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func circleProfileButtonDidPress(sender: UIButton) {
         let tag = sender.tag
-        if tag < 5 {
+        if circleSpotFilled[tag] {
+            toggleCircleMemberDetailContent(buttonTag: tag)
+            selectedCircleMember = tag
+        } else {
             self.performSegue(withIdentifier: "selectCircleMembersSegue", sender: self)
         }
     }
+     
+    func toggleCircleMemberDetailContent(buttonTag: Int) {
+        if CurrentUser.circleMembers.count == 0 {
+            circleNameLabel.text = "Tap above to send invitation"
+            circleJoinedLabel.text = ""
+            circleAgreedLabel.text = ""
+            circleAgreedCountLabel.text = ""
+            deleteFromCircleButton.isHidden = true
+        } else {
+            let circleUser = CurrentUser.circleMembers[buttonTag]
+            for button in circleProfileImageButtons {
+                print("button.tag \(button.tag)")
+                if button.tag != buttonTag && button.tag < CurrentUser.circleMembers.count {
+                    button.layer.backgroundColor = UIColor.StyleFile.TealColor.cgColor
+                } else {
+                    button.layer.backgroundColor = UIColor.clear.cgColor
+                }
+            }
+            circleNameLabel.text = circleUser.getFullName(user: circleUser)
+            circleJoinedLabel.text = "You are still waiting for your invitation to be accepted"
+            circleAgreedLabel.text = ""
+            circleAgreedCountLabel.text = ""
+            deleteFromCircleButton.isHidden = false
+        }
+    }
     
-    func getCircleData() {
+    func setCircleData() {
         let circleUsers = CurrentUser.circleMembers
-        // this is where we'll unpack the data for names, prayercount, images, et al for circle users
-        for circleUser in circleUsers {
-            if let firstName = circleUser.firstName {
-                print(firstName)
+        let circleCount = circleUsers.count
+        
+        for i in 0...4 {
+            switch i {
+            case 0 ..< circleCount:
+                print("circle member #\(i)")
+                let circleUser = circleUsers[i]
+                circleProfileImages[i].image = UIImage(data: circleUser.profileImage!)
+                circleSpotFilled[i] = true
+            case circleCount ... 4:
+                print("empty space #\(i - circleCount)")
+                circleProfileImages[i].image = UIImage(named: "addCircleMemberIcon.pdf")
+                circleSpotFilled[i] = false
+            default:
+                print("failure")
             }
         }
-        tableView.reloadData()
+
+        for button in circleProfileImageButtons {
+            button.layer.cornerRadius = button.frame.size.height / 2
+            button.clipsToBounds = true
+        }
+
+        for imageView in circleProfileImages {
+            imageView.layer.cornerRadius = imageView.frame.size.height / 2
+            imageView.clipsToBounds = true
+        }
+        toggleCircleMemberDetailContent(buttonTag: selectedCircleMember)
+    }
+    
+    @IBAction func deleteCircleMemberDidPress(_ sender: Any) {
+        print("circleMember.count before: \(CurrentUser.circleMembers.count)")
+        let alert = UIAlertController(title: "Are you sure", message: "Are you sure you want to remove this Circle Member", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
+            CurrentUser.circleMembers.remove(at: self.selectedCircleMember)
+//            self.circleSpotFilled[selectedCircleMember] = false
+            self.selectedCircleMember = 0
+            print("circleMember.count after: \(CurrentUser.circleMembers.count)")
+            self.setCircleData()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true) {
+            print("completed alert")
+        }
     }
     
     @IBAction func timerButtonDidPress(_ sender: Any) {

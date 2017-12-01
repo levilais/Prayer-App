@@ -625,31 +625,67 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8rR-Me-LyU">
                                         <rect key="frame" x="0.0" y="30" width="320" height="157.5"/>
                                         <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="7p6-Af-GOw">
+                                                <rect key="frame" x="15" y="10" width="290" height="50"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="addCircleMemberIcon" translatesAutoresizingMaskIntoConstraints="NO" id="AYm-hE-fXv">
+                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="AYm-hE-fXv" secondAttribute="height" multiplier="1:1" id="zx3-3A-Hcm"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="addCircleMemberIcon" translatesAutoresizingMaskIntoConstraints="NO" id="34V-sf-ZL5">
+                                                        <rect key="frame" x="60" y="0.0" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="34V-sf-ZL5" secondAttribute="height" multiplier="1:1" id="jjz-UT-3K5"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="addCircleMemberIcon" translatesAutoresizingMaskIntoConstraints="NO" id="IkO-NM-e1I">
+                                                        <rect key="frame" x="120" y="0.0" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="IkO-NM-e1I" secondAttribute="height" multiplier="1:1" id="sPw-6y-10Y"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="addCircleMemberIcon" translatesAutoresizingMaskIntoConstraints="NO" id="sCZ-cw-doc">
+                                                        <rect key="frame" x="180" y="0.0" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="sCZ-cw-doc" secondAttribute="height" multiplier="1:1" id="DfU-wz-b8Q"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="addCircleMemberIcon" translatesAutoresizingMaskIntoConstraints="NO" id="BDP-Gc-nVs">
+                                                        <rect key="frame" x="240" y="0.0" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="BDP-Gc-nVs" secondAttribute="height" multiplier="1:1" id="u2a-sy-8ko"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="sCZ-cw-doc" firstAttribute="width" secondItem="IkO-NM-e1I" secondAttribute="width" id="C2m-a9-L43"/>
+                                                    <constraint firstItem="34V-sf-ZL5" firstAttribute="width" secondItem="AYm-hE-fXv" secondAttribute="width" id="Lrw-RF-dlq"/>
+                                                    <constraint firstItem="IkO-NM-e1I" firstAttribute="width" secondItem="34V-sf-ZL5" secondAttribute="width" id="QOU-fJ-qxS"/>
+                                                    <constraint firstItem="BDP-Gc-nVs" firstAttribute="width" secondItem="sCZ-cw-doc" secondAttribute="width" id="Ylg-Hl-HG3"/>
+                                                </constraints>
+                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="DPU-VG-MTs">
                                                 <rect key="frame" x="15" y="10" width="290" height="50"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wjb-lY-zxk">
+                                                    <button opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wjb-lY-zxk">
                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="Wjb-lY-zxk" secondAttribute="height" multiplier="1:1" id="pbW-2f-voH"/>
                                                         </constraints>
-                                                        <state key="normal" backgroundImage="addCircleMemberIcon"/>
                                                     </button>
-                                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BTO-RE-dSh">
+                                                    <button opaque="NO" alpha="0.5" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BTO-RE-dSh">
                                                         <rect key="frame" x="60" y="0.0" width="50" height="50"/>
-                                                        <state key="normal" backgroundImage="addCircleMemberIcon"/>
                                                     </button>
-                                                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uJm-T1-Ina">
+                                                    <button opaque="NO" alpha="0.5" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uJm-T1-Ina">
                                                         <rect key="frame" x="120" y="0.0" width="50" height="50"/>
-                                                        <state key="normal" backgroundImage="addCircleMemberIcon"/>
                                                     </button>
-                                                    <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QFR-kc-BhL">
+                                                    <button opaque="NO" alpha="0.5" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QFR-kc-BhL">
                                                         <rect key="frame" x="180" y="0.0" width="50" height="50"/>
-                                                        <state key="normal" backgroundImage="addCircleMemberIcon"/>
                                                     </button>
-                                                    <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ipx-DH-KoN">
+                                                    <button opaque="NO" alpha="0.5" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ipx-DH-KoN">
                                                         <rect key="frame" x="240" y="0.0" width="50" height="50"/>
-                                                        <state key="normal" backgroundImage="addCircleMemberIcon"/>
                                                     </button>
                                                 </subviews>
                                                 <constraints>
@@ -690,12 +726,16 @@
                                                     <constraint firstAttribute="height" constant="24" id="Jna-qy-T4J"/>
                                                 </constraints>
                                                 <state key="normal" backgroundImage="deleteIcon"/>
+                                                <connections>
+                                                    <action selector="deleteCircleMemberDidPress:" destination="OMC-xO-wJs" eventType="touchUpInside" id="sKV-m4-1aP"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="DPU-VG-MTs" secondAttribute="trailing" constant="15" id="EVl-SF-86g"/>
                                             <constraint firstItem="xO3-f8-cts" firstAttribute="leading" secondItem="8rR-Me-LyU" secondAttribute="leading" constant="15" id="JMP-pL-jCi"/>
                                             <constraint firstItem="F1k-ka-lRC" firstAttribute="top" secondItem="GSR-Gd-rrv" secondAttribute="bottom" constant="5" id="MTf-ZZ-QDN"/>
+                                            <constraint firstItem="xO3-f8-cts" firstAttribute="top" secondItem="7p6-Af-GOw" secondAttribute="bottom" constant="10" id="Mch-GA-ZwM"/>
                                             <constraint firstItem="DPU-VG-MTs" firstAttribute="top" secondItem="8rR-Me-LyU" secondAttribute="top" constant="10" id="N4l-2R-b9N"/>
                                             <constraint firstItem="GSR-Gd-rrv" firstAttribute="top" secondItem="xO3-f8-cts" secondAttribute="bottom" constant="5" id="OHM-up-bZg"/>
                                             <constraint firstItem="F1k-ka-lRC" firstAttribute="leading" secondItem="8rR-Me-LyU" secondAttribute="leading" constant="15" id="P6G-Ff-Phj"/>
@@ -706,8 +746,11 @@
                                             <constraint firstItem="ke9-dp-hJM" firstAttribute="leading" secondItem="8rR-Me-LyU" secondAttribute="leading" constant="15" id="dgO-eu-hNH"/>
                                             <constraint firstAttribute="trailing" secondItem="xO3-f8-cts" secondAttribute="trailing" constant="10" id="hec-Sv-mA9"/>
                                             <constraint firstItem="ke9-dp-hJM" firstAttribute="top" secondItem="F1k-ka-lRC" secondAttribute="bottom" constant="5" id="jQk-1s-g9n"/>
+                                            <constraint firstItem="7p6-Af-GOw" firstAttribute="leading" secondItem="8rR-Me-LyU" secondAttribute="leading" constant="15" id="kVW-OA-4hj"/>
                                             <constraint firstAttribute="bottom" secondItem="Ipc-Ag-wzA" secondAttribute="bottom" constant="10" id="lb5-Oq-3BE"/>
+                                            <constraint firstItem="7p6-Af-GOw" firstAttribute="top" secondItem="8rR-Me-LyU" secondAttribute="top" constant="10" id="qZL-CL-Lun"/>
                                             <constraint firstAttribute="trailing" secondItem="Ipc-Ag-wzA" secondAttribute="trailing" constant="15" id="tc0-Rt-nBJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="7p6-Af-GOw" secondAttribute="trailing" constant="15" id="vdO-X2-V09"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zFD-g5-mrS">
@@ -840,6 +883,11 @@
                         <outletCollection property="circleProfileImageButtons" destination="uJm-T1-Ina" collectionClass="NSMutableArray" id="jUv-Iq-FPp"/>
                         <outletCollection property="circleProfileImageButtons" destination="QFR-kc-BhL" collectionClass="NSMutableArray" id="iaP-SR-Wuv"/>
                         <outletCollection property="circleProfileImageButtons" destination="Ipx-DH-KoN" collectionClass="NSMutableArray" id="0Fh-GE-Osk"/>
+                        <outletCollection property="circleProfileImages" destination="AYm-hE-fXv" collectionClass="NSMutableArray" id="iVf-bV-qzF"/>
+                        <outletCollection property="circleProfileImages" destination="34V-sf-ZL5" collectionClass="NSMutableArray" id="0kH-d2-Qk2"/>
+                        <outletCollection property="circleProfileImages" destination="IkO-NM-e1I" collectionClass="NSMutableArray" id="xlz-Ta-Pgg"/>
+                        <outletCollection property="circleProfileImages" destination="sCZ-cw-doc" collectionClass="NSMutableArray" id="8NA-Ox-oWz"/>
+                        <outletCollection property="circleProfileImages" destination="BDP-Gc-nVs" collectionClass="NSMutableArray" id="XRY-nB-HEo"/>
                         <segue destination="e92-fH-MMI" kind="presentation" identifier="loginSignUpSegue" modalTransitionStyle="flipHorizontal" id="s97-uR-UlF"/>
                         <segue destination="n3B-qY-OVx" kind="show" identifier="selectCircleMembersSegue" id="exo-XS-mFi"/>
                     </connections>
@@ -2481,7 +2529,7 @@
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5sI-7B-53b"/>
+        <segue reference="exo-XS-mFi"/>
         <segue reference="s97-uR-UlF"/>
     </inferredMetricsTieBreakers>
 </document>

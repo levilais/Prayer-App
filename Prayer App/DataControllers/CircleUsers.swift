@@ -21,12 +21,21 @@ class CircleUser {
     var circleUserID: String?
     var circleMemberEmails: [CNLabeledValue<NSString>]?
     var circleMemberPhoneNumbers: [CNLabeledValue<CNPhoneNumber>]?
+    var userRelationshipToCurrentUser: userRelationshipToCurrentUser?
     var hasBeenInvited: Bool?
+    
+    enum userRelationshipToCurrentUser: Int {
+        case nonMember = 0
+        case memberButNoRelation = 1
+        case invited = 2
+        case myCircleMember = 3
+        case theirCircleMember = 4
+    }
 
-    func getFullName() -> String {
+    func getFullName(user: CircleUser) -> String {
         var fullName = ""
-        if let first = firstName {
-            if let last = lastName {
+        if let first = user.firstName {
+            if let last = user.lastName {
                 fullName += first
                 if fullName != "" {
                     fullName += " " + last
@@ -79,6 +88,65 @@ class CircleUser {
         if let phoneNumbersCount = user.circleMemberPhoneNumbers?.count {
             print("circleMemberPhoneNumbers.count: \(phoneNumbersCount))")
         }
+        if let userRelationshipCheck = user.userRelationshipToCurrentUser {
+            print("userRelationshipToCurrentUser: \(userRelationshipCheck))")
+        }
+    }
+    
+    func getRelationshipStatus(userToCheck: CircleUser) -> CircleUser {
+        var user = userToCheck
+        var circleMemberEmails = [CNLabeledValue<NSString>]()
+        var userEmails = [CNLabeledValue<NSString>]()
+        var circleMemberPhonenumbers = [CNLabeledValue<CNPhoneNumber>]()
+        var userPhoneNumbers = [CNLabeledValue<CNPhoneNumber>]()
+        
+        var matchFound = false
+        user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.nonMember
+        while matchFound == false {
+            //                        print("started while loop")
+            for circleMember in CurrentUser.circleMembers {
+                if let circleMemberEmailCheck = circleMember.circleMemberEmails {
+                    circleMemberEmails = circleMemberEmailCheck
+                }
+                for circleMemberEmail in circleMemberEmails {
+                    print("circleMemberEmail: \(circleMemberEmail)")
+                    if let userEmailsCheck = user.circleMemberEmails {
+                        userEmails = userEmailsCheck
+                    }
+                    for userEmail in userEmails {
+                        print("userEmail: \(userEmail)")
+                        if circleMemberEmail == userEmail {
+                            print("match found")
+                            user = circleMember
+                            user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
+                            matchFound = true
+                        }
+                    }
+                }
+                
+                if let circleMemberPhoneNumbersCheck = circleMember.circleMemberPhoneNumbers {
+                    circleMemberPhonenumbers = circleMemberPhoneNumbersCheck
+                }
+                if let userPhoneNumbersCheck = user.circleMemberPhoneNumbers {
+                    userPhoneNumbers = userPhoneNumbersCheck
+                }
+                for circleMemberPhoneNumber in circleMemberPhonenumbers {
+                    for userPhoneNumber in userPhoneNumbers {
+                        if circleMemberPhoneNumber == userPhoneNumber {
+                            user = circleMember
+                            user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
+                            print("match found")
+                            matchFound = true
+                        }
+                    }
+                }
+            }
+            matchFound = true
+        }
+        if let relationship = user.userRelationshipToCurrentUser {
+             print("userRelationship: \(relationship)")
+        }
+        return user
     }
 }
 
@@ -117,11 +185,13 @@ extension CircleUser {
                 }
             }
         }
+        
         user.profileImage = imageDataToSave
         
         user.circleUserID = "userID.\(String(describing: user.dateAdded)).\(String(describing: user.firstName)).\(String(describing: user.lastName))"
         user.circleMemberEmails = cnContact.emailAddresses
         user.circleMemberPhoneNumbers = cnContact.phoneNumbers
+        
         return user
     }
 }
