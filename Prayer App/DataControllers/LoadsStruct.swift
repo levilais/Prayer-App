@@ -10,4 +10,5 @@ import Foundation
 
 class Loads {
     static var loadCount = 0
+    static var firstLoadPresented = false
 }

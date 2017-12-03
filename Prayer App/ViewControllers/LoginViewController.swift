@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseDatabase
 import Contacts
 import ContactsUI
 
@@ -33,6 +34,7 @@ class LoginViewController: UIViewController {
     
     var activeField: UITextField?
     var signupShowing = Bool()
+    var firstLoadSignUp = Bool()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +86,7 @@ class LoginViewController: UIViewController {
     }
     
     func showLoginSignup() {
+        print("signupshowing: \(signupShowing)")
         if signupShowing == true {
             showSignUp()
         } else {
@@ -137,7 +140,17 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func maybeLaterDidPress(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        if firstLoadSignUp == true {
+            self.view.window!.rootViewController?.dismiss(animated: true, completion: nil)
+        } else {
+            if self.navigationController != nil {
+                print("attempting pop")
+                self.navigationController?.popToRootViewController(animated: true)
+            } else {
+                print("attempting dismiss")
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
     }
     
     @IBAction func forgotPasswordDidPress(_ sender: Any) {
@@ -170,12 +183,10 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginSignupDidPress(_ sender: Any) {
         if signupShowing == true {
-            print("sing up pressed")
             if canAttemptSignup() {
                 attemptSignup()
             }
         } else {
-            print("log in pressed")
             attemptLogin()
         }
     }
@@ -265,28 +276,40 @@ class LoginViewController: UIViewController {
                 }
             }
         }
-        print("canAttempt: \(canAttempt)")
         return canAttempt
     }
     
     func attemptSignup() {
+        var firstName = String()
+        var lastName = String()
         let email = Utilities().formattedEmailString(emailTextFieldString: signupEmailTextField.text)
+        let dateJoined = String(Date().timeIntervalSince1970)
         if let password = signupPasswordTextField.text {
-            Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
-                if let error = error {
-                    self.explanationLabel.text = error.localizedDescription
-                    self.explanationLabel.textColor = UIColor.StyleFile.WineColor
-                    return
+            if let firstNameCheck = firstNameTextField.text {
+                if let lastNameCheck = lastNameTextField.text {
+                    firstName = firstNameCheck.trimmingCharacters(in: .whitespacesAndNewlines)
+                    lastName = lastNameCheck.trimmingCharacters(in: .whitespacesAndNewlines)
+                    Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
+                        if let error = error {
+                            self.explanationLabel.text = error.localizedDescription
+                            self.explanationLabel.textColor = UIColor.StyleFile.WineColor
+                            return
+                        } else {
+                            if let user = user {
+                                Database.database().reference().child("users").child(user.uid).child("email").setValue(email)
+                                Database.database().reference().child("users").child(user.uid).child("firstName").setValue(firstName)
+                                Database.database().reference().child("users").child(user.uid).child("lastName").setValue(lastName)
+                                Database.database().reference().child("users").child(user.uid).child("dateJoined").setValue(dateJoined)
+                            }
+                            if ContactsHandler().contactsAuthStatus() != ".authorized"  {
+                                self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
+                            } else {
+                                self.dismiss(animated: true, completion: nil)
+                            }
+                        }
+                    })
                 }
-                print("signed in")
-                // NOTICE: Right now we're dismissing the view controller.  In the future, we will navigate to Circle user flow (adding contacts, etc)
-                
-                if ContactsHandler().contactsAuthStatus() != ".authorized"  {
-                    self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
-                } else  {
-                    self.dismiss(animated: true, completion: nil)
-                }
-            })
+            }
         }
     }
     

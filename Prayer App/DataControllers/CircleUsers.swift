@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import Contacts
 import ContactsUI
+import Firebase
 
 class CircleUser {
     var firstName: String?
@@ -18,18 +19,19 @@ class CircleUser {
     var lastAgreedInPrayerDate: Date?
     var agreedInPrayerCount: Int?
     var profileImage: Data?
-    var circleUserID: String?
+    var circleUID: String?
     var circleMemberEmails: [CNLabeledValue<NSString>]?
     var circleMemberPhoneNumbers: [CNLabeledValue<CNPhoneNumber>]?
     var userRelationshipToCurrentUser: userRelationshipToCurrentUser?
     var hasBeenInvited: Bool?
     
-    enum userRelationshipToCurrentUser: Int {
-        case nonMember = 0
-        case memberButNoRelation = 1
-        case invited = 2
-        case myCircleMember = 3
-        case theirCircleMember = 4
+    enum userRelationshipToCurrentUser: String {
+        case nonMember = "nonMember"
+        case invitedToPrayer = "invitedToPrayer"
+        case memberButNoRelation = "memberButNoRelation"
+        case invited = "invited"
+        case myCircleMember = "myCircleMember"
+        case theirCircleMember = "theirCircleMember"
     }
 
     func getFullName(user: CircleUser) -> String {
@@ -73,7 +75,7 @@ class CircleUser {
             print("profileImage: no image")
         }
         
-        if let circleUserIdCheck = user.circleUserID {
+        if let circleUserIdCheck = user.circleUID {
             print("circleUserID: \(circleUserIdCheck)")
         }
         if let circleMemberEmailsCheck = user.circleMemberEmails {
@@ -97,61 +99,44 @@ class CircleUser {
         var user = userToCheck
         var circleMemberEmails = [CNLabeledValue<NSString>]()
         var userEmails = [CNLabeledValue<NSString>]()
-        var circleMemberPhonenumbers = [CNLabeledValue<CNPhoneNumber>]()
-        var userPhoneNumbers = [CNLabeledValue<CNPhoneNumber>]()
         
-        var matchFound = false
+        var relationshipDetermined = false
         user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.nonMember
-        while matchFound == false {
-            //                        print("started while loop")
-            for circleMember in CurrentUser.circleMembers {
-                if let circleMemberEmailCheck = circleMember.circleMemberEmails {
-                    circleMemberEmails = circleMemberEmailCheck
-                }
-                for circleMemberEmail in circleMemberEmails {
-                    print("circleMemberEmail: \(circleMemberEmail)")
-                    if let userEmailsCheck = user.circleMemberEmails {
-                        userEmails = userEmailsCheck
-                    }
-                    for userEmail in userEmails {
-                        print("userEmail: \(userEmail)")
-                        if circleMemberEmail == userEmail {
-                            print("match found")
-                            user = circleMember
-                            user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
-                            matchFound = true
-                        }
-                    }
-                }
-                
-                if let circleMemberPhoneNumbersCheck = circleMember.circleMemberPhoneNumbers {
-                    circleMemberPhonenumbers = circleMemberPhoneNumbersCheck
-                }
-                if let userPhoneNumbersCheck = user.circleMemberPhoneNumbers {
-                    userPhoneNumbers = userPhoneNumbersCheck
-                }
-                for circleMemberPhoneNumber in circleMemberPhonenumbers {
-                    for userPhoneNumber in userPhoneNumbers {
-                        if circleMemberPhoneNumber == userPhoneNumber {
-                            user = circleMember
-                            user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
-                            print("match found")
-                            matchFound = true
+        while relationshipDetermined == false {
+            if let userEmailsCheck = user.circleMemberEmails {
+                userEmails = userEmailsCheck
+                for userEmail in userEmails {
+                    let userEmailString = userEmail.value
+                    for email in FirebaseHelper.firebaseUserEmails {
+                        if userEmailString as String == email {
+                            // user exists
+                            user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation
+                            for circleMember in CurrentUser.circleMembers {
+                                if let circleMemberEmailCheck = circleMember.circleMemberEmails {
+                                    circleMemberEmails = circleMemberEmailCheck
+                                }
+                                for circleMemberEmail in circleMemberEmails {
+                                    let circleMemberEmailString = circleMemberEmail.value
+                                    if userEmailString == circleMemberEmailString {
+                                        // invited
+                                        user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
+                                        user = circleMember
+                                        relationshipDetermined = true
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-            matchFound = true
-        }
-        if let relationship = user.userRelationshipToCurrentUser {
-             print("userRelationship: \(relationship)")
+            relationshipDetermined = true
         }
         return user
     }
 }
 
 extension CircleUser {
-    func setFromCnContact(cnContact: CNContact) -> CircleUser {
+    func setFromCnContact(cnContact: CNContact) -> CircleUser {        
         let user = CircleUser()
         user.firstName = cnContact.givenName
         user.lastName = cnContact.familyName
@@ -188,7 +173,7 @@ extension CircleUser {
         
         user.profileImage = imageDataToSave
         
-        user.circleUserID = "userID.\(String(describing: user.dateAdded)).\(String(describing: user.firstName)).\(String(describing: user.lastName))"
+        user.circleUID = "userID.\(String(describing: user.dateAdded)).\(String(describing: user.firstName)).\(String(describing: user.lastName))"
         user.circleMemberEmails = cnContact.emailAddresses
         user.circleMemberPhoneNumbers = cnContact.phoneNumbers
         

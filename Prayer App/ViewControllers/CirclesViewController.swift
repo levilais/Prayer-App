@@ -106,12 +106,10 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         for i in 0...4 {
             switch i {
             case 0 ..< circleCount:
-                print("circle member #\(i)")
                 let circleUser = circleUsers[i]
                 circleProfileImages[i].image = UIImage(data: circleUser.profileImage!)
                 circleSpotFilled[i] = true
             case circleCount ... 4:
-                print("empty space #\(i - circleCount)")
                 circleProfileImages[i].image = UIImage(named: "addCircleMemberIcon.pdf")
                 circleSpotFilled[i] = false
             default:
@@ -136,7 +134,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         let alert = UIAlertController(title: "Are you sure", message: "Are you sure you want to remove this Circle Member", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
             CurrentUser.circleMembers.remove(at: self.selectedCircleMember)
-//            self.circleSpotFilled[selectedCircleMember] = false
+            self.circleSpotFilled[self.selectedCircleMember] = false
             self.selectedCircleMember = 0
             print("circleMember.count after: \(CurrentUser.circleMembers.count)")
             self.setCircleData()
@@ -178,6 +176,10 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 tableViewHeaderFooterView.textLabel?.textColor = UIColor.StyleFile.BackgroundColor
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

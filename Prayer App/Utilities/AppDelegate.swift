@@ -23,16 +23,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.backgroundColor=UIColor.white
         
         UITextView.appearance().tintColor = UIColor.StyleFile.DarkGrayColor
+        
         UITabBar.appearance().layer.borderWidth = 0.0
         UITabBar.appearance().clipsToBounds = true
+        
         UISwitch.appearance().onTintColor = UIColor.StyleFile.LightGrayColor
         UISwitch.appearance().thumbTintColor = UIColor.StyleFile.GoldColor
         
+        
+        
+        
         FirebaseApp.configure()
         UserDefaultsHelper().getLastContactAuthStatus()
-        
-        print("launched")
-        
+                
         return true
     }
 

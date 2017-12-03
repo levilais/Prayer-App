@@ -38,10 +38,10 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     // DATA HANDLING
     let persistentContainer = NSPersistentContainer(name: "Prayer")
     
-    fileprivate lazy var fetchedResultsController: NSFetchedResultsController<Prayer> = {
-        let fetchRequest: NSFetchRequest<Prayer> = Prayer.fetchRequest()
+    fileprivate lazy var fetchedResultsController: NSFetchedResultsController<UserPrayer> = {
+        let fetchRequest: NSFetchRequest<UserPrayer> = UserPrayer.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "prayerCategory", ascending: true)]
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.persistentContainer.viewContext, sectionNameKeyPath: #keyPath(Prayer.prayerCategory), cacheName: nil)
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.persistentContainer.viewContext, sectionNameKeyPath: #keyPath(UserPrayer.prayerCategory), cacheName: nil)
         
         let predicate = NSPredicate(format: "isAnswered = \(NSNumber(value:false))")
         fetchedResultsController.fetchRequest.predicate = predicate

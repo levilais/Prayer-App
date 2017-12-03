@@ -10,11 +10,15 @@ import Foundation
 
 class UserDefaultsHelper {
     func saveLoad() {
-         UserDefaults.standard.set(Loads.loadCount, forKey: "loads")
+        UserDefaults.standard.set(Loads.loadCount, forKey: "loads")
+        UserDefaults.standard.set(Loads.firstLoadPresented, forKey: "firstLoadPresented")
     }
     func getLoads() {
         if let loads = UserDefaults.standard.object(forKey: "loads") as? Int {
             Loads.loadCount = loads
+        }
+        if let firstLoadPresentedCheck = UserDefaults.standard.object(forKey: "firstLoadPresented") as? Bool {
+            Loads.firstLoadPresented = firstLoadPresentedCheck
         }
     }
     
@@ -42,6 +46,7 @@ class UserDefaultsHelper {
     
     enum Key: String {
         case loads = "loads"
+        case firstLoadPresented = "firstLoadPresented"
         case preferredTimerDuration = "preferredTimerDuration"
         case hasAllowedContacts = "hasAllowedContacts"
         case lastContactAuthStatus = "lastContactAuthStatus"

@@ -11,9 +11,10 @@ import UIKit
 class AddCircleMemberTableViewCell: UITableViewCell {
 
     @IBOutlet weak var fullNameLabel: UILabel!
-    @IBOutlet weak var inviteButton: CustomUIButton!
-    @IBOutlet weak var inviteSentButton: CustomUIButton!
+    @IBOutlet weak var inviteButton: CellButton!
     @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var deleteButton: CellButton!
+    @IBOutlet weak var relationshipStatusLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -11,84 +11,15 @@ import CoreData
 import UIKit
 
 class CoreDataHelper {
-//    init() {
-//        let container = NSPersistentContainer(name: "Prayer")
-//        container.loadPersistentStores { NSPersistentStoreDescription, error in
-//            if let error = error {
-//                print("levil \(error)")
-//            } else {
-//                print("levil Core Data Fine")
-//            }
-//        }
-//    }
     
     func getContext () -> NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }
     
-//    func storePrayer(prayerCategory: UITextField, prayerText: UITextView) {
-//        // Create a NSManagedObjectContext object from the getContext() function
-//        let context = getContext()
-//
-//        // Create an NSEntityDescription object from the Entity name pointed at the context we just created
-//        // Create the actual NSManagedObject we're going to save to the context with the description above
-//        // Set the values for the object
-//        if let entity = NSEntityDescription.entity(forEntityName: "Prayer", in: context) {
-//            let prayer = NSManagedObject(entity: entity, insertInto: context)
-//            if let category = prayerCategory.text {
-//                if let text = prayerText.text {
-//                    prayer.setValue(category, forKey: "prayerCategory")
-//                    prayer.setValue(text, forKey: "prayerText")
-//                    prayer.setValue(Date(), forKey: "timeStamp")
-//                    prayer.setValue(1, forKey: "prayerCount")
-//
-//                    // try to save it
-//                    do {
-//                        try context.save()
-//                        print("levil saved")
-//                    } catch {
-//
-//                    }
-//                }
-//            }
-//        }
-//    }
-    
-//    func updateUserIsLoggedIn(isLoggedIn: Bool) {
-//        let context = getContext()
-//        if let entity = NSEntityDescription.entity(forEntityName: "User", in: context) {
-//            let user = NSManagedObject(entity: entity, insertInto: context)
-//            user.setValue(isLoggedIn, forKey: "isLoggedIn")
-//            do {
-//                try context.save()
-//                print("levil saved")
-//            } catch {
-//                print("couldn't update isLoggedIn")
-//            }
-//        }
-//    }
-//    
-//    func checkIsLoggedIn() -> Bool? {
-//        var isLoggedIn = false
-//        let fetchRequest: NSFetchRequest<User> = User.fetchRequest()
-//        do {
-//            let searchResults = try getContext().fetch(fetchRequest)
-//            for result in searchResults as [NSManagedObject] {
-//                if let isLoggedInCheck = result.value(forKey: "isLoggedIn") as? Bool {
-//                    isLoggedIn = isLoggedInCheck
-//                }
-//            }
-//        } catch {
-//            print("couldn't update isLoggedIn")
-//        }
-//        print("isLoggedIn: \(isLoggedIn)")
-//        return isLoggedIn
-//    }
-    
     func getPrayersCategories() -> [String]? {
         var categoryHeaders: [String] = [String]()
-        let fetchRequest: NSFetchRequest<Prayer> = Prayer.fetchRequest()
+        let fetchRequest: NSFetchRequest<UserPrayer> = UserPrayer.fetchRequest()
         
         do {
             let searchResults = try getContext().fetch(fetchRequest)

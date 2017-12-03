@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13771" systemVersion="17C76a" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Prayer" representedClassName="Prayer" syncable="YES" codeGenerationType="class">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13771" systemVersion="17C83a" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="UserPrayer" representedClassName="UserPrayer" syncable="YES" codeGenerationType="class">
         <attribute name="howAnswered" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAnswered" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="prayerCategory" optional="YES" attributeType="String" syncable="YES"/>
@@ -9,6 +9,6 @@
         <attribute name="timeStamp" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Prayer" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="UserPrayer" positionX="-63" positionY="-18" width="128" height="135"/>
     </elements>
 </model>
