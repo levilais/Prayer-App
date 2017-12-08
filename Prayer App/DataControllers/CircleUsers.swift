@@ -27,7 +27,7 @@ class CircleUser {
     
     enum userRelationshipToCurrentUser: String {
         case nonMember = "nonMember"
-        case invitedToPrayer = "invitedToPrayer"
+//        case invitedToPrayer = "invitedToPrayer"
         case memberButNoRelation = "memberButNoRelation"
         case invited = "invited"
         case myCircleMember = "myCircleMember"

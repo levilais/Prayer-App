@@ -60,11 +60,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     var categoryButtons: [UIButton] = [UIButton]()
     var categoryInputIsTextfield = true
     var chosenCategory = String()
-    
-    // Spinner Popup
-    @IBOutlet weak var spinnerView: UIView!
-    @IBOutlet weak var spinnerImage: UIImageView!
-    @IBOutlet weak var spinnerLabel: UILabel!
 
     // Review Popup Variables
     var passFirstResponder = true
@@ -390,7 +385,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         UIView.animate(withDuration: 0.33) {
             self.dismissSaveToJournalPopup()
         }
-        Animations().animateSpinner(spinnerView: spinnerView, spinnerImage: spinnerImage, spinnerLabel: spinnerLabel, spinnerString: "Saved", textView: textField, viewController: self)
+        Animations().showPopup(labelText: "Saved!", presentingVC: self)
         dismissSaveToJournalPopup()
         resetCountLabel()
         categoryCreationTextField.text = ""
@@ -531,7 +526,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             if !completed {
                 return
             }
-            Animations().animateSpinner(spinnerView: self.spinnerView, spinnerImage: self.spinnerImage, spinnerLabel: self.spinnerLabel, spinnerString: "Shared", textView: self.textField, viewController: self)
+            Animations().showPopup(labelText: "Shared!", presentingVC: self)
             self.textField.becomeFirstResponder()
         }
         present(activityViewController, animated: true, completion: nil)

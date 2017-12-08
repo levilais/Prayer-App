@@ -234,22 +234,28 @@ class Animations {
             }, completion: nil)
         })
     }
-    
-    func animateSpinner(spinnerView: UIView, spinnerImage: UIImageView, spinnerLabel: UILabel, spinnerString: String, textView: UITextView, viewController: UIViewController) {
-        spinnerLabel.text = spinnerString
-        UIView.animate(withDuration: 0.8, delay: 0.0, options: [.curveEaseIn], animations: {
-            spinnerImage.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            spinnerLabel.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            spinnerView.alpha = 1.0
-            spinnerImage.alpha = 1.0
-            spinnerLabel.alpha = 1.0
+        
+    func showPopup(labelText: String, presentingVC: UIViewController) {
+        let popupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "popupViewControllerID") as! PopupViewController
+        presentingVC.addChildViewController(popupVC)
+        popupVC.view.frame = presentingVC.view.frame
+        presentingVC.view.addSubview(popupVC.view)
+        popupVC.didMove(toParentViewController: presentingVC)
+        
+        popupVC.label.text = labelText
+        UIView.animate(withDuration: 0.8, delay: 0.5, options: [.curveEaseIn], animations: {
+            popupVC.labelBackground.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            popupVC.label.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            popupVC.popupBackground.alpha = 1.0
+            popupVC.labelBackground.alpha = 1.0
+            popupVC.label.alpha = 1.0
         }) { (completed) in
             UIView.animate(withDuration: 0.5, delay: 1.0, options: [.curveEaseIn], animations: {
-                spinnerImage.alpha = 0
-                spinnerLabel.alpha = 0
-                spinnerView.alpha = 0
+                popupVC.labelBackground.alpha = 0
+                popupVC.label.alpha = 0
+                popupVC.popupBackground.alpha = 0
             }, completion: { (completed) in
-                textView.becomeFirstResponder()
+                popupVC.view.removeFromSuperview()
             })
         }
     }

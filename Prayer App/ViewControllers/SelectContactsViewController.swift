@@ -11,8 +11,9 @@ import Firebase
 import FirebaseDatabase
 import Contacts
 import ContactsUI
+import MessageUI
 
-class SelectContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SelectContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate {
     
     // Authorize Contacts View
     @IBOutlet weak var contactsNotAllowedView: UIView!
@@ -29,7 +30,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     var cnContacts = [CNContact]()
     var segueFromSettings = false
     var cleanContactsAsCircleUsers = [CircleUser]()
-
     var members = [CircleUser]()
     var nonMembers = [CircleUser]()
     var sectionHeaders = [String]()
@@ -141,7 +141,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             }
             for user in self.cleanContactsAsCircleUsers {
                 if let status = user.userRelationshipToCurrentUser?.rawValue {
-                    print("user relationship status: \(status)")
+//                    print("user relationship status: \(status)")
                 }
             }
         })
@@ -235,7 +235,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             if sectionHeaders.count > 1 {
                 user = members[indexPath.row]
             } else {
-                print("called")
                 user = nonMembers[indexPath.row]
             }
         case 1:
@@ -256,7 +255,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         cell.fullNameLabel.text = fullName
         cell.inviteButton.tag = indexPath.row
         cell.inviteButton.section = indexPath.section
-        cell.inviteButton.addTarget(self, action: #selector(sendInvite(sender:)), for: .touchUpInside)
+        cell.inviteButton.addTarget(self, action: #selector(inviteMemberToCircle(sender:)), for: .touchUpInside)
         cell.deleteButton.tag = indexPath.row
         cell.deleteButton.section = indexPath.section
         cell.deleteButton.addTarget(self, action: #selector(deleteCircleMember(sender:)), for: .touchUpInside)
@@ -283,7 +282,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         }
     }
     
-    @objc func sendInvite(sender: CellButton){
+    @objc func inviteMemberToCircle(sender: CellButton){
         print("send invite fired")
         if CurrentUser.circleMembers.count < 5 {
             let buttonTag = sender.tag
@@ -304,6 +303,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             default:
                 user = nonMembers[indexPath.row]
             }
+            
             if user.userRelationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation {
                 user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
                 CurrentUser.circleMembers.append(user)
@@ -315,6 +315,129 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 print("CurrentUser.circleMembers.count: \(CurrentUser.circleMembers.count)")
             } else {
                 print("not a member yet - need to do action sheet to invite")
+                inviteMemberToPrayer(sender: sender)
+            }
+        }
+    }
+    
+    func inviteMemberToPrayer(sender: UIButton) {
+        let user = nonMembers[sender.tag]
+
+        var emails = [CNLabeledValue<NSString>]()
+        var phoneNumbers = [CNLabeledValue<CNPhoneNumber>]()
+        var alert = UIAlertController()
+        var errorMessage = ""
+        
+        if let emailsCheck = user.circleMemberEmails {
+            emails = emailsCheck
+        }
+        if let phoneNumbersCheck = user.circleMemberPhoneNumbers {
+            phoneNumbers = phoneNumbersCheck
+        }
+        
+        if emails.count > 0 || phoneNumbers.count > 0 {
+            let contactName = CircleUser().getFullName(user: user)
+            alert = UIAlertController(title: "Invite \(contactName) to Prayer", message: nil, preferredStyle: .actionSheet)
+            var i = 0
+            if emails.count > 0 {
+                if MFMailComposeViewController.canSendMail() {
+                    for email in emails {
+                        let emailString = email.value as String
+                        let action = UIAlertAction(title: emailString, style: .default, handler: { (action) in
+                            print("pressed: \(emailString)")
+                            let composeVC = MFMailComposeViewController()
+                            composeVC.mailComposeDelegate = self
+                            
+                            composeVC.setToRecipients([emailString])
+                            composeVC.setSubject("An invitation from [username]")
+                            composeVC.setMessageBody("[username] would like to invite you to download Prayer - Swipe To Send.  (There would be a link to download the app here in the near future)", isHTML: false)
+                            
+                            self.present(composeVC, animated: true, completion: nil)
+                        })
+                        alert.addAction(action)
+                        i += 1
+                    }
+                } else {
+                    errorMessage = "Messaging services are not available at this time"
+                }
+            }
+            
+            i = 0
+            if phoneNumbers.count > 0 {
+                if MFMessageComposeViewController.canSendText() {
+                    for phoneNumber in phoneNumbers {
+                        let number = "(text) " + phoneNumber.value.stringValue
+                        let action = UIAlertAction(title: number, style: .default, handler: { (action) in
+                            print("pressed: \(number)")
+                            let composeVC = MFMessageComposeViewController()
+                            composeVC.messageComposeDelegate = self
+
+//                            composeVC.recipients = ["5034733923"] // for testing
+                            composeVC.recipients = [number]
+                            composeVC.body = "[username] would like to invite you to download Prayer - Swipe To Send."
+                            self.present(composeVC, animated: true, completion: nil)
+                            
+                        })
+                        alert.addAction(action)
+                        i += 1
+                    }
+                } else {
+                    errorMessage = "Messaging services are not available at this time"
+                }
+            }
+            if errorMessage != "" {
+                alert = UIAlertController(title: "There was an error", message: errorMessage, preferredStyle: .actionSheet)
+                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alert.addAction(action)
+            } else {
+                let action = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                alert.addAction(action)
+            }
+        }
+        
+        present(alert, animated: true, completion: nil)
+        print(alert.actions.count)
+        alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                               didFinishWith result: MFMailComposeResult, error: Error?) {
+        var labelText = ""
+        
+        switch result {
+        case .cancelled:
+            print("cancelled")
+        case .sent:
+            labelText = "Sent!"
+        case .saved:
+            labelText = "Saved!"
+        case .failed:
+            print("failed")
+        }
+        
+        controller.dismiss(animated: true) {
+            if labelText != "" {
+                Animations().showPopup(labelText: labelText, presentingVC: self)
+            }
+        }
+    }
+    
+    func messageComposeViewController(_ controller: MFMessageComposeViewController,
+                                      didFinishWith result: MessageComposeResult) {
+        var labelText = ""
+        
+        switch result {
+        case .cancelled:
+            print("cancelled")
+        case .sent:
+            labelText = "Sent!"
+        case .failed:
+            print("failed")
+        }
+        
+        controller.dismiss(animated: true) {
+            if labelText != "" {
+                Animations().showPopup(labelText: labelText, presentingVC: self)
             }
         }
     }
@@ -363,7 +486,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     func updateSpotsLeftLabel() {
         circleUserSpotsUsed = CurrentUser.circleMembers.count
         if members.count == 0 {
-            spotsLeftLabel.text = "None of your contacts are members of Prayer. Invite them to join!"
+            spotsLeftLabel.text = "None of your contacts are members of Prayer yet. Invite them to join!"
         } else {
             if circleUserSpotsUsed < 5 {
                 spotsLeftLabel.text = "You still have \(5 - circleUserSpotsUsed) out of 5 Circle Member spots available."

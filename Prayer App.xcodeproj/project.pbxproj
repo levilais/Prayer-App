@@ -21,6 +21,7 @@
 		044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */; };
 		044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */; };
 		046203301FA39ACE00BDF8ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */; };
+		04695D491FD9FDE50063B5B7 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04695D481FD9FDE50063B5B7 /* PopupViewController.swift */; };
 		047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */; };
 		0474DD6C1F9FE7B4008D79E3 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474DD6B1F9FE7B4008D79E3 /* Animations.swift */; };
 		0485B3501FD37DF200BC85F0 /* CustomUIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0485B34F1FD37DF200BC85F0 /* CustomUIAlertController.swift */; };
@@ -67,6 +68,7 @@
 		044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		04695D481FD9FDE50063B5B7 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnsweredPrayerTableViewCell.swift; sourceTree = "<group>"; };
 		0474DD6B1F9FE7B4008D79E3 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		0485B34F1FD37DF200BC85F0 /* CustomUIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIAlertController.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				04FE7CDB1FBE077C00E500A5 /* CirclesViewController.swift */,
 				0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */,
 				04F2255C1FC50337000549D5 /* SettingsDetailViewController.swift */,
+				04695D481FD9FDE50063B5B7 /* PopupViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */,
 				04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */,
 				04EFA65F1FCB3058001C291D /* AddCircleMemberTableViewCell.swift in Sources */,
+				04695D491FD9FDE50063B5B7 /* PopupViewController.swift in Sources */,
 				044A0EE51FD1AF8C004164D0 /* FirebaseHelper.swift in Sources */,
 				041953121FD23D4A00186084 /* CellButton.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
