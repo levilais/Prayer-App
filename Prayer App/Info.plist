@@ -43,5 +43,7 @@
 	</array>
 	<key>NSContactsUsageDescription</key>
 	<string>Prayer requires access to Contacts for Prayer Circles</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>In order to access your photos, you&apos;ll need to allow Prayer access to your photo libraries </string>
 </dict>
 </plist>

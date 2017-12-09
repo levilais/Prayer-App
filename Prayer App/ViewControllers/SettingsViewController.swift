@@ -27,7 +27,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         settingsProfileButtonImage.layer.cornerRadius = settingsProfileButtonImage.frame.size.height / 2
         settingsProfileButtonImage.clipsToBounds = true
         tableView.tableFooterView = UIView()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
