@@ -13,7 +13,7 @@ import Contacts
 import ContactsUI
 import MessageUI
 
-class SelectContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate {
+class SelectContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UISearchResultsUpdating {
     
     // Authorize Contacts View
     @IBOutlet weak var contactsNotAllowedView: UIView!
@@ -28,15 +28,27 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     @IBOutlet weak var spotsLeftLabel: UILabel!
     var circleUserSpotsUsed = Int()
     var cnContacts = [CNContact]()
-    var segueFromSettings = false
     var cleanContactsAsCircleUsers = [CircleUser]()
+    var contactsToDisplay = [CircleUser]()
+    var filteredContacts = [CircleUser]()
+    
+    var segueFromSettings = false
     var members = [CircleUser]()
     var nonMembers = [CircleUser]()
     var sectionHeaders = [String]()
     
+    // Search
+    var resultSearchController = UISearchController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         FirebaseHelper().getUsers()
+        
+        setupSearchResultsController()
+
+        let backView = UIView(frame: self.tableView.bounds)
+        backView.backgroundColor = UIColor.StyleFile.BackgroundColor
+        self.tableView.backgroundView = backView
         tableView.tableFooterView = UIView()
     }
     
@@ -46,6 +58,34 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
         updateSpotsLeftLabel()
         loadCorrectView()
+    }
+    
+    func setupSearchResultsController() {
+        self.resultSearchController = ({
+            let controller = UISearchController(searchResultsController: nil)
+            controller.searchResultsUpdater = self
+            controller.dimsBackgroundDuringPresentation = false
+            controller.searchBar.sizeToFit()
+            controller.searchBar.barTintColor = UIColor.StyleFile.BackgroundColor
+            controller.searchBar.tintColor = UIColor.StyleFile.DarkGrayColor
+            controller.searchBar.backgroundColor = UIColor.StyleFile.BackgroundColor
+            controller.searchBar.barStyle = UIBarStyle.default
+            controller.searchBar.keyboardType = UIKeyboardType.asciiCapable
+            controller.searchBar.keyboardAppearance = UIKeyboardAppearance.dark
+            controller.hidesNavigationBarDuringPresentation = false
+            
+            self.tableView.tableHeaderView = controller.searchBar
+            self.definesPresentationContext = true
+            
+            let textFieldInsideSearchBar = controller.searchBar.value(forKey: "searchField") as? UITextField
+            textFieldInsideSearchBar?.layer.borderColor = UIColor.lightGray.cgColor
+            textFieldInsideSearchBar?.layer.borderWidth = 0.5
+            textFieldInsideSearchBar?.textColor = .clear
+            textFieldInsideSearchBar?.textColor = UIColor.StyleFile.DarkGrayColor
+            textFieldInsideSearchBar?.backgroundColor = .clear
+            
+            return controller
+        })()
     }
     
     func loadCorrectView() {
@@ -79,6 +119,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     func getContactsData() {
         cnContacts = []
         cleanContactsAsCircleUsers = []
+        contactsToDisplay = []
         sectionHeaders = []
         members = []
         nonMembers = []
@@ -86,16 +127,13 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         let store = CNContactStore()
         store.requestAccess(for: .contacts, completionHandler: {
             granted, error in
-            
             guard granted else {
                 print("didn't have access to contacts")
                 return
             }
-            
             let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey,CNContactEmailAddressesKey,CNContactImageDataKey,CNContactImageDataAvailableKey,CNContactPhoneNumbersKey] as [CNKeyDescriptor]
             
             let request = CNContactFetchRequest(keysToFetch: keysToFetch)
-            
             request.sortOrder = CNContactSortOrder.familyName
             
             do {
@@ -132,22 +170,25 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 }
                 if append == true {
                     let userWithStatus = CircleUser().getRelationshipStatus(userToCheck: user)
-                    self.cleanContactsAsCircleUsers.append(userWithStatus)
+                    self.contactsToDisplay.append(userWithStatus)
                 }
+                
+                self.cleanContactsAsCircleUsers = self.contactsToDisplay
             }
+            
             self.setUpContactSections()
+            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-            }
-            for user in self.cleanContactsAsCircleUsers {
-                if let status = user.userRelationshipToCurrentUser?.rawValue {
-//                    print("user relationship status: \(status)")
-                }
             }
         })
     }
     
     func setUpContactSections() {
+        members = []
+        nonMembers = []
+        sectionHeaders = []
+        
         for user in cleanContactsAsCircleUsers {
             if let relationshipCheck = user.userRelationshipToCurrentUser {
                 var sectionHeader = String()
@@ -172,7 +213,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             self.dismiss(animated: true, completion: nil)
         } else {
             self.view.window!.rootViewController?.dismiss(animated: true, completion: nil)
-//            self.dismiss(animated: false, completion: nil)
         }
     }
     
@@ -209,7 +249,18 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionHeaders[section]
+        var title = String()
+        title = "Invite to join Prayer"
+        if section == 0 {
+            if sectionHeaders.count > 1 {
+                title = "Invite member to your Circle"
+            } else if sectionHeaders.count == 1 {
+                if members.count > 0 {
+                    title = "Invite member to your Circle"
+                }
+            }
+        }
+        return title
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -217,11 +268,16 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var rowCount = Int()
-        if section == 0 && sectionHeaders.count > 1 {
-            rowCount = members.count
-        } else {
-            rowCount = nonMembers.count
+        var rowCount = nonMembers.count
+        
+        if section == 0 {
+            if sectionHeaders.count > 1 {
+                rowCount = members.count
+            } else if sectionHeaders.count == 1 {
+                if members.count > 0 {
+                    rowCount = members.count
+                }
+            }
         }
         return rowCount
     }
@@ -230,19 +286,22 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         let cell = tableView.dequeueReusableCell(withIdentifier: "addCircleMemberCell", for: indexPath) as! AddCircleMemberTableViewCell
  
         var user = CircleUser()
-        switch indexPath.section {
-        case 0:
+        
+        if indexPath.section == 0 {
             if sectionHeaders.count > 1 {
                 user = members[indexPath.row]
+            } else if sectionHeaders.count == 1 {
+                if members.count > 0 {
+                    user = members[indexPath.row]
+                } else {
+                    user = nonMembers[indexPath.row]
+                }
             } else {
                 user = nonMembers[indexPath.row]
             }
-        case 1:
-            user = nonMembers[indexPath.row]
-        default:
+        } else {
             user = nonMembers[indexPath.row]
         }
-        
         
         if let profileImageData = user.profileImage {
             if let profileImage = UIImage(data: profileImageData) {
@@ -266,11 +325,11 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     func updateRelationshipActions(cell: AddCircleMemberTableViewCell, user: CircleUser) {
         if let userRelationship = user.userRelationshipToCurrentUser {
             switch userRelationship {
-            case CircleUser.userRelationshipToCurrentUser.invited:
+            case .invited:
                 cell.inviteButton.isHidden = true
                 cell.deleteButton.isHidden = false
                 cell.relationshipStatusLabel.isHidden = false
-            case CircleUser.userRelationshipToCurrentUser.nonMember:
+            case .nonMember:
                 cell.inviteButton.isHidden = false
                 cell.deleteButton.isHidden = true
                 cell.relationshipStatusLabel.isHidden = true
@@ -291,18 +350,35 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
             
             var user = CircleUser()
-            switch indexPath.section {
-            case 0:
+            
+            if indexPath.section == 0 {
                 if sectionHeaders.count > 1 {
                     user = members[indexPath.row]
+                } else if sectionHeaders.count == 1 {
+                    if members.count > 0 {
+                        user = members[indexPath.row]
+                    } else {
+                        user = nonMembers[indexPath.row]
+                    }
                 } else {
                     user = nonMembers[indexPath.row]
                 }
-            case 1:
-                user = nonMembers[indexPath.row]
-            default:
+            } else {
                 user = nonMembers[indexPath.row]
             }
+            
+//            switch indexPath.section {
+//            case 0:
+//                if sectionHeaders.count > 1 {
+//                    user = members[indexPath.row]
+//                } else {
+//                    user = nonMembers[indexPath.row]
+//                }
+//            case 1:
+//                user = nonMembers[indexPath.row]
+//            default:
+//                user = nonMembers[indexPath.row]
+//            }
             
             if user.userRelationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation {
                 user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
@@ -311,10 +387,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 cell.inviteButton.isHidden = true
                 cell.deleteButton.isHidden = false
                 cell.relationshipStatusLabel.isHidden = false
-                print("row number: \(buttonTag)")
-                print("CurrentUser.circleMembers.count: \(CurrentUser.circleMembers.count)")
             } else {
-                print("not a member yet - need to do action sheet to invite")
                 inviteMemberToPrayer(sender: sender)
             }
         }
@@ -344,7 +417,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                     for email in emails {
                         let emailString = email.value as String
                         let action = UIAlertAction(title: emailString, style: .default, handler: { (action) in
-                            print("pressed: \(emailString)")
                             let composeVC = MFMailComposeViewController()
                             composeVC.mailComposeDelegate = self
                             
@@ -449,9 +521,9 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             let buttonSection = sender.section
             let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
             let cell = self.tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
+            
             let user = self.members[indexPath.row]
             
-            print("attempted")
             if let idToDelete = user.circleUID {
                 print("user UID: \(idToDelete)")
                 var matchFound = false
@@ -461,17 +533,22 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                         if let circleMemberID = circleMember.circleUID {
                             print("circleMember UID: \(circleMemberID)")
                             if circleMemberID == idToDelete {
+                                user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation
                                 CurrentUser.circleMembers.remove(at: i)
+                                
+                                print("CircleMember trying to delete: \(i)")
                                 cell.inviteButton.isHidden = false
                                 cell.deleteButton.isHidden = true
                                 cell.relationshipStatusLabel.isHidden = true
                                 self.updateSpotsLeftLabel()
+                                print("deleted: \(user.firstName!) \(user.lastName!)")
                                 matchFound = true
                             }
                         }
                         i += 1
                     }
                     matchFound = true
+//                    self.tableView.reloadData()
                 }
             }
         }
@@ -485,15 +562,36 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     func updateSpotsLeftLabel() {
         circleUserSpotsUsed = CurrentUser.circleMembers.count
-        if members.count == 0 {
-            spotsLeftLabel.text = "None of your contacts are members of Prayer yet. Invite them to join!"
+        
+        if circleUserSpotsUsed < 5 {
+            spotsLeftLabel.text = "You still have \(5 - circleUserSpotsUsed) out of 5 Circle Member spots available."
         } else {
-            if circleUserSpotsUsed < 5 {
-                spotsLeftLabel.text = "You still have \(5 - circleUserSpotsUsed) out of 5 Circle Member spots available."
-            } else {
-                spotsLeftLabel.text = "You have used all 5 of your Circle Member spots. Uninvite or remove someone from your circle if you would like to invite someone else."
+            spotsLeftLabel.text = "You have used all 5 of your Circle Member spots. Uninvite or remove someone from your circle if you would like to invite someone else."
+        }
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+//        cleanContactsAsCircleUsers = []
+        let searchText = searchController.searchBar.text
+        if let searchText = searchText {
+            if !searchText.isEmpty {
+                self.cleanContactsAsCircleUsers = self.contactsToDisplay.filter { $0.firstName!.contains(searchText) || $0.lastName!.contains(searchText) }
+                for contact in self.cleanContactsAsCircleUsers {
+                    print("\(contact.firstName!) \(contact.lastName!)")
+                }
+            }
+            else {
+                self.cleanContactsAsCircleUsers = self.contactsToDisplay
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "showResultsBeforeSearchingNotification"), object: nil) // Calls SearchVC
             }
         }
+        
+//        self.sectionHeaders = []
+        print("members.count: \(members.count)")
+        print("nonMembers.count: \(nonMembers.count)")
+        print("sectionHeaders.count: \(sectionHeaders.count)")
+        setUpContactSections()
+        self.tableView.reloadData()
     }
     
     @objc func handleNotification(_ notification: NSNotification) {
@@ -502,7 +600,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         }
         print("notification fired")
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
     }

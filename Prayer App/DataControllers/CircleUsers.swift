@@ -181,3 +181,9 @@ extension CircleUser {
     }
 }
 
+//extension Collection {
+//    func find( predicate: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
+//        return try index(where: predicate).map({self[$0]})
+//    }
+//}
+

@@ -8,7 +8,7 @@
 
 import UIKit
 import StoreKit
-//import Firebase
+import Firebase
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -16,12 +16,16 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var titleImage: UIImageView!
     @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var settingsProfileButtonImage: UIButton!
+    @IBOutlet weak var welcomeLabel: UILabel!
     
     var sectionHeaders = ["Timer Duration","Review The Prayer App","Settings"]
     var selectedRow = Int()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        settingsProfileButtonImage.layer.cornerRadius = settingsProfileButtonImage.frame.size.height / 2
+        settingsProfileButtonImage.clipsToBounds = true
         tableView.tableFooterView = UIView()
         
     }
@@ -31,6 +35,22 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         tableView.reloadData()
+        
+        if Auth.auth().currentUser != nil {
+            settingsProfileButtonImage.setBackgroundImage(UIImage(named: "profilePlaceHolderImageL.pdf"), for: .normal)
+            settingsProfileButtonImage.isEnabled = true
+            welcomeLabel.text = "Good afternoon, Levi"
+            // set the profile image to be the user's profile image
+        } else {
+            settingsProfileButtonImage.isEnabled = false
+            // this is temporary - if we set the profile image when the user is created, we can always set the image from the profile image. It will pull from the current instance of the user once
+            settingsProfileButtonImage.setBackgroundImage(UIImage(named: "settingsPrayerIcon.pdf"), for: .normal)
+            welcomeLabel.text = "Welcome To Prayer"
+        }
+    }
+    
+    @IBAction func profileImageButtonDidPress(_ sender: Any) {
+        performSegue(withIdentifier: "settingsToUpdateProfileSegue", sender: self)
     }
     
     @IBAction func timerButtonDidPress(_ sender: Any) {

@@ -99,6 +99,7 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
             }
         case 2:
             if let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as? SettingsTableViewCell {
+                
                 cell.label.text = labelString
                 cellToReturn = cell
             }
@@ -110,6 +111,21 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let category = Settings().settingsCategories[chosenSection]
+        if let subCategories = category["subCategories"] as? [AnyObject] {
+            if let subCategory = subCategories[indexPath.row] as? [String:AnyObject] {
+                if let subTitle = subCategory["subTitle"] as? String {
+                    if subTitle == "Edit Profile" {
+                        if Auth.auth().currentUser != nil {
+                            performSegue(withIdentifier: "settingsDetailToUpdateProfileSegue", sender: self)
+                        } else {
+                            performSegue(withIdentifier: "settingsToLoginSegue", sender: nil)
+                        }
+                    }
+                }
+            }
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
     

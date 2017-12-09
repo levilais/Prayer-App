@@ -30,9 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UISwitch.appearance().onTintColor = UIColor.StyleFile.LightGrayColor
         UISwitch.appearance().thumbTintColor = UIColor.StyleFile.GoldColor
         
-        
-        
-        
         FirebaseApp.configure()
         UserDefaultsHelper().getLastContactAuthStatus()
                 

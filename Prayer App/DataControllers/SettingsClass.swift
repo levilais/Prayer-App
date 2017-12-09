@@ -13,6 +13,14 @@ class Settings {
 
     var settingsCategories = [
         [
+        "title": "Profile",
+        "subCategories":
+            [
+            ["subTitle":"Edit Profile","actionType":2]
+            ]
+        ],
+        
+        [
         "title": "Account",
         "subCategories":
             [
@@ -22,7 +30,7 @@ class Settings {
         ],
         
         [
-        "title": "Friends",
+        "title": "Circle Settings",
         "subCategories":
             [
             ["subTitle":"Connect To Contacts","actionType":0]
