@@ -170,7 +170,7 @@ extension CircleUser {
                 }
             }
         }
-        
+
         user.profileImage = imageDataToSave
         
         user.circleUID = "userID.\(String(describing: user.dateAdded)).\(String(describing: user.firstName)).\(String(describing: user.lastName))"
@@ -180,10 +180,4 @@ extension CircleUser {
         return user
     }
 }
-
-//extension Collection {
-//    func find( predicate: (Self.Iterator.Element) throws -> Bool) rethrows -> Self.Iterator.Element? {
-//        return try index(where: predicate).map({self[$0]})
-//    }
-//}
 

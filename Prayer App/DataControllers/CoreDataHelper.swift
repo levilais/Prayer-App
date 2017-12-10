@@ -19,7 +19,7 @@ class CoreDataHelper {
     
     func getPrayersCategories() -> [String]? {
         var categoryHeaders: [String] = [String]()
-        let fetchRequest: NSFetchRequest<UserPrayer> = UserPrayer.fetchRequest()
+        let fetchRequest: NSFetchRequest<Prayer> = Prayer.fetchRequest()
         
         do {
             let searchResults = try getContext().fetch(fetchRequest)

@@ -22,6 +22,7 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     @IBOutlet weak var lastNameTextField: UITextField!
     
     var imagePicker: UIImagePickerController?
+    var newImageToSave = UIImage()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +34,9 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        profileImageButton.setBackgroundImage(UIImage(named: "profilePlaceHolderImageL.pdf"), for:  .normal)
+        profileImageButton.setBackgroundImage(CurrentUser().currentUserProfileImage(), for:  .normal)
+        firstNameTextField.text = CurrentUser().currentUserFirstName()
+        lastNameTextField.text = CurrentUser().currentUserLastName()
     }
     
     func setupView() {
@@ -48,7 +51,7 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     }
     
     @IBAction func saveButtonDidPress(_ sender: Any) {
-        print("save pressed")
+        saveUpdates()
     }
     
     @IBAction func editPhotoButtonDidPress(_ sender: Any) {
@@ -79,6 +82,11 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
         }
     }
     
+    func saveUpdates() {
+        // do code to process save
+        print("save pressed")
+    }
+    
     func launchPicker() {
         self.imagePicker?.sourceType = .photoLibrary
         if let picker = self.imagePicker {
@@ -92,7 +100,6 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var sourceImage = UIImage()
-        
         if imagePicker!.allowsEditing {
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 sourceImage = image
@@ -104,6 +111,7 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
         }
         
         profileImageButton.setBackgroundImage(sourceImage, for: .normal)
+        newImageToSave = sourceImage
         print("attempted to set image")
         picker.dismiss(animated: true, completion: nil)
     }

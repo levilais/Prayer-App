@@ -65,7 +65,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     var passFirstResponder = true
     
     // Core Data Variables
-    var prayer: UserPrayer?
+    var prayer: Prayer?
     var managedObjectContext: NSManagedObjectContext?
     
     // Gestures
@@ -479,7 +479,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         }
         
         let managedContext = appDelegate.persistentContainer.viewContext
-        let entity = NSEntityDescription.entity(forEntityName: "UserPrayer", in: managedContext)!
+        let entity = NSEntityDescription.entity(forEntityName: "Prayer", in: managedContext)!
         let prayer = NSManagedObject(entity: entity, insertInto: managedContext)
         
         setCategoryIfFromText(prayerHeader: prayerHeader)

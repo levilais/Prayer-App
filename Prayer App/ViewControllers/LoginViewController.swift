@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 import Firebase
 import FirebaseDatabase
 import Contacts
@@ -287,8 +288,8 @@ class LoginViewController: UIViewController {
         if let password = signupPasswordTextField.text {
             if let firstNameCheck = firstNameTextField.text {
                 if let lastNameCheck = lastNameTextField.text {
-                    firstName = firstNameCheck.trimmingCharacters(in: .whitespacesAndNewlines)
-                    lastName = lastNameCheck.trimmingCharacters(in: .whitespacesAndNewlines)
+                    firstName = firstNameCheck.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
+                    lastName = lastNameCheck.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
                     Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
                         if let error = error {
                             self.explanationLabel.text = error.localizedDescription
@@ -300,6 +301,16 @@ class LoginViewController: UIViewController {
                                 Database.database().reference().child("users").child(user.uid).child("firstName").setValue(firstName)
                                 Database.database().reference().child("users").child(user.uid).child("lastName").setValue(lastName)
                                 Database.database().reference().child("users").child(user.uid).child("dateJoined").setValue(dateJoined)
+                                
+                                let profileImageData = CurrentUser().profileImageFromNameAsData(firstName: firstName)
+                                
+                                if CurrentUser().currentUserExists() {
+                                    // remove all Core Data from the previous user and replace it with this new user on the device.  Likely need to remove Prayers from previous user, too.  Need to do this on login, too.  Core Data should be relevant to signed-in UID.
+                                    CurrentUser().deleteCurrentUser()
+                                    self.saveUser(firstName: firstName, lastName: lastName, dateJoined: dateJoined, profileImageData: profileImageData, uid: user.uid)
+                                } else {
+                                    self.saveUser(firstName: firstName, lastName: lastName, dateJoined: dateJoined, profileImageData: profileImageData, uid: user.uid)
+                                }
                             }
                             if ContactsHandler().contactsAuthStatus() != ".authorized"  {
                                 self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
@@ -309,6 +320,30 @@ class LoginViewController: UIViewController {
                         }
                     })
                 }
+            }
+        }
+    }
+    
+    func saveUser(firstName: String, lastName: String, dateJoined: String, profileImageData: Data, uid: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        if let entity = NSEntityDescription.entity(forEntityName: "CurrentUserMO", in: managedContext) {
+            let currentUser = NSManagedObject(entity: entity, insertInto: managedContext)
+            
+            currentUser.setValue(firstName, forKey: "firstName")
+            currentUser.setValue(lastName, forKey: "lastName")
+            currentUser.setValue(dateJoined, forKey: "dateJoinedPrayer")
+            currentUser.setValue(profileImageData, forKey: "profileImage")
+            currentUser.setValue(uid, forKey: "uid")
+            currentUser.setValue(true, forKey: "hasAccount")
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("Could not save. \(error), \(error.userInfo)")
             }
         }
     }

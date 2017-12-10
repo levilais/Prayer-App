@@ -36,9 +36,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.reloadData()
         
         if Auth.auth().currentUser != nil {
-            settingsProfileButtonImage.setBackgroundImage(UIImage(named: "profilePlaceHolderImageL.pdf"), for: .normal)
+            settingsProfileButtonImage.setBackgroundImage(CurrentUser().currentUserProfileImage(), for: .normal)
             settingsProfileButtonImage.isEnabled = true
-            welcomeLabel.text = "Good afternoon, Levi"
+            welcomeLabel.text = "Good afternoon, \(CurrentUser().currentUserFirstName())"
             // set the profile image to be the user's profile image
         } else {
             settingsProfileButtonImage.isEnabled = false

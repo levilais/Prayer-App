@@ -54,7 +54,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
         updateSpotsLeftLabel()
         loadCorrectView()
@@ -89,6 +89,9 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func loadCorrectView() {
+        
+        // if not logged in, dismiss
+        
         if ContactsHandler().contactsAuthStatus() == ".authorized" {
             if segueFromSettings == true {
                 dismiss(animated: true, completion: nil)
