@@ -304,6 +304,9 @@ class LoginViewController: UIViewController {
                                 
                                 let profileImageData = CurrentUser().profileImageFromNameAsData(firstName: firstName)
                                 
+                                
+                                // if this works, it means the user doesn't exist.  If this is the case, we need to create another "Current User" and have all data app-wide be whatever Firebase has saved for that new user ID.  CircleUsers, Prayers, and CirclePrayers are all relative to who the logged in uid is.  We don't necessarily want to delete the current user.  Rather - update how we fetch data everywhere we call on the database.  THis exact process is also what needs to be done when loggin in.
+                                
                                 if CurrentUser().currentUserExists() {
                                     // remove all Core Data from the previous user and replace it with this new user on the device.  Likely need to remove Prayers from previous user, too.  Need to do this on login, too.  Core Data should be relevant to signed-in UID.
                                     CurrentUser().deleteCurrentUser()

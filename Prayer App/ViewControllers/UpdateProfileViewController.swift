@@ -83,8 +83,11 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     }
     
     func saveUpdates() {
-        // do code to process save
         print("save pressed")
+        // Unwrap textfields
+        // Save first, last, and image (if changed) to Firebase
+        // Save first, last, and image (if changed) to Core Data
+        // If it fails, trigger error alert
     }
     
     func launchPicker() {
