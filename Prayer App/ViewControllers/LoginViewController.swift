@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import Firebase
 import FirebaseDatabase
+import FirebaseStorage
 import Contacts
 import ContactsUI
 
@@ -36,9 +37,13 @@ class LoginViewController: UIViewController {
     var activeField: UITextField?
     var signupShowing = Bool()
     var firstLoadSignUp = Bool()
+    var ref: DatabaseReference!
+    
+    var firstNameCapitalCheck = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
         
         self.hideKeyboardWhenTappedAway()
         setupTextFields()
@@ -169,6 +174,7 @@ class LoginViewController: UIViewController {
                             self.explanationLabel.textColor = UIColor.StyleFile.WineColor
                             return
                         }
+                        
                         let alert = UIAlertController(title: "Email Sent!", message: "Please check your inbox for password reset instructions.", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
@@ -288,8 +294,8 @@ class LoginViewController: UIViewController {
         if let password = signupPasswordTextField.text {
             if let firstNameCheck = firstNameTextField.text {
                 if let lastNameCheck = lastNameTextField.text {
-                    firstName = firstNameCheck.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
-                    lastName = lastNameCheck.trimmingCharacters(in: .whitespacesAndNewlines).capitalized
+                    firstName = firstNameCheck.trimmingCharacters(in: .whitespacesAndNewlines).capitalizingFirstLetter()
+                    lastName = lastNameCheck.trimmingCharacters(in: .whitespacesAndNewlines).capitalizingFirstLetter()
                     Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
                         if let error = error {
                             self.explanationLabel.text = error.localizedDescription
@@ -304,8 +310,30 @@ class LoginViewController: UIViewController {
                                 
                                 let profileImageData = CurrentUser().profileImageFromNameAsData(firstName: firstName)
                                 
+                                if let imageToSave = UIImage(data: profileImageData) {
+                                    let imagesFolder = Storage.storage().reference().child("images")
+                                    if let imageData = UIImageJPEGRepresentation(imageToSave, 0.5) {
+                                        imagesFolder.child("profileImage\(user.uid).jpg").putData(imageData, metadata: nil, completion: { (metadata, error) in
+                                            if let error = error {
+                                                let alert = UIAlertController(title: "Something Went Wrong", message: error.localizedDescription, preferredStyle: .alert)
+                                                let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                                                    alert.dismiss(animated: true, completion: nil)
+                                                })
+                                                alert.addAction(action)
+                                                self.present(alert, animated: true, completion: nil)
+                                                print(error)
+                                            } else {
+                                                if let downloadURL = metadata?.downloadURL()?.absoluteString {
+                                                    self.ref.child("users").child(user.uid).child("profileImageURL").setValue(downloadURL)
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
                                 
                                 // if this works, it means the user doesn't exist.  If this is the case, we need to create another "Current User" and have all data app-wide be whatever Firebase has saved for that new user ID.  CircleUsers, Prayers, and CirclePrayers are all relative to who the logged in uid is.  We don't necessarily want to delete the current user.  Rather - update how we fetch data everywhere we call on the database.  THis exact process is also what needs to be done when loggin in.
+                                
+                                // there is now a property that is "isLoggedInAsCurrentUser".  Do a for loop and change all uid's that dont' match this uid to "false" - and this one to "true".  Then, when fetching info, make sure that there is a predicate that calls for only objects where "isCurrentUser" is true
                                 
                                 if CurrentUser().currentUserExists() {
                                     // remove all Core Data from the previous user and replace it with this new user on the device.  Likely need to remove Prayers from previous user, too.  Need to do this on login, too.  Core Data should be relevant to signed-in UID.
@@ -315,6 +343,7 @@ class LoginViewController: UIViewController {
                                     self.saveUser(firstName: firstName, lastName: lastName, dateJoined: dateJoined, profileImageData: profileImageData, uid: user.uid)
                                 }
                             }
+                            
                             if ContactsHandler().contactsAuthStatus() != ".authorized"  {
                                 self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
                             } else {
@@ -341,7 +370,7 @@ class LoginViewController: UIViewController {
             currentUser.setValue(dateJoined, forKey: "dateJoinedPrayer")
             currentUser.setValue(profileImageData, forKey: "profileImage")
             currentUser.setValue(uid, forKey: "uid")
-            currentUser.setValue(true, forKey: "hasAccount")
+            currentUser.setValue(true, forKey: "isLoggedInAsCurrentUser")
             
             do {
                 try managedContext.save()

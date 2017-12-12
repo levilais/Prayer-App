@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import Firebase
+import FirebaseDatabase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -31,6 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UISwitch.appearance().thumbTintColor = UIColor.StyleFile.GoldColor
         
         FirebaseApp.configure()
+        Database.database().isPersistenceEnabled = true
+        
         UserDefaultsHelper().getLastContactAuthStatus()
                 
         return true

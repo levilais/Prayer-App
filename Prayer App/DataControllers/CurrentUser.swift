@@ -8,6 +8,8 @@
 
 
 import Foundation
+import Firebase
+import FirebaseStorage
 import UIKit
 import CoreData
 
@@ -84,7 +86,7 @@ class CurrentUser {
             // Peform Fetch Request
             let users = try context.fetch(fetchRequest)
             for user in users {
-                userExists = user.hasAccount
+                userExists = user.isLoggedInAsCurrentUser
             }
         } catch {
             print("Unable to Fetch users, (\(error))")

@@ -8,7 +8,7 @@
         <attribute name="relationshipToCurrentUser" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="CurrentUserMO" representedClassName="CurrentUserMO" parentEntity="UserMO" syncable="YES" codeGenerationType="class">
-        <attribute name="hasAccount" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isLoggedInAsCurrentUser" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="Prayer" representedClassName="Prayer" syncable="YES" codeGenerationType="class">
         <attribute name="howAnswered" optional="YES" attributeType="String" syncable="YES"/>

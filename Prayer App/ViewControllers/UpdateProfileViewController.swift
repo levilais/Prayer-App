@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseStorage
+import CoreData
 import Photos
 import PhotosUI
 
@@ -23,20 +25,24 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     
     var imagePicker: UIImagePickerController?
     var newImageToSave = UIImage()
+    var ref: DatabaseReference!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         imagePicker = UIImagePickerController()
         imagePicker!.delegate = self
         imagePicker?.allowsEditing = true
-        profileImageButton.setBackgroundImage(UIImage(named: "profilePlaceHolderImageL.pdf"), for:  .normal)
+        
+        profileImageButton.setBackgroundImage(CurrentUser().currentUserProfileImage(), for:  .normal)
+        firstNameTextField.text = CurrentUser().currentUserFirstName()
+        lastNameTextField.text = CurrentUser().currentUserLastName()
+        
+        ref = Database.database().reference()
         setupView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        profileImageButton.setBackgroundImage(CurrentUser().currentUserProfileImage(), for:  .normal)
-        firstNameTextField.text = CurrentUser().currentUserFirstName()
-        lastNameTextField.text = CurrentUser().currentUserLastName()
+        
     }
     
     func setupView() {
@@ -83,11 +89,70 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     }
     
     func saveUpdates() {
-        print("save pressed")
-        // Unwrap textfields
-        // Save first, last, and image (if changed) to Firebase
-        // Save first, last, and image (if changed) to Core Data
-        // If it fails, trigger error alert
+        var firstName = String()
+        var lastName = String()
+        var imageDataForCoreData: Data?
+        var errorMessage: String?
+        
+        if let firstNameCheck = firstNameTextField.text {
+            if let lastNameCheck = lastNameTextField.text {
+                firstName = firstNameCheck.trimmingCharacters(in: .whitespacesAndNewlines).capitalizingFirstLetter()
+                lastName = lastNameCheck.trimmingCharacters(in: .whitespacesAndNewlines).capitalizingFirstLetter()
+            }
+        }
+        
+        if let userID = Auth.auth().currentUser?.uid {
+            print("userID: \(userID)")
+            self.ref.child("users").child(userID).child("firstName").setValue(firstName)
+            self.ref.child("users").child(userID).child("lastName").setValue(lastName)
+            
+            let imagesFolder = Storage.storage().reference().child("images")
+            
+            if let imageData = UIImageJPEGRepresentation(newImageToSave, 0.5) {
+                // SAVE TO FIREBASE
+                imageDataForCoreData = imageData
+                imagesFolder.child("profileImage\(userID).jpg").putData(imageData, metadata: nil, completion: { (metadata, error) in
+                    if let error = error {
+                        errorMessage = error.localizedDescription
+                    } else {
+                        if let downloadURL = metadata?.downloadURL()?.absoluteString {
+                             self.ref.child("users").child(userID).child("profileImageURL").setValue(downloadURL)
+                        }
+                    }
+                })
+            }
+            // SAVE TO COREDATA
+            let context = CoreDataHelper().getContext()
+            let fetchRequest: NSFetchRequest<CurrentUserMO> = CurrentUserMO.fetchRequest()
+            do {
+                let users = try context.fetch(fetchRequest)
+                users[0].setValue(firstName, forKey: "firstName")
+                users[0].setValue(lastName, forKey: "lastName")
+                if let imageDataForCoreData = imageDataForCoreData {
+                    users[0].setValue(imageDataForCoreData, forKey: "profileImage")
+                }
+                try context.save()
+            } catch {
+                if errorMessage != nil {
+                    errorMessage = errorMessage! + "  Also, unable to save to your phone at this time."
+                } else {
+                    errorMessage = "Unable to save at this time."
+                }
+            }
+        }
+        
+        if errorMessage != nil {
+            let alert = UIAlertController(title: "Error", message: errorMessage!, preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                alert.dismiss(animated: true, completion: nil)
+            })
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            firstNameTextField.resignFirstResponder()
+            lastNameTextField.resignFirstResponder()
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     func launchPicker() {
