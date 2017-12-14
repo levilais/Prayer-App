@@ -307,6 +307,7 @@ class LoginViewController: UIViewController {
                                 Database.database().reference().child("users").child(user.uid).child("firstName").setValue(firstName)
                                 Database.database().reference().child("users").child(user.uid).child("lastName").setValue(lastName)
                                 Database.database().reference().child("users").child(user.uid).child("dateJoined").setValue(dateJoined)
+                                Database.database().reference().child("users").child(user.uid).child("userID").setValue(user.uid)
                                 
                                 let profileImageData = CurrentUser().profileImageFromNameAsData(firstName: firstName)
                                 
@@ -338,9 +339,9 @@ class LoginViewController: UIViewController {
                                 if CurrentUser().currentUserExists() {
                                     // remove all Core Data from the previous user and replace it with this new user on the device.  Likely need to remove Prayers from previous user, too.  Need to do this on login, too.  Core Data should be relevant to signed-in UID.
                                     CurrentUser().deleteCurrentUser()
-                                    self.saveUser(firstName: firstName, lastName: lastName, dateJoined: dateJoined, profileImageData: profileImageData, uid: user.uid)
+                                    self.saveUserToCoreData(firstName: firstName, lastName: lastName, dateJoined: dateJoined, profileImageData: profileImageData, uid: user.uid)
                                 } else {
-                                    self.saveUser(firstName: firstName, lastName: lastName, dateJoined: dateJoined, profileImageData: profileImageData, uid: user.uid)
+                                    self.saveUserToCoreData(firstName: firstName, lastName: lastName, dateJoined: dateJoined, profileImageData: profileImageData, uid: user.uid)
                                 }
                             }
                             
@@ -356,7 +357,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func saveUser(firstName: String, lastName: String, dateJoined: String, profileImageData: Data, uid: String) {
+    func saveUserToCoreData(firstName: String, lastName: String, dateJoined: String, profileImageData: Data, uid: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
@@ -391,6 +392,10 @@ class LoginViewController: UIViewController {
                         return
                     }
                     print("signed in")
+                    // Check if UID matches saved UID in Core Data.
+                    // If yes, proceed by adding any new data
+                    // If no, remove all Core Data and replace with Firebase data
+                    
                     if ContactsHandler().contactsAuthStatus() != ".authorized"  {
                         self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
                     } else  {

@@ -11,6 +11,7 @@ import UIKit
 import StoreKit
 import CoreData
 import Firebase
+import FirebaseDatabase
 
 class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
     
@@ -57,6 +58,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBOutlet weak var saveToJournalSubview: UIView!
     @IBOutlet weak var saveToJournalBackgroundButton: UIButton!
     var categoryTextfieldCharacterLimit = 24
+    var categoryTitles = [String]()
     var categoryButtons: [UIButton] = [UIButton]()
     var categoryInputIsTextfield = true
     var chosenCategory = String()
@@ -64,9 +66,10 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     // Review Popup Variables
     var passFirstResponder = true
     
-    // Core Data Variables
+    // Data Variables
     var prayer: Prayer?
     var managedObjectContext: NSManagedObjectContext?
+    var ref: DatabaseReference!
     
     // Gestures
     var tapGesture = UITapGestureRecognizer()
@@ -77,6 +80,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
 
         textField.delegate = self
         touchToPrayButton.setTitleColor(UIColor.lightGray, for: .normal)
@@ -126,6 +130,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        categoryTitles = []
+        getSectionHeaders()
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -256,6 +262,21 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         }
     }
     
+    func getSectionHeaders() {
+        if let userID = Auth.auth().currentUser?.uid {
+            Database.database().reference().child("users").child(userID).child("prayers").observe(.childAdded) { (snapshot) in
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    let snapshotPrayer = FirebaseHelper().prayerFromDictionary(userDictionary: userDictionary)
+                    if let category = snapshotPrayer.prayerCategory {
+                        if !self.categoryTitles.contains(category) {
+                            self.categoryTitles.append(category)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func createCategoryButtons() {
         for button in categoryButtons {
             button.removeFromSuperview()
@@ -265,50 +286,49 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         var xOffset: CGFloat = 0
         var buttonWidth: CGFloat = 0
         
-        if let prayerCategories = CoreDataHelper().getPrayersCategories() {
-            if prayerCategories.count > 0 {
+        if categoryTitles.count > 0 {
+        
+        categoryLabelScrollView.translatesAutoresizingMaskIntoConstraints = false
+        var i = 0
+        
+        for prayerCategory in categoryTitles {
+            let button = UIButton()
+            button.frame = CGRect(x: xOffset, y: 0, width: buttonWidth, height: categoryLabelScrollView.frame.height)
+            button.tag = i
+            button.setTitle(prayerCategory, for: .normal)
+            button.backgroundColor = UIColor.StyleFile.LightGrayColor
+            button.titleLabel?.font = UIFont.StyleFile.ButtonFont
+            button.setTitleColor(UIColor.StyleFile.DarkGrayColor, for: .normal)
+            button.sizeToFit()
+            buttonWidth = button.frame.size.width + 10
+            button.addTarget(self, action: #selector(categoryButtonTapped(sender:)), for: .touchUpInside)
+            button.frame = CGRect(x: button.frame.minX, y: button.frame.minY, width: buttonWidth, height: button.frame.size.height)
+            categoryLabelScrollView.addSubview(button)
+            categoryButtons.append(button)
             
-            categoryLabelScrollView.translatesAutoresizingMaskIntoConstraints = false
-            var i = 0
-            
-            for prayerCategory in prayerCategories {
-                let button = UIButton()
-                button.frame = CGRect(x: xOffset, y: 0, width: buttonWidth, height: categoryLabelScrollView.frame.height)
-                button.tag = i
-                button.setTitle(prayerCategory, for: .normal)
-                button.backgroundColor = UIColor.StyleFile.LightGrayColor
-                button.titleLabel?.font = UIFont.StyleFile.ButtonFont
-                button.setTitleColor(UIColor.StyleFile.DarkGrayColor, for: .normal)
-                button.sizeToFit()
-                buttonWidth = button.frame.size.width + 10
-                button.addTarget(self, action: #selector(categoryButtonTapped(sender:)), for: .touchUpInside)
-                button.frame = CGRect(x: button.frame.minX, y: button.frame.minY, width: buttonWidth, height: button.frame.size.height)
-                categoryLabelScrollView.addSubview(button)
-                categoryButtons.append(button)
-                
-                xOffset = xOffset + buttonWidth + 10
-                i += 1
-            }
-            categoryLabelScrollView.contentSize = CGSize(width: xOffset - 10, height: categoryLabelScrollView.frame.height)
-            } else {
-                let button = UIButton()
-                button.frame = CGRect(x: xOffset, y: 0, width: buttonWidth, height: categoryLabelScrollView.frame.height)
-                button.tag = 0
-                button.setTitle("General Prayers", for: .normal)
-                button.backgroundColor = UIColor.StyleFile.LightGrayColor
-                button.titleLabel?.font = UIFont.StyleFile.ButtonFont
-                button.setTitleColor(UIColor.StyleFile.DarkGrayColor, for: .normal)
-                button.sizeToFit()
-                buttonWidth = button.frame.size.width + 10
-                button.addTarget(self, action: #selector(categoryButtonTapped(sender:)), for: .touchUpInside)
-                button.frame = CGRect(x: button.frame.minX, y: button.frame.minY, width: buttonWidth, height: button.frame.size.height)
-                categoryLabelScrollView.addSubview(button)
-                categoryButtons.append(button)
-                
-                xOffset = xOffset + buttonWidth + 10
-                categoryLabelScrollView.contentSize = CGSize(width: xOffset - 10, height: categoryLabelScrollView.frame.height)
-            }
+            xOffset = xOffset + buttonWidth + 10
+            i += 1
         }
+        categoryLabelScrollView.contentSize = CGSize(width: xOffset - 10, height: categoryLabelScrollView.frame.height)
+        } else {
+            let button = UIButton()
+            button.frame = CGRect(x: xOffset, y: 0, width: buttonWidth, height: categoryLabelScrollView.frame.height)
+            button.tag = 0
+            button.setTitle("General Prayers", for: .normal)
+            button.backgroundColor = UIColor.StyleFile.LightGrayColor
+            button.titleLabel?.font = UIFont.StyleFile.ButtonFont
+            button.setTitleColor(UIColor.StyleFile.DarkGrayColor, for: .normal)
+            button.sizeToFit()
+            buttonWidth = button.frame.size.width + 10
+            button.addTarget(self, action: #selector(categoryButtonTapped(sender:)), for: .touchUpInside)
+            button.frame = CGRect(x: button.frame.minX, y: button.frame.minY, width: buttonWidth, height: button.frame.size.height)
+            categoryLabelScrollView.addSubview(button)
+            categoryButtons.append(button)
+            
+            xOffset = xOffset + buttonWidth + 10
+            categoryLabelScrollView.contentSize = CGSize(width: xOffset - 10, height: categoryLabelScrollView.frame.height)
+        }
+        
     }
     
     @objc func categoryButtonTapped(sender: UIButton) {
@@ -474,28 +494,33 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     func savePrayer(prayerText: UITextView, prayerHeader: UITextField) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let entity = NSEntityDescription.entity(forEntityName: "Prayer", in: managedContext)!
-        let prayer = NSManagedObject(entity: entity, insertInto: managedContext)
-        
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+//            return
+//        }
+//
+//        let managedContext = appDelegate.persistentContainer.viewContext
+//        let entity = NSEntityDescription.entity(forEntityName: "Prayer", in: managedContext)!
+//        let prayer = NSManagedObject(entity: entity, insertInto: managedContext)
+//
         setCategoryIfFromText(prayerHeader: prayerHeader)
-        
-        prayer.setValue(prayerText.text, forKeyPath: "prayerText")
-        prayer.setValue(Date(), forKey: "timeStamp")
-        prayer.setValue(1, forKey: "prayerCount")
-        prayer.setValue(chosenCategory, forKey: "prayerCategory")
-        prayer.setValue(false, forKey: "isAnswered")
-        prayer.setValue("", forKey: "howAnswered")
-        
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
-        }
+        let prayerID = NSUUID().uuidString
+//
+//        prayer.setValue(prayerText.text, forKeyPath: "prayerText")
+//        prayer.setValue(Date(), forKey: "timeStamp")
+//        prayer.setValue(1, forKey: "prayerCount")
+//        prayer.setValue(chosenCategory, forKey: "prayerCategory")
+//        prayer.setValue(false, forKey: "isAnswered")
+//        prayer.setValue("", forKey: "howAnswered")
+//        prayer.setValue(prayerID, forKey: "prayerID")
+//
+//        do {
+//            try managedContext.save()
+//        } catch let error as NSError {
+//            print("Could not save. \(error), \(error.userInfo)")
+//        }
+//
+        FirebaseHelper().saveNewPrayerToFirebase(prayerText: prayerText.text, prayerCategory: chosenCategory, lastPrayedDate: "Temporary Placeholder", prayerID: prayerID, ref: ref)
+        getSectionHeaders()
     }
     
     func setCategoryIfFromText(prayerHeader: UITextField) {

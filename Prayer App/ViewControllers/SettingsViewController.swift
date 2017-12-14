@@ -9,6 +9,7 @@
 import UIKit
 import StoreKit
 import Firebase
+import SDWebImage
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -24,6 +25,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         settingsProfileButtonImage.layer.cornerRadius = settingsProfileButtonImage.frame.size.height / 2
         settingsProfileButtonImage.clipsToBounds = true
         tableView.tableFooterView = UIView()
@@ -35,14 +37,13 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         tableView.reloadData()
         
+        
         if Auth.auth().currentUser != nil {
-            settingsProfileButtonImage.setBackgroundImage(CurrentUser().currentUserProfileImage(), for: .normal)
+            settingsProfileButtonImage = CurrentUser().setProfileImageButton(button: settingsProfileButtonImage)
             settingsProfileButtonImage.isEnabled = true
-            welcomeLabel.text = "Good afternoon, \(CurrentUser().currentUserFirstName())"
-            // set the profile image to be the user's profile image
+            welcomeLabel = CurrentUser().setupCurrentUserFirstNameWelcomeLabel(label: welcomeLabel)
         } else {
             settingsProfileButtonImage.isEnabled = false
-            // this is temporary - if we set the profile image when the user is created, we can always set the image from the profile image. It will pull from the current instance of the user once
             settingsProfileButtonImage.setBackgroundImage(UIImage(named: "settingsPrayerIcon.pdf"), for: .normal)
             welcomeLabel.text = "Welcome To Prayer"
         }

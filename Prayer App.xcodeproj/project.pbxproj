@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0416833F1FE0541900750A31 /* CurrentUserPrayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */; };
 		041953121FD23D4A00186084 /* CellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041953111FD23D4A00186084 /* CellButton.swift */; };
 		041953141FD3387900186084 /* FirstLoadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041953131FD3387900186084 /* FirstLoadViewController.swift */; };
 		042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA7D1FAE26FB00545786 /* Prayer.xcdatamodeld */; };
@@ -55,6 +56,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserPrayer.swift; sourceTree = "<group>"; };
 		041953111FD23D4A00186084 /* CellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellButton.swift; sourceTree = "<group>"; };
 		041953131FD3387900186084 /* FirstLoadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLoadViewController.swift; sourceTree = "<group>"; };
 		042FCA7E1FAE26FB00545786 /* Prayer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Prayer.xcdatamodel; sourceTree = "<group>"; };
@@ -172,11 +174,12 @@
 				04F2255E1FC505BB000549D5 /* SettingsClass.swift */,
 				043520B71FA943C900CFD0C1 /* TopicIdeasClass.swift */,
 				04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */,
-				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
 				04F0E4E01FA12762006D1244 /* LoadsStruct.swift */,
 				04FA1FF21FC4A77B00234033 /* ContactsController.swift */,
 				04410F171FCA2BC5002EC8F9 /* CircleUsers.swift */,
 				04410F191FCA398F002EC8F9 /* CurrentUser.swift */,
+				0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */,
+				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
 				044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */,
 			);
 			path = DataControllers;
@@ -387,6 +390,7 @@
 				04695D491FD9FDE50063B5B7 /* PopupViewController.swift in Sources */,
 				044A0EE51FD1AF8C004164D0 /* FirebaseHelper.swift in Sources */,
 				041953121FD23D4A00186084 /* CellButton.swift in Sources */,
+				0416833F1FE0541900750A31 /* CurrentUserPrayer.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,
 				04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */,

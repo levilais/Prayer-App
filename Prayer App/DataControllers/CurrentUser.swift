@@ -23,59 +23,69 @@ class CurrentUser {
     static var lastName: String?
     static var currentUserUID: String?
     
-    func currentUserFirstName() -> String {
-        var firstName = String()
-        let context = CoreDataHelper().getContext()
-        let fetchRequest: NSFetchRequest<CurrentUserMO> = CurrentUserMO.fetchRequest()
-        do {
-            // Peform Fetch Request
-            let users = try context.fetch(fetchRequest)
-            for user in users {
-                if let firstNameCheck = user.firstName {
-                    firstName = firstNameCheck
-                }
-            }
-        } catch {
-            print("Unable to Fetch users, (\(error))")
-        }
-        return firstName
-    }
     
-    func currentUserLastName() -> String {
-        var lastName = String()
-        let context = CoreDataHelper().getContext()
-        let fetchRequest: NSFetchRequest<CurrentUserMO> = CurrentUserMO.fetchRequest()
-        do {
-            // Peform Fetch Request
-            let users = try context.fetch(fetchRequest)
-            for user in users {
-                if let lastNameCheck = user.lastName {
-                    lastName = lastNameCheck
-                }
-            }
-        } catch {
-            print("Unable to Fetch users, (\(error))")
-        }
-        return lastName
-    }
-    
-    func currentUserProfileImage() -> UIImage {
-        var image = UIImage()
-        let context = CoreDataHelper().getContext()
-        let fetchRequest: NSFetchRequest<CurrentUserMO> = CurrentUserMO.fetchRequest()
-        do {
-            let users = try context.fetch(fetchRequest)
-            for user in users {
-                if let imageData = user.profileImage as NSData? {
-                    if let imageCheck = UIImage(data: imageData as Data) {
-                        image = imageCheck
+    func setupCurrentUserFirstNameTextfield(textField: UITextField) -> UITextField {
+        if Auth.auth().currentUser != nil {
+            if let userID = Auth.auth().currentUser?.uid {
+                Database.database().reference().child("users").child(userID).observe(.value) { (snapshot) in
+                    if let userDictionary = snapshot.value as? NSDictionary {
+                        if let firstName = userDictionary["firstName"] as? String {
+                            textField.text = firstName
+                        }
                     }
                 }
             }
-        } catch {
-            print("Unable to Fetch users, (\(error))")
         }
-        return image
+        return textField
+    }
+    
+    func setupCurrentUserFirstNameWelcomeLabel(label: UILabel) -> UILabel {
+        if Auth.auth().currentUser != nil {
+            if let userID = Auth.auth().currentUser?.uid {
+                Database.database().reference().child("users").child(userID).observe(.value) { (snapshot) in
+                    if let userDictionary = snapshot.value as? NSDictionary {
+                        if let firstName = userDictionary["firstName"] as? String {
+                            label.text =  "Good afternoon, \(firstName)"
+                        }
+                    }
+                }
+            }
+        }
+        return label
+    }
+    
+    func setupCurrentUserLastNameTextfield(textField: UITextField) -> UITextField {
+        if Auth.auth().currentUser != nil {
+            if let userID = Auth.auth().currentUser?.uid {
+                Database.database().reference().child("users").child(userID).observe(.value) { (snapshot) in
+                    if let userDictionary = snapshot.value as? NSDictionary {
+                        if let lastName = userDictionary["lastName"] as? String {
+                            textField.text = lastName
+                        }
+                    }
+                }
+            }
+        }
+        return textField
+    }
+    
+    func setProfileImageButton(button: UIButton) -> UIButton {
+        if Auth.auth().currentUser != nil {
+            if let userID = Auth.auth().currentUser?.uid {
+                Database.database().reference().child("users").child(userID).observe(.value) { (snapshot) in
+                    if let userDictionary = snapshot.value as? NSDictionary {
+                        if let imageURLString = userDictionary["profileImageURL"] as? String {
+                            if let url = URL(string: imageURLString) {
+                                button.sd_setBackgroundImage(with: url, for: .normal, completed: { (image, error, cacheType, imageURL) in
+                                    
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return button
     }
     
     func currentUserExists() -> Bool {

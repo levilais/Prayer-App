@@ -89,9 +89,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func loadCorrectView() {
-        
         // if not logged in, dismiss
-        
         if ContactsHandler().contactsAuthStatus() == ".authorized" {
             if segueFromSettings == true {
                 dismiss(animated: true, completion: nil)
@@ -101,6 +99,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 selectContactsView.isHidden = false
                 FirebaseHelper().getUserEmails(completion: { (success) in
                     self.getContactsData()
+                    print("emails inside completion: \(FirebaseHelper.firebaseUserEmails)")
                 })
             }
         } else if ContactsHandler().contactsAuthStatus() == ".notDetermined" {
