@@ -147,8 +147,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         sectionHeaders = []
         prayersSortedByCategory = [:]
         
-        print("preSortedPrayers.count: \(preSortedPrayers.count)")
-        
         for prayer in preSortedPrayers {
             if let prayerIsAnswered = prayer.isAnswered {
                 if !prayerIsAnswered {
@@ -312,7 +310,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        print("sectioncount: \(sectionHeaders.count)")
         return sectionHeaders.count
     }
     
@@ -349,22 +346,18 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func configureUnanswered(_ cell: PrayerTableViewCell, at indexPath: IndexPath) {
         let prayer = prayerAtIndexPath(indexPath: indexPath)
+        
         cell.prayerTextView.text = prayer.prayerText
         
-        var lastPrayerString = String()
-//        if !answeredShowing {
-//            lastPrayerString = Utilities().dayDifference(from: (prayer.timeStamp?.timeIntervalSince1970)!)
-//            cell.prayedLastLabel.text = "Last prayed \(lastPrayerString)"
-//        }
-        
         if !answeredShowing {
-            cell.prayedLastLabel.text = "Last prayed temporary placeholder"
+            cell.prayedLastLabel = FirebaseHelper().daysSinceTimeStampLabel(cellLabel: cell.prayedLastLabel, prayer: prayer, cell: cell)
         }
         
         var prayerCount = Int()
         if let prayerCountCheck = prayer.prayerCount {
             prayerCount = prayerCountCheck
         }
+        
         var timeVsTimesString = ""
         if prayerCount == 1 {
             timeVsTimesString = "time"
@@ -372,47 +365,15 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             timeVsTimesString = "times"
         }
         
-//        cell.prayerCountLabel.text = "Prayed \(prayerCount) \(timeVsTimesString)"
-        
+        cell.prayedCountLabel.text = "Prayed \(prayerCount) \(timeVsTimesString)"
         cell.selectionStyle = .none
-        markRecentlyPrayed(cell: cell, lastPrayedString: lastPrayerString)
     }
-    
-//    func configureUnanswered(_ cell: PrayerTableViewCell, at indexPath: IndexPath) {
-//        let prayer = fetchedResultsController.object(at: indexPath)
-//        cell.prayerTextView.text = prayer.prayerText
-//
-//        var lastPrayerString = String()
-//        if !answeredShowing {
-//            lastPrayerString = Utilities().dayDifference(from: (prayer.timeStamp?.timeIntervalSince1970)!)
-//            cell.prayedLastLabel.text = "Last prayed \(lastPrayerString)"
-//        }
-//
-//        var timeVsTimesString = ""
-//        if prayer.prayerCount == 1 {
-//            timeVsTimesString = "time"
-//        } else {
-//            timeVsTimesString = "times"
-//        }
-//
-//        cell.prayedCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
-//        cell.selectionStyle = .none
-//
-//        markRecentlyPrayed(cell: cell, lastPrayedString: lastPrayerString)
-//    }
     
     func configureAnswered(_ cell: AnsweredPrayerTableViewCell, at indexPath: IndexPath) {
         let prayer = prayerAtIndexPath(indexPath: indexPath)
         cell.prayerLabel.text = prayer.prayerText
         
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateStyle = .short
-//
-//        if let date = prayer.lastPrayed {
-//            cell.lastPrayedLabel.text = "Answered on \(dateFormatter.string(from: date))"
-//        }
-        
-        cell.lastPrayedLabel.text = "Answered on Temporary Placeholder)"
+        cell.lastPrayedLabel = FirebaseHelper().dateAnsweredLabel(cellLabel: cell.lastPrayedLabel, prayer: prayer)
         
         if let answeredPrayer = prayer.howAnswered {
             cell.howAnsweredLabel.text = answeredPrayer
@@ -431,36 +392,8 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         cell.prayerCountLabel.text = "Prayed \(prayerCount) \(timeVsTimesString)"
         
-//        cell.prayerCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
-        
         cell.selectionStyle = .none
     }
-    
-//    func configureAnswered(_ cell: AnsweredPrayerTableViewCell, at indexPath: IndexPath) {
-//        let prayer = fetchedResultsController.object(at: indexPath)
-//        cell.prayerLabel.text = prayer.prayerText
-//
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateStyle = .short
-//        if let date = prayer.timeStamp{
-//            cell.lastPrayedLabel.text = "Answered on \(dateFormatter.string(from: date))"
-//        }
-//
-//        if let answeredPrayer = prayer.howAnswered {
-//            cell.howAnsweredLabel.text = answeredPrayer
-//            print("howAnswered: \(answeredPrayer) for index: \(indexPath)")
-//        }
-//
-//        var timeVsTimesString = ""
-//        if prayer.prayerCount == 1 {
-//            timeVsTimesString = "time"
-//        } else {
-//            timeVsTimesString = "times"
-//        }
-//        cell.prayerCountLabel.text = "Prayed \(prayer.prayerCount) \(timeVsTimesString)"
-//
-//        cell.selectionStyle = .none
-//    }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .default, title: "Delete") { (action:UITableViewRowAction, indexPath:IndexPath) in
@@ -485,40 +418,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         return [delete]
     }
     
-//    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-//        let delete = UITableViewRowAction(style: .default, title: "Delete") { (action:UITableViewRowAction, indexPath:IndexPath) in
-//            print("delete at:\(indexPath)")
-//            let prayer = self.fetchedResultsController.object(at: indexPath)
-//
-//            if let prayerID = prayer.prayerID {
-//                FirebaseHelper().deletePrayerFromFirebase(prayerID: prayerID, ref: self.ref)
-//            }
-//
-//            prayer.managedObjectContext?.delete(prayer)
-//            print("attempting to delete")
-//            do {
-//                try prayer.managedObjectContext?.save()
-//                print("saved!")
-//                tableView.reloadData()
-//            } catch let error as NSError  {
-//                print("Could not save \(error), \(error.userInfo)")
-//            } catch {
-//            }
-//        }
-//        delete.backgroundColor = UIColor.StyleFile.WineColor
-//
-//        if !answeredShowing {
-//            let more = UITableViewRowAction(style: .default, title: "Answered") { (action:UITableViewRowAction, indexPath:IndexPath) in
-//                self.indexPathToMarkAnswered = indexPath
-//                Animations().animateMarkAnsweredPopup(view: self.markAnsweredPopoverView, backgroundButton: self.markAnsweredBackgroundButton, subView: self.markAnsweredSubview, viewController: self, textView: self.markAnsweredTextView)
-//            }
-//            more.backgroundColor = UIColor.StyleFile.DarkBlueColor
-//                return [delete, more]
-//
-//            }
-//        return [delete]
-//    }
-    
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if !answeredShowing {
             var amenAction = UIContextualAction()
@@ -532,44 +431,13 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         return nil
     }
     
-    func markRecentlyPrayed(cell: PrayerTableViewCell, lastPrayedString: String) {
-        if lastPrayedString == "today" {
-            cell.prayedLastLabel.textColor = UIColor.StyleFile.TealColor
-            cell.prayedLastLabel.font = UIFont.StyleFile.LastPrayedBold
-            cell.recentlyPrayed = true
-        } else {
-            cell.prayedLastLabel.textColor = UIColor.StyleFile.MediumGrayColor
-            cell.prayedLastLabel.font = UIFont.StyleFile.LastPrayedMedium
-            cell.recentlyPrayed = false
-        }
-    }
-    
     func markPrayed(indexPath: IndexPath) {
         let prayer = prayerAtIndexPath(indexPath: indexPath)
         let newCount = prayer.prayerCount! + 1
-        let date = Date()
         if let prayerID = prayer.prayerID {
-            FirebaseHelper().markPrayedInFirebase(prayerID: prayerID, newLastPrayedDate: date, newPrayerCount: Int(newCount), ref: ref)
+            FirebaseHelper().markPrayedInFirebase(prayerID: prayerID, newPrayerCount: Int(newCount), ref: ref)
         }
     }
-    
-//    func markPrayed(indexPath: IndexPath) {
-//        let prayer = fetchedResultsController.object(at: indexPath)
-//        let newCount = prayer.prayerCount + 1
-//        let date = Date()
-//        prayer.setValue(newCount, forKey: "prayerCount")
-//        prayer.setValue(date, forKey: "timeStamp")
-//
-//        do {
-//            try prayer.managedObjectContext?.save()
-//        } catch let error as NSError  {
-//            print("Could not save \(error), \(error.userInfo)")
-//        }
-//
-//        if let prayerID = prayer.prayerID {
-//            FirebaseHelper().markPrayedInFirebase(prayerID: prayerID, newLastPrayedDate: date, newPrayerCount: Int(newCount), ref: ref)
-//        }
-//    }
     
     func markAnswered() {
         let prayer = prayerAtIndexPath(indexPath: indexPathToMarkAnswered)
@@ -581,11 +449,9 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             }
             howAnswered = trimmedText
         }
-
         if let prayerID = prayer.prayerID {
             FirebaseHelper().markAnsweredInFirebase(prayerID: prayerID, howAnswered: howAnswered, isAnswered: true, ref: ref)
         }
-        
         tableView.reloadData()
     }
     
@@ -595,36 +461,8 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         if let categoryPrayerArray = prayersSortedByCategory[category] {
             prayer = categoryPrayerArray[indexPath.row]
         }
-        print("prayerID: \(prayer.prayerID!)")
         return prayer
     }
-    
-    
-//    func markAnswered() {
-//        let prayer = fetchedResultsController.object(at: indexPathToMarkAnswered)
-//        prayer.setValue(true, forKey: "isAnswered")
-//        var howAnswered = String()
-//        if let answeredPrayer = markAnsweredTextView.text {
-//            var trimmedText = answeredPrayer.trimmingCharacters(in: .whitespacesAndNewlines)
-//            if trimmedText == "" {
-//                trimmedText = "Undisclosed"
-//            }
-//            howAnswered = trimmedText
-//        }
-//        prayer.setValue(howAnswered, forKey: "howAnswered")
-//
-//        do {
-//            try prayer.managedObjectContext?.save()
-//        } catch let error as NSError  {
-//            print("Could not save \(error), \(error.userInfo)")
-//        }
-//
-//        if let prayerID = prayer.prayerID {
-//            FirebaseHelper().markAnsweredInFirebase(prayerID: prayerID, howAnswered: howAnswered, isAnswered: true, ref: ref)
-//        }
-//
-//        tableView.reloadData()
-//    }
     
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)

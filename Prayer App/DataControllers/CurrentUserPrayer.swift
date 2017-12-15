@@ -13,8 +13,7 @@ class CurrentUserPrayer {
     var prayerID : String?
     var prayerCategory : String?
     var prayerCount : Int?
-    var firstPrayed : String?
-    var lastPrayed : String?
+    var lastPrayed : Double?
     var isAnswered : Bool?
     var howAnswered : String?
 }

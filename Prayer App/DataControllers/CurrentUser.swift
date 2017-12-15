@@ -17,7 +17,6 @@ class CurrentUser {
     static var isLoggedIn: Bool?
     static var hasAllowedContactAccess = false
     static var circleMembers = [CircleUser]()
-    
     static var profileImage: UIImage?
     static var firstName: String?
     static var lastName: String?

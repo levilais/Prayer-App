@@ -16,8 +16,9 @@ class Utilities {
         vc.present(alert, animated: true, completion: nil)
     }
     
-    func dayDifference(from interval: TimeInterval) -> String {
+    func dayDifference(timeStampAsDouble: Double) -> String {
         let calendar = NSCalendar.current
+        let interval = timeStampAsDouble / 1000
         let date = Date(timeIntervalSince1970: interval)
         if calendar.isDateInYesterday(date) { return "yesterday" }
         else if calendar.isDateInToday(date) { return "today" }
@@ -29,6 +30,16 @@ class Utilities {
             if day < 1 { return "\(abs(day)) days ago" }
             else { return "In \(day) days" }
         }
+    }
+    
+    func dayAnswered(timeStampAsDouble: Double) -> String {
+        var dateString = String()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        let interval = timeStampAsDouble / 1000
+        let date = Date(timeIntervalSince1970: interval)
+        dateString = "Answered on \(dateFormatter.string(from: date))"
+        return dateString
     }
     
     func setupTextFieldLook(textField: UITextField) {

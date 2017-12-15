@@ -519,7 +519,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
 //            print("Could not save. \(error), \(error.userInfo)")
 //        }
 //
-        FirebaseHelper().saveNewPrayerToFirebase(prayerText: prayerText.text, prayerCategory: chosenCategory, lastPrayedDate: "Temporary Placeholder", prayerID: prayerID, ref: ref)
+        FirebaseHelper().saveNewPrayerToFirebase(prayerText: prayerText.text, prayerCategory: chosenCategory, prayerID: prayerID, ref: ref)
         getSectionHeaders()
     }
     

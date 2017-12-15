@@ -39,11 +39,48 @@ class FirebaseHelper {
         }
     }
     
-    func saveNewPrayerToFirebase(prayerText: String, prayerCategory: String, lastPrayedDate: String, prayerID: String, ref: DatabaseReference) {
+    func daysSinceTimeStampLabel(cellLabel: UILabel, prayer: CurrentUserPrayer, cell: PrayerTableViewCell) -> UILabel {
+        if let prayerID = prayer.prayerID {
+            if Auth.auth().currentUser != nil {
+                if let userID = Auth.auth().currentUser?.uid {
+                    Database.database().reference().child("users").child(userID).child("prayers").child(prayerID).observe(.value) { (snapshot) in
+                        if let userDictionary = snapshot.value as? NSDictionary {
+                            if let timeStampAsDouble = userDictionary["lastPrayedDate"] as? Double {
+                                let lastPrayedString = Utilities().dayDifference(timeStampAsDouble: timeStampAsDouble)
+                                cellLabel.text = "Last prayed \(lastPrayedString)"
+                                PrayerTableViewCell().updateCellToShowIfRecentlyPrayed(cell: cell, lastPrayedString: lastPrayedString)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return cellLabel
+    }
+    
+    func dateAnsweredLabel(cellLabel: UILabel, prayer: CurrentUserPrayer) -> UILabel {
+        if let prayerID = prayer.prayerID {
+            if Auth.auth().currentUser != nil {
+                if let userID = Auth.auth().currentUser?.uid {
+                    Database.database().reference().child("users").child(userID).child("prayers").child(prayerID).observe(.value) { (snapshot) in
+                        if let userDictionary = snapshot.value as? NSDictionary {
+                            if let timeStampAsDouble = userDictionary["lastPrayedDate"] as? Double {
+                                let dayAnsweredString = Utilities().dayAnswered(timeStampAsDouble: timeStampAsDouble)
+                                cellLabel.text = dayAnsweredString
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return cellLabel
+    }
+    
+    func saveNewPrayerToFirebase(prayerText: String, prayerCategory: String, prayerID: String, ref: DatabaseReference) {
         if let userID = Auth.auth().currentUser?.uid {
             ref.child("users").child(userID).child("prayers").child(prayerID).child("prayerText").setValue(prayerText)
             ref.child("users").child(userID).child("prayers").child(prayerID).child("prayerCategory").setValue(prayerCategory)
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("lastPrayedDate").setValue(lastPrayedDate)
+            ref.child("users").child(userID).child("prayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
             ref.child("users").child(userID).child("prayers").child(prayerID).child("howAnswered").setValue("")
             ref.child("users").child(userID).child("prayers").child(prayerID).child("isAnswered").setValue(false)
             ref.child("users").child(userID).child("prayers").child(prayerID).child("prayerCount").setValue(1)
@@ -61,10 +98,9 @@ class FirebaseHelper {
         }
     }
     
-    func markPrayedInFirebase(prayerID: String, newLastPrayedDate: Date, newPrayerCount: Int, ref: DatabaseReference) {
-        let newLastPrayedDateAsString = String(newLastPrayedDate.timeIntervalSince1970 as Double)
+    func markPrayedInFirebase(prayerID: String, newPrayerCount: Int, ref: DatabaseReference) {
         if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("lastPrayedDate").setValue(newLastPrayedDateAsString)
+            ref.child("users").child(userID).child("prayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
             ref.child("users").child(userID).child("prayers").child(prayerID).child("prayerCount").setValue(newPrayerCount)
         }
     }
@@ -93,11 +129,8 @@ class FirebaseHelper {
         if let prayerIDCheck = userDictionary["prayerID"] as? String {
             prayer.prayerID = prayerIDCheck
         }
-        if let lastPrayedCheck = userDictionary["lastPrayed"] as? String {
+        if let lastPrayedCheck = userDictionary["lastPrayed"] as? Double {
             prayer.lastPrayed = lastPrayedCheck
-        }
-        if let firstPrayedCheck = userDictionary["firstPrayed"] as? String {
-            prayer.firstPrayed = firstPrayedCheck
         }
         if let howAnsweredCheck = userDictionary["howAnswered"] as? String {
             prayer.howAnswered = howAnsweredCheck
