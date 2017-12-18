@@ -16,13 +16,18 @@ class CircleUser {
     var firstName: String?
     var lastName: String?
     var dateAdded: Date?
+    var userEmail: String?
     var lastAgreedInPrayerDate: Date?
     var agreedInPrayerCount: Int?
     var profileImage: Data?
+    var profileImageAsUIImage: UIImage?
+    var profileImageDownloadUrlAsString: String?
     var circleUID: String?
+    var firebaseCircleUid: String?
+    var userRelationshipToCurrentUser: userRelationshipToCurrentUser?
+    
     var circleMemberEmails: [CNLabeledValue<NSString>]?
     var circleMemberPhoneNumbers: [CNLabeledValue<CNPhoneNumber>]?
-    var userRelationshipToCurrentUser: userRelationshipToCurrentUser?
     var hasBeenInvited: Bool?
     
     enum userRelationshipToCurrentUser: String {
@@ -110,6 +115,7 @@ class CircleUser {
                     for email in FirebaseHelper.firebaseUserEmails {
                         if userEmailString as String == email {
                             // user exists
+                            user.userEmail = email
                             user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation
                             for circleMember in CurrentUser.circleMembers {
                                 if let circleMemberEmailCheck = circleMember.circleMemberEmails {
@@ -172,7 +178,6 @@ extension CircleUser {
         }
 
         user.profileImage = imageDataToSave
-        
         user.circleUID = "userID.\(String(describing: user.dateAdded)).\(String(describing: user.firstName)).\(String(describing: user.lastName))"
         user.circleMemberEmails = cnContact.emailAddresses
         user.circleMemberPhoneNumbers = cnContact.phoneNumbers

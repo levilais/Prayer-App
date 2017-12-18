@@ -17,6 +17,7 @@ class CurrentUser {
     static var isLoggedIn: Bool?
     static var hasAllowedContactAccess = false
     static var circleMembers = [CircleUser]()
+    static var firebaseCircleMembers = [CircleUser]()
     static var profileImage: UIImage?
     static var firstName: String?
     static var lastName: String?
@@ -76,7 +77,6 @@ class CurrentUser {
                         if let imageURLString = userDictionary["profileImageURL"] as? String {
                             if let url = URL(string: imageURLString) {
                                 button.sd_setBackgroundImage(with: url, for: .normal, completed: { (image, error, cacheType, imageURL) in
-                                    
                                 })
                             }
                         }

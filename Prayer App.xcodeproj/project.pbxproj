@@ -31,6 +31,7 @@
 		049E04CD1FC659A000705766 /* CustomUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E04CC1FC659A000705766 /* CustomUIButton.swift */; };
 		049E04D61FC6A37300705766 /* SettingsToggleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E04D51FC6A37300705766 /* SettingsToggleTableViewCell.swift */; };
 		049E04D81FC6A40800705766 /* SettingsButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E04D71FC6A40800705766 /* SettingsButtonTableViewCell.swift */; };
+		04A1F3161FE6F1CA00E56771 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A1F3151FE6F1CA00E56771 /* User.swift */; };
 		04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B636321FC0DEB700113FE8 /* CustomTabBarController.swift */; };
 		04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */; };
 		04CDE8631FC0A74600F20EFB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */; };
@@ -80,6 +81,7 @@
 		049E04CC1FC659A000705766 /* CustomUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIButton.swift; sourceTree = "<group>"; };
 		049E04D51FC6A37300705766 /* SettingsToggleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsToggleTableViewCell.swift; sourceTree = "<group>"; };
 		049E04D71FC6A40800705766 /* SettingsButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButtonTableViewCell.swift; sourceTree = "<group>"; };
+		04A1F3151FE6F1CA00E56771 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		04B636321FC0DEB700113FE8 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -181,6 +183,7 @@
 				0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */,
 				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
 				044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */,
+				04A1F3151FE6F1CA00E56771 /* User.swift */,
 			);
 			path = DataControllers;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 				041953121FD23D4A00186084 /* CellButton.swift in Sources */,
 				0416833F1FE0541900750A31 /* CurrentUserPrayer.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
+				04A1F3161FE6F1CA00E56771 /* User.swift in Sources */,
 				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,
 				04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */,
 				043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */,

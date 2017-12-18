@@ -37,13 +37,16 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     var nonMembers = [CircleUser]()
     var sectionHeaders = [String]()
     
+    // FIREBASE
+    var ref: DatabaseReference!
+    
     // Search
     var resultSearchController = UISearchController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
         FirebaseHelper().getUsers()
-        
         setupSearchResultsController()
 
         let backView = UIView(frame: self.tableView.bounds)
@@ -352,7 +355,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
             
             var user = CircleUser()
-            
             if indexPath.section == 0 {
                 if sectionHeaders.count > 1 {
                     user = members[indexPath.row]
@@ -369,20 +371,14 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 user = nonMembers[indexPath.row]
             }
             
-//            switch indexPath.section {
-//            case 0:
-//                if sectionHeaders.count > 1 {
-//                    user = members[indexPath.row]
-//                } else {
-//                    user = nonMembers[indexPath.row]
-//                }
-//            case 1:
-//                user = nonMembers[indexPath.row]
-//            default:
-//                user = nonMembers[indexPath.row]
-//            }
-            
             if user.userRelationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation {
+                // SAVE TO FIREBASE
+                if let email = user.userEmail {
+                    print("user email: \(email)")
+                    FirebaseHelper().saveNewCircleUserToFirebase(userEmail: email, ref: self.ref)
+                }
+                
+                // SAVE TO CORE DATA (where we're currently getting circle users from)
                 user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
                 CurrentUser.circleMembers.append(user)
                 updateSpotsLeftLabel()
@@ -445,8 +441,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                             print("pressed: \(number)")
                             let composeVC = MFMessageComposeViewController()
                             composeVC.messageComposeDelegate = self
-
-//                            composeVC.recipients = ["5034733923"] // for testing
                             composeVC.recipients = [number]
                             composeVC.body = "[username] would like to invite you to download Prayer - Swipe To Send."
                             self.present(composeVC, animated: true, completion: nil)
@@ -526,19 +520,20 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             
             let user = self.members[indexPath.row]
             
+            print("userEmail in delete function: \(user.userEmail!)")
+            if let userEmail = user.userEmail {
+                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
+            }
+            
             if let idToDelete = user.circleUID {
-                print("user UID: \(idToDelete)")
                 var matchFound = false
                 while matchFound == false {
                     var i = 0
                     for circleMember in CurrentUser.circleMembers {
                         if let circleMemberID = circleMember.circleUID {
-                            print("circleMember UID: \(circleMemberID)")
                             if circleMemberID == idToDelete {
                                 user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation
                                 CurrentUser.circleMembers.remove(at: i)
-                                
-                                print("CircleMember trying to delete: \(i)")
                                 cell.inviteButton.isHidden = false
                                 cell.deleteButton.isHidden = true
                                 cell.relationshipStatusLabel.isHidden = true
@@ -550,7 +545,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                         i += 1
                     }
                     matchFound = true
-//                    self.tableView.reloadData()
                 }
             }
         }
@@ -564,7 +558,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     func updateSpotsLeftLabel() {
         circleUserSpotsUsed = CurrentUser.circleMembers.count
-        
         if circleUserSpotsUsed < 5 {
             spotsLeftLabel.text = "You still have \(5 - circleUserSpotsUsed) out of 5 Circle Member spots available."
         } else {
@@ -573,7 +566,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-//        cleanContactsAsCircleUsers = []
         let searchText = searchController.searchBar.text
         if let searchText = searchText {
             if !searchText.isEmpty {
@@ -587,11 +579,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "showResultsBeforeSearchingNotification"), object: nil) // Calls SearchVC
             }
         }
-        
-//        self.sectionHeaders = []
-        print("members.count: \(members.count)")
-        print("nonMembers.count: \(nonMembers.count)")
-        print("sectionHeaders.count: \(sectionHeaders.count)")
         setUpContactSections()
         self.tableView.reloadData()
     }
@@ -600,7 +587,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         DispatchQueue.main.async {
             self.loadCorrectView()
         }
-        print("notification fired")
     }
 
     override func viewWillDisappear(_ animated: Bool) {
