@@ -61,35 +61,7 @@ class FirebaseHelper {
                                             circleUser.profileImageDownloadUrlAsString = profileImageUrl
                                             CurrentUser.firebaseCircleMembers.append(circleUser)
                                             
-                                            if let url = URL(string: profileImageUrl) {
-                                                print("1")
-                                                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-                                                    if error != nil {
-                                                        print(error!.localizedDescription)
-                                                        return
-                                                    }
-                                                    print("2")
-                                                    if let imageData = data {
-                                                        print("3")
-                                                        if let image = UIImage(data: imageData) {
-                                                            print("4")
-                                                            circleUser.profileImageAsUIImage = image
-                                                            var i = 0
-                                                            for user in CurrentUser.firebaseCircleMembers {
-                                                                print("5 - user: \(i)")
-                                                                if let email = user.userEmail {
-                                                                    print("6")
-                                                                    if email == userEmail {
-                                                                        print("7")
-                                                                        CurrentUser.firebaseCircleMembers[i] = circleUser
-                                                                    }
-                                                                }
-                                                                i += 1
-                                                            }
-                                                        }
-                                                    }
-                                                }).resume()
-                                            }
+                                            self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
                                         }
                                     }
                                 }
@@ -100,49 +72,6 @@ class FirebaseHelper {
                     print ("no circle users found")
                 }
             })
-        }
-        setCircleUsersProfileImage()
-    }
-    
-    func setCircleUsersProfileImage() {
-        print("1")
-        if Auth.auth().currentUser != nil {
-             print("2")
-            var i = 0
-            for circleUser in CurrentUser.firebaseCircleMembers {
-                 print("3")
-                if let circleUserID = circleUser.firebaseCircleUid {
-                     print("4")
-                    Database.database().reference().child("users").child(circleUserID).observe(.value) { (snapshot) in
-                         print("5")
-                        if let userDictionary = snapshot.value as? NSDictionary {
-                             print("6")
-                            if let imageURLString = userDictionary["profileImageURL"] as? String {
-                                 print("7")
-                                if let url = URL(string: imageURLString) {
-                                     print("8")
-                                    URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-                                        if error != nil {
-                                            print(error!.localizedDescription)
-                                            return
-                                        }
-                                         print("9")
-                                        if let imageData = data {
-                                             print("10")
-                                            if let image = UIImage(data: imageData) {
-                                                 print("11")
-                                                circleUser.profileImageAsUIImage = image
-                                                CurrentUser.firebaseCircleMembers[i] = circleUser
-                                            }
-                                        }
-                                    }).resume()
-                                }
-                            }
-                        }
-                    }
-                }
-                i += 1
-            }
         }
     }
     
@@ -169,6 +98,8 @@ class FirebaseHelper {
                                         circleUser.userEmail = userEmail
                                         circleUser.profileImageDownloadUrlAsString = profileImageUrl
                                         CurrentUser.firebaseCircleMembers.append(circleUser)
+                                        
+                                        self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
                                     }
                                 }
                             }
@@ -178,6 +109,35 @@ class FirebaseHelper {
                     print ("user not found")
                 }
             })
+        }
+    }
+    
+    func setCircleUserProfileImageFromFirebase(circleUser: CircleUser) {
+        if let urlString = circleUser.profileImageDownloadUrlAsString {
+            if let url = URL(string: urlString) {
+                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                    if error != nil {
+                        print(error!.localizedDescription)
+                        return
+                    }
+                    if let imageData = data {
+                        if let image = UIImage(data: imageData) {
+                            circleUser.profileImageAsUIImage = image
+                            var i = 0
+                            for user in CurrentUser.firebaseCircleMembers {
+                                if let email = user.userEmail {
+                                    if let userEmail = circleUser.userEmail {
+                                        if email == userEmail {
+                                            CurrentUser.firebaseCircleMembers[i] = circleUser
+                                        }
+                                    }
+                                }
+                                i += 1
+                            }
+                        }
+                    }
+                }).resume()
+            }
         }
     }
     
@@ -191,12 +151,10 @@ class FirebaseHelper {
                                 if let error = error {
                                     print("error \(error.localizedDescription)")
                                 }
-                                
                                 var i = 0
                                 for circleUser in CurrentUser.firebaseCircleMembers {
                                     if let circleUserEmail = circleUser.userEmail {
                                         if circleUserEmail == savedEmail {
-                                            print("index trying to remove from firebaseCircleMembers: \(i)")
                                             CurrentUser.firebaseCircleMembers.remove(at: i)
                                         }
                                     }

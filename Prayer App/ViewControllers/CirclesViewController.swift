@@ -58,6 +58,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         if Auth.auth().currentUser != nil {
             userNotLoggedInView.isHidden = true
             userLoggedInView.isHidden = false
+            selectedCircleMember = 0
             setCircleData()
         } else {
             userNotLoggedInView.isHidden = false
@@ -184,19 +185,22 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 print("failure")
             }
         }
-        
-        toggleCircleMemberDetailContent(buttonTag: 0)
+        toggleCircleMemberDetailContent(buttonTag: selectedCircleMember)
     }
 
     
     @IBAction func deleteCircleMemberDidPress(_ sender: Any) {
-        print("circleMember.count before: \(CurrentUser.circleMembers.count)")
         let alert = UIAlertController(title: "Are you sure", message: "Are you sure you want to remove this Circle Member", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
-            CurrentUser.circleMembers.remove(at: self.selectedCircleMember)
+            // delete in FB
+            let circleUser = CurrentUser.firebaseCircleMembers[self.selectedCircleMember]
+            if let email = circleUser.userEmail {
+                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: email, ref: Database.database().reference())
+            }
+            CurrentUser.firebaseCircleMembers.remove(at: self.selectedCircleMember)
+            
             self.circleSpotFilled[self.selectedCircleMember] = false
             self.selectedCircleMember = 0
-            print("circleMember.count after: \(CurrentUser.circleMembers.count)")
             self.setCircleData()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
