@@ -24,7 +24,7 @@ class CircleUser {
     var profileImageDownloadUrlAsString: String?
     var circleUID: String?
     var firebaseCircleUid: String?
-    var userRelationshipToCurrentUser: userRelationshipToCurrentUser?
+    var userRelationshipToCurrentUser: String?
     
     var circleMemberEmails: [CNLabeledValue<NSString>]?
     var circleMemberPhoneNumbers: [CNLabeledValue<CNPhoneNumber>]?
@@ -32,7 +32,6 @@ class CircleUser {
     
     enum userRelationshipToCurrentUser: String {
         case nonMember = "nonMember"
-//        case invitedToPrayer = "invitedToPrayer"
         case memberButNoRelation = "memberButNoRelation"
         case invited = "invited"
         case myCircleMember = "myCircleMember"
@@ -102,11 +101,11 @@ class CircleUser {
     
     func getRelationshipStatus(userToCheck: CircleUser) -> CircleUser {
         var user = userToCheck
-        var circleMemberEmails = [CNLabeledValue<NSString>]()
+//        var circleMemberEmails = [CNLabeledValue<NSString>]()
         var userEmails = [CNLabeledValue<NSString>]()
         
         var relationshipDetermined = false
-        user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.nonMember
+        user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.nonMember.rawValue
         while relationshipDetermined == false {
             if let userEmailsCheck = user.circleMemberEmails {
                 userEmails = userEmailsCheck
@@ -115,21 +114,19 @@ class CircleUser {
                     for email in FirebaseHelper.firebaseUserEmails {
                         if userEmailString as String == email {
                             // user exists
-                            user.userEmail = email
-                            user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation
-                            for circleMember in CurrentUser.circleMembers {
-                                if let circleMemberEmailCheck = circleMember.circleMemberEmails {
-                                    circleMemberEmails = circleMemberEmailCheck
-                                }
-                                for circleMemberEmail in circleMemberEmails {
-                                    let circleMemberEmailString = circleMemberEmail.value
-                                    if userEmailString == circleMemberEmailString {
+                            userToCheck.userEmail = email
+                            userToCheck.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue
+                            var i = 0
+                            for circleMember in CurrentUser.firebaseCircleMembers {
+                                if let circleMemberEmail = circleMember.userEmail {
+                                    if userEmailString as String == circleMemberEmail {
                                         // invited
-                                        user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
-                                        user = circleMember
+                                        print("NOTICE - Invitation determined and attempting to set user")
+                                        user = CurrentUser.firebaseCircleMembers[i]
                                         relationshipDetermined = true
                                     }
                                 }
+                                i += 1
                             }
                         }
                     }
@@ -140,6 +137,47 @@ class CircleUser {
         return user
     }
 }
+    
+//    func getRelationshipStatus(userToCheck: CircleUser) -> CircleUser {
+//        var user = userToCheck
+//        var circleMemberEmails = [CNLabeledValue<NSString>]()
+//        var userEmails = [CNLabeledValue<NSString>]()
+//
+//        var relationshipDetermined = false
+//        user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.nonMember.rawValue
+//        while relationshipDetermined == false {
+//            if let userEmailsCheck = user.circleMemberEmails {
+//                userEmails = userEmailsCheck
+//                for userEmail in userEmails {
+//                    let userEmailString = userEmail.value
+//                    for email in FirebaseHelper.firebaseUserEmails {
+//                        if userEmailString as String == email {
+//                            // user exists
+//                            user.userEmail = email
+//                            user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue
+//                            for circleMember in CurrentUser.circleMembers {
+//                                if let circleMemberEmailCheck = circleMember.circleMemberEmails {
+//                                    circleMemberEmails = circleMemberEmailCheck
+//                                }
+//                                for circleMemberEmail in circleMemberEmails {
+//                                    let circleMemberEmailString = circleMemberEmail.value
+//                                    if userEmailString == circleMemberEmailString {
+//                                        // invited
+//                                        user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited.rawValue
+//                                        user = circleMember
+//                                        relationshipDetermined = true
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            relationshipDetermined = true
+//        }
+//        return user
+//    }
+//}
 
 extension CircleUser {
     func setFromCnContact(cnContact: CNContact) -> CircleUser {        

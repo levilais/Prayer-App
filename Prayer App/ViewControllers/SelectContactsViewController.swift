@@ -40,7 +40,8 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     // FIREBASE
     var ref: DatabaseReference!
     
-    // Search
+    // SEARCH
+    var searchActive = false
     var resultSearchController = UISearchController()
     
     override func viewDidLoad() {
@@ -59,7 +60,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         super.viewWillAppear(true)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
-        updateSpotsLeftLabel()
         loadCorrectView()
     }
     
@@ -102,7 +102,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 selectContactsView.isHidden = false
                 FirebaseHelper().getUserEmails(completion: { (success) in
                     self.getContactsData()
-                    print("emails inside completion: \(FirebaseHelper.firebaseUserEmails)")
                 })
             }
         } else if ContactsHandler().contactsAuthStatus() == ".notDetermined" {
@@ -173,6 +172,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 } else {
                     fullName = firstName + " " + lastName
                 }
+                
                 if append == true {
                     let userWithStatus = CircleUser().getRelationshipStatus(userToCheck: user)
                     self.contactsToDisplay.append(userWithStatus)
@@ -184,7 +184,11 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             self.setUpContactSections()
             
             DispatchQueue.main.async {
+                if self.searchActive == true {
+                    self.updateSearchResults(for: self.resultSearchController)
+                }
                 self.tableView.reloadData()
+                self.updateSpotsLeftLabel()
             }
         })
     }
@@ -194,10 +198,10 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         nonMembers = []
         sectionHeaders = []
         
-        for user in cleanContactsAsCircleUsers {
+        for user in contactsToDisplay {
             if let relationshipCheck = user.userRelationshipToCurrentUser {
                 var sectionHeader = String()
-                if relationshipCheck != CircleUser.userRelationshipToCurrentUser.nonMember {
+                if relationshipCheck != CircleUser.userRelationshipToCurrentUser.nonMember.rawValue {
                     sectionHeader = "Invite member to your Circle"
                     members.append(user)
                 } else {
@@ -308,12 +312,18 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             user = nonMembers[indexPath.row]
         }
         
-        if let profileImageData = user.profileImage {
-            if let profileImage = UIImage(data: profileImageData) {
-                cell.profileImageView.image = profileImage
+        print("\(user.firstName!) \(user.lastName!) relationship when loading: \(user.userRelationshipToCurrentUser!)")
+        updateRelationshipActions(cell: cell, user: user)
+        
+        if let image = user.profileImageAsUIImage {
+            cell.profileImageView.image = image
+        } else {
+            if let profileImageData = user.profileImage {
+                if let profileImage = UIImage(data: profileImageData) {
+                    cell.profileImageView.image = profileImage
+                }
             }
         }
-        updateRelationshipActions(cell: cell, user: user)
         
         let fullName = CircleUser().getFullName(user: user)
         cell.fullNameLabel.text = fullName
@@ -330,11 +340,11 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     func updateRelationshipActions(cell: AddCircleMemberTableViewCell, user: CircleUser) {
         if let userRelationship = user.userRelationshipToCurrentUser {
             switch userRelationship {
-            case .invited:
+            case "invited":
                 cell.inviteButton.isHidden = true
                 cell.deleteButton.isHidden = false
                 cell.relationshipStatusLabel.isHidden = false
-            case .nonMember:
+            case "nonMember":
                 cell.inviteButton.isHidden = false
                 cell.deleteButton.isHidden = true
                 cell.relationshipStatusLabel.isHidden = true
@@ -344,52 +354,190 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 cell.relationshipStatusLabel.isHidden = true
             }
         }
+        updateSpotsLeftLabel()
     }
     
-    @objc func inviteMemberToCircle(sender: CellButton){
-        print("send invite fired")
-        if CurrentUser.circleMembers.count < 5 {
-            let buttonTag = sender.tag
-            let buttonSection = sender.section
-            let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
-            let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
-            
-            var user = CircleUser()
-            if indexPath.section == 0 {
-                if sectionHeaders.count > 1 {
-                    user = members[indexPath.row]
-                } else if sectionHeaders.count == 1 {
-                    if members.count > 0 {
+    // SECOND ATTEMPT
+        @objc func inviteMemberToCircle(sender: CellButton){
+            print("send invite fired")
+            if CurrentUser.firebaseCircleMembers.count < 5 {
+                let buttonTag = sender.tag
+                let buttonSection = sender.section
+                let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
+                let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
+    
+                var user = CircleUser()
+                if indexPath.section == 0 {
+                    if sectionHeaders.count > 1 {
                         user = members[indexPath.row]
+                    } else if sectionHeaders.count == 1 {
+                        if members.count > 0 {
+                            user = members[indexPath.row]
+                        } else {
+                            user = nonMembers[indexPath.row]
+                        }
                     } else {
                         user = nonMembers[indexPath.row]
                     }
                 } else {
                     user = nonMembers[indexPath.row]
                 }
-            } else {
-                user = nonMembers[indexPath.row]
-            }
-            
-            if user.userRelationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation {
-                // SAVE TO FIREBASE
-                if let email = user.userEmail {
-                    print("user email: \(email)")
-                    FirebaseHelper().saveNewCircleUserToFirebase(userEmail: email, ref: self.ref)
+    
+                if user.userRelationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue {
+                    // SAVE TO FIREBASE
+                    if let email = user.userEmail {
+                        print("user email: \(email)")
+                        FirebaseHelper().saveNewCircleUserToFirebase(userEmail: email, ref: self.ref)
+                    }
+    
+                    // SAVE TO CORE DATA (where we're currently getting circle users from)
+//                    user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited.rawValue
+//                    CurrentUser.circleMembers.append(user)
+                    updateSpotsLeftLabel()
+                    cell.inviteButton.isHidden = true
+                    cell.deleteButton.isHidden = false
+                    cell.relationshipStatusLabel.isHidden = false
+                    self.getContactsData()
+                } else {
+                    inviteMemberToPrayer(sender: sender)
                 }
-                
-                // SAVE TO CORE DATA (where we're currently getting circle users from)
-                user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
-                CurrentUser.circleMembers.append(user)
-                updateSpotsLeftLabel()
-                cell.inviteButton.isHidden = true
-                cell.deleteButton.isHidden = false
-                cell.relationshipStatusLabel.isHidden = false
-            } else {
-                inviteMemberToPrayer(sender: sender)
             }
         }
+    
+    // FIRST ATTEMPT
+//    @objc func inviteMemberToCircle(sender: CellButton){
+//        print("send invite fired")
+//        if CurrentUser.firebaseCircleMembers.count < 5 {
+//            let buttonTag = sender.tag
+//            let buttonSection = sender.section
+//            let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
+//            let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
+//
+//            var user = CircleUser()
+//            if indexPath.section == 0 {
+//                if sectionHeaders.count > 1 {
+//                    user = members[indexPath.row]
+//                } else if sectionHeaders.count == 1 {
+//                    if members.count > 0 {
+//                        user = members[indexPath.row]
+//                    } else {
+//                        user = nonMembers[indexPath.row]
+//                    }
+//                } else {
+//                    user = nonMembers[indexPath.row]
+//                }
+//            } else {
+//                user = nonMembers[indexPath.row]
+//            }
+//
+//            if user.userRelationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue {
+//                // SAVE TO FIREBASE
+//                if let email = user.userEmail {
+//                    print("user email: \(email)")
+//                    FirebaseHelper().saveNewCircleUserToFirebase(userEmail: email, ref: self.ref)
+//                }
+//
+//                showActionButtonForRelationship(cell: cell, user: user)
+////                // SAVE TO CORE DATA (where we're currently getting circle users from)
+////                user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
+//////                CurrentUser.circleMembers.append(user)
+////                cell.inviteButton.isHidden = true
+////                cell.deleteButton.isHidden = false
+////                cell.relationshipStatusLabel.isHidden = false
+////                updateSpotsLeftLabel()
+//            } else {
+//                inviteMemberToPrayer(sender: sender)
+//            }
+//        }
+//    }
+    
+//    func showActionButtonForRelationship(cell: AddCircleMemberTableViewCell, user: CircleUser) {
+//        if let relationship = user.userRelationshipToCurrentUser {
+//            print("relationship when trying to update cell: \(relationship)")
+//            switch relationship {
+//            case "invited":
+//                cell.inviteButton.isHidden = true
+//                cell.deleteButton.isHidden = false
+//                cell.relationshipStatusLabel.isHidden = false
+//            case "memberButNoRelation":
+//                cell.inviteButton.isHidden = false
+//                cell.deleteButton.isHidden = true
+//                cell.relationshipStatusLabel.isHidden = true
+//            case "nonMember":
+//                cell.inviteButton.isHidden = false
+//                cell.deleteButton.isHidden = true
+//                cell.relationshipStatusLabel.isHidden = true
+//            default:
+//                cell.inviteButton.isHidden = false
+//                cell.deleteButton.isHidden = true
+//                cell.relationshipStatusLabel.isHidden = true
+//            }
+//            updateSpotsLeftLabel()
+//        }
+//    }
+    
+    func updateSpotsLeftLabel() {
+        circleUserSpotsUsed = CurrentUser.firebaseCircleMembers.count
+        if circleUserSpotsUsed < 5 {
+            spotsLeftLabel.text = "You still have \(5 - circleUserSpotsUsed) out of 5 Circle Member spots available."
+        } else {
+            spotsLeftLabel.text = "You have used all 5 of your Circle Member spots. Uninvite or remove someone from your circle if you would like to invite someone else."
+        }
     }
+    
+    //    func updateSpotsLeftLabel() {
+    //        circleUserSpotsUsed = CurrentUser.circleMembers.count
+    //        if circleUserSpotsUsed < 5 {
+    //            spotsLeftLabel.text = "You still have \(5 - circleUserSpotsUsed) out of 5 Circle Member spots available."
+    //        } else {
+    //            spotsLeftLabel.text = "You have used all 5 of your Circle Member spots. Uninvite or remove someone from your circle if you would like to invite someone else."
+    //        }
+    //    }
+    
+//    @objc func inviteMemberToCircle(sender: CellButton){
+//        print("send invite fired")
+//        if CurrentUser.circleMembers.count < 5 {
+//            let buttonTag = sender.tag
+//            let buttonSection = sender.section
+//            let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
+//            let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
+//
+//            var user = CircleUser()
+//            if indexPath.section == 0 {
+//                if sectionHeaders.count > 1 {
+//                    user = members[indexPath.row]
+//                } else if sectionHeaders.count == 1 {
+//                    if members.count > 0 {
+//                        user = members[indexPath.row]
+//                    } else {
+//                        user = nonMembers[indexPath.row]
+//                    }
+//                } else {
+//                    user = nonMembers[indexPath.row]
+//                }
+//            } else {
+//                user = nonMembers[indexPath.row]
+//            }
+//
+//            if user.userRelationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation {
+//                // SAVE TO FIREBASE
+//                if let email = user.userEmail {
+//                    print("user email: \(email)")
+//                    FirebaseHelper().saveNewCircleUserToFirebase(userEmail: email, ref: self.ref)
+//                }
+//
+//                // SAVE TO CORE DATA (where we're currently getting circle users from)
+//                user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited
+//                CurrentUser.circleMembers.append(user)
+//                updateSpotsLeftLabel()
+//                cell.inviteButton.isHidden = true
+//                cell.deleteButton.isHidden = false
+//                cell.relationshipStatusLabel.isHidden = false
+//            } else {
+//                inviteMemberToPrayer(sender: sender)
+//            }
+//        }
+//    }
     
     func inviteMemberToPrayer(sender: UIButton) {
         let user = nonMembers[sender.tag]
@@ -468,6 +616,96 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
     }
     
+    @objc func deleteCircleMember(sender: CellButton) {
+        let alert = UIAlertController(title: "Are you sure?", message: "Are you sure you want to remove this Circle Member?", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
+            let buttonTag = sender.tag
+            let buttonSection = sender.section
+            let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
+            let cell = self.tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
+            
+            let user = self.members[indexPath.row]
+            
+            cell.inviteButton.isHidden = false
+            cell.deleteButton.isHidden = true
+            cell.relationshipStatusLabel.isHidden = true
+            
+            if let userEmail = user.userEmail {
+                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
+                print("circle user count after delete called \(CurrentUser.firebaseCircleMembers.count)")
+            }
+            
+            var i = 0
+            for circleUser in CurrentUser.firebaseCircleMembers {
+                if let circleUserEmail = circleUser.userEmail {
+                    if let emailToCheck = user.userEmail {
+                        if circleUserEmail == emailToCheck {
+                            CurrentUser.firebaseCircleMembers.remove(at: i)
+                            print("user removed from firebase")
+                        }
+                    }
+                }
+                i += 1
+            }
+            
+            self.updateSpotsLeftLabel()
+            self.getContactsData()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true) {
+            print("completed alert")
+        }
+    }
+    
+    //    @objc func deleteCircleMember(sender: CellButton) {
+    //        let alert = UIAlertController(title: "Are you sure?", message: "Are you sure you want to remove this Circle Member?", preferredStyle: .alert)
+    //        let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
+    //            let buttonTag = sender.tag
+    //            let buttonSection = sender.section
+    //            let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
+    //            let cell = self.tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
+    //
+    //            let user = self.members[indexPath.row]
+    //
+    //            print("userEmail in delete function: \(user.userEmail!)")
+    //            if let userEmail = user.userEmail {
+    //                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
+    //            }
+    //
+    //            if let idToDelete = user.circleUID {
+    //                var matchFound = false
+    //                while matchFound == false {
+    //                    var i = 0
+    //                    for circleMember in CurrentUser.circleMembers {
+    //                        if let circleMemberID = circleMember.circleUID {
+    //                            if circleMemberID == idToDelete {
+    //                                user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation
+    //                                CurrentUser.circleMembers.remove(at: i)
+    //                                cell.inviteButton.isHidden = false
+    //                                cell.deleteButton.isHidden = true
+    //                                cell.relationshipStatusLabel.isHidden = true
+    //                                self.updateSpotsLeftLabel()
+    //                                print("deleted: \(user.firstName!) \(user.lastName!)")
+    //                                matchFound = true
+    //                            }
+    //                        }
+    //                        i += 1
+    //                    }
+    //                    matchFound = true
+    //                }
+    //            }
+    //        }
+    //        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+    //        alert.addAction(okAction)
+    //        alert.addAction(cancelAction)
+    //        present(alert, animated: true) {
+    //            print("completed alert")
+    //        }
+    //    }
+    
     func mailComposeController(_ controller: MFMailComposeViewController,
                                didFinishWith result: MFMailComposeResult, error: Error?) {
         var labelText = ""
@@ -510,75 +748,23 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         }
     }
     
-    @objc func deleteCircleMember(sender: CellButton) {
-        let alert = UIAlertController(title: "Are you sure?", message: "Are you sure you want to remove this Circle Member?", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
-            let buttonTag = sender.tag
-            let buttonSection = sender.section
-            let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
-            let cell = self.tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
-            
-            let user = self.members[indexPath.row]
-            
-            print("userEmail in delete function: \(user.userEmail!)")
-            if let userEmail = user.userEmail {
-                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
-            }
-            
-            if let idToDelete = user.circleUID {
-                var matchFound = false
-                while matchFound == false {
-                    var i = 0
-                    for circleMember in CurrentUser.circleMembers {
-                        if let circleMemberID = circleMember.circleUID {
-                            if circleMemberID == idToDelete {
-                                user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation
-                                CurrentUser.circleMembers.remove(at: i)
-                                cell.inviteButton.isHidden = false
-                                cell.deleteButton.isHidden = true
-                                cell.relationshipStatusLabel.isHidden = true
-                                self.updateSpotsLeftLabel()
-                                print("deleted: \(user.firstName!) \(user.lastName!)")
-                                matchFound = true
-                            }
-                        }
-                        i += 1
-                    }
-                    matchFound = true
-                }
-            }
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
-        alert.addAction(okAction)
-        alert.addAction(cancelAction)
-        present(alert, animated: true) {
-            print("completed alert")
-        }
-    }
-    
-    func updateSpotsLeftLabel() {
-        circleUserSpotsUsed = CurrentUser.circleMembers.count
-        if circleUserSpotsUsed < 5 {
-            spotsLeftLabel.text = "You still have \(5 - circleUserSpotsUsed) out of 5 Circle Member spots available."
-        } else {
-            spotsLeftLabel.text = "You have used all 5 of your Circle Member spots. Uninvite or remove someone from your circle if you would like to invite someone else."
-        }
-    }
-    
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text
         if let searchText = searchText {
             if !searchText.isEmpty {
-                self.cleanContactsAsCircleUsers = self.contactsToDisplay.filter { $0.firstName!.contains(searchText) || $0.lastName!.contains(searchText) }
-                for contact in self.cleanContactsAsCircleUsers {
+                self.contactsToDisplay = self.cleanContactsAsCircleUsers.filter { $0.firstName!.contains(searchText) || $0.lastName!.contains(searchText) }
+                for contact in self.contactsToDisplay {
                     print("\(contact.firstName!) \(contact.lastName!)")
                 }
+                self.searchActive = true
             }
             else {
-                self.cleanContactsAsCircleUsers = self.contactsToDisplay
+                self.contactsToDisplay = self.cleanContactsAsCircleUsers
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "showResultsBeforeSearchingNotification"), object: nil) // Calls SearchVC
+                self.searchActive = false
             }
         }
+        
         setUpContactSections()
         self.tableView.reloadData()
     }

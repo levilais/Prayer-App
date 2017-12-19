@@ -44,6 +44,7 @@ class FirebaseHelper {
     }
     
     func loadCircleMembers() {
+        print("loadCircleMembers ran")
         if let userID = Auth.auth().currentUser?.uid {
             Database.database().reference().child("users").child(userID).child("circleUsers").observe(.childAdded, with: { snapshot in
                 if snapshot.value != nil {
@@ -53,15 +54,19 @@ class FirebaseHelper {
                                 if let firstName = userDictionary["firstName"] as? String {
                                     if let lastName = userDictionary["lastName"] as? String {
                                         if let userEmail = userDictionary["userEmail"] as? String {
-                                            let circleUser = CircleUser()
-                                            circleUser.firstName = firstName
-                                            circleUser.lastName = lastName
-                                            circleUser.firebaseCircleUid = uid
-                                            circleUser.userEmail = userEmail
-                                            circleUser.profileImageDownloadUrlAsString = profileImageUrl
-                                            CurrentUser.firebaseCircleMembers.append(circleUser)
-                                            
-                                            self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
+                                            if let relationship = userDictionary["relationship"] as? String {
+                                                let circleUser = CircleUser()
+                                                circleUser.firstName = firstName
+                                                circleUser.lastName = lastName
+                                                circleUser.firebaseCircleUid = uid
+                                                circleUser.userEmail = userEmail
+                                                circleUser.profileImageDownloadUrlAsString = profileImageUrl
+                                                circleUser.userRelationshipToCurrentUser = relationship
+                                                print("\(firstName) \(lastName) relationship when loading: \(relationship)")
+                                                CurrentUser.firebaseCircleMembers.append(circleUser)
+                                                
+                                                self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
+                                            }
                                         }
                                     }
                                 }
@@ -97,9 +102,12 @@ class FirebaseHelper {
                                         circleUser.firebaseCircleUid = uid
                                         circleUser.userEmail = userEmail
                                         circleUser.profileImageDownloadUrlAsString = profileImageUrl
-                                        CurrentUser.firebaseCircleMembers.append(circleUser)
+                                        circleUser.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited.rawValue
                                         
+                                        CurrentUser.firebaseCircleMembers.append(circleUser)
                                         self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
+                                        
+                                        print("firebaseCircleMembers.count as saving: \(CurrentUser.firebaseCircleMembers.count)")
                                     }
                                 }
                             }
@@ -151,15 +159,16 @@ class FirebaseHelper {
                                 if let error = error {
                                     print("error \(error.localizedDescription)")
                                 }
-                                var i = 0
-                                for circleUser in CurrentUser.firebaseCircleMembers {
-                                    if let circleUserEmail = circleUser.userEmail {
-                                        if circleUserEmail == savedEmail {
-                                            CurrentUser.firebaseCircleMembers.remove(at: i)
-                                        }
-                                    }
-                                    i += 1
-                                }
+//                                var i = 0
+//                                for circleUser in CurrentUser.firebaseCircleMembers {
+//                                    if let circleUserEmail = circleUser.userEmail {
+//                                        if circleUserEmail == savedEmail {
+//                                            CurrentUser.firebaseCircleMembers.remove(at: i)
+//                                            print("user removed from firebase")
+//                                        }
+//                                    }
+//                                    i += 1
+//                                }
                             }
                         }
                     }

@@ -95,6 +95,9 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             circleAgreedLabel.text = ""
             circleAgreedCountLabel.text = ""
             deleteFromCircleButton.isHidden = true
+            for button in circleProfileImageButtons {
+                button.layer.backgroundColor = UIColor.clear.cgColor
+            }
         } else {
             let circleUser = CurrentUser.firebaseCircleMembers[buttonTag]
             for button in circleProfileImageButtons {
@@ -168,6 +171,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func setCircleData() {
         let circleUsers = CurrentUser.firebaseCircleMembers
+        print("circleUsers when setCircleData is showing: \(CurrentUser.firebaseCircleMembers.count)")
         let circleCount = circleUsers.count
         
         for i in 0...4 {
@@ -192,12 +196,13 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func deleteCircleMemberDidPress(_ sender: Any) {
         let alert = UIAlertController(title: "Are you sure", message: "Are you sure you want to remove this Circle Member", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
-            // delete in FB
             let circleUser = CurrentUser.firebaseCircleMembers[self.selectedCircleMember]
+            
+            CurrentUser.firebaseCircleMembers.remove(at: self.selectedCircleMember)
+            
             if let email = circleUser.userEmail {
                 FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: email, ref: Database.database().reference())
             }
-            CurrentUser.firebaseCircleMembers.remove(at: self.selectedCircleMember)
             
             self.circleSpotFilled[self.selectedCircleMember] = false
             self.selectedCircleMember = 0
