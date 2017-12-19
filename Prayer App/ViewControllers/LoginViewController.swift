@@ -92,7 +92,6 @@ class LoginViewController: UIViewController {
     }
     
     func showLoginSignup() {
-        print("signupshowing: \(signupShowing)")
         if signupShowing == true {
             showSignUp()
         } else {
@@ -150,17 +149,14 @@ class LoginViewController: UIViewController {
             self.view.window!.rootViewController?.dismiss(animated: true, completion: nil)
         } else {
             if self.navigationController != nil {
-                print("attempting pop")
                 self.navigationController?.popToRootViewController(animated: true)
             } else {
-                print("attempting dismiss")
                 self.dismiss(animated: true, completion: nil)
             }
         }
     }
     
     @IBAction func forgotPasswordDidPress(_ sender: Any) {
-        print("forgot password pressed")
         if let email = loginEmailTextField.text {
             if email != "" {
                 if !Utilities().hasEmailFormat(emailString: email) {
@@ -178,7 +174,6 @@ class LoginViewController: UIViewController {
                         let alert = UIAlertController(title: "Email Sent!", message: "Please check your inbox for password reset instructions.", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
-                        print("Sent email")
                     })
                 }
             } else {
@@ -391,7 +386,6 @@ class LoginViewController: UIViewController {
                         self.loginPasswordTextField.text = ""
                         return
                     }
-                    print("signed in")
                     FirebaseHelper().loadCircleMembers()
                     // Check if UID matches saved UID in Core Data.
                     // If yes, proceed by adding any new data

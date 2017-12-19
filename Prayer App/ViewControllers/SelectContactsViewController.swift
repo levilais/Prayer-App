@@ -199,7 +199,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         sectionHeaders = []
         
         for user in contactsToDisplay {
-            if let relationshipCheck = user.userRelationshipToCurrentUser {
+            if let relationshipCheck = user.relationshipToCurrentUser {
                 var sectionHeader = String()
                 if relationshipCheck != CircleUser.userRelationshipToCurrentUser.nonMember.rawValue {
                     sectionHeader = "Invite member to your Circle"
@@ -319,10 +319,10 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         
         updateRelationshipActions(cell: cell, user: user)
         
-        if let image = user.profileImageAsUIImage {
+        if let image = user.profileImageAsImage {
             cell.profileImageView.image = image
         } else {
-            if let profileImageData = user.profileImage {
+            if let profileImageData = user.profileImageAsData {
                 if let profileImage = UIImage(data: profileImageData) {
                     cell.profileImageView.image = profileImage
                 }
@@ -342,7 +342,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func updateRelationshipActions(cell: AddCircleMemberTableViewCell, user: CircleUser) {
-        if let userRelationship = user.userRelationshipToCurrentUser {
+        if let userRelationship = user.relationshipToCurrentUser {
             switch userRelationship {
             case "invited":
                 cell.inviteButton.isHidden = true
@@ -386,7 +386,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 user = nonMembers[indexPath.row]
             }
 
-            if user.userRelationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue {
+            if user.relationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue {
                 // SAVE TO FIREBASE
                 if let email = user.userEmail {
                     FirebaseHelper().inviteUserToCircle(userEmail: email, ref: self.ref)
@@ -485,7 +485,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         }
         
         present(alert, animated: true, completion: nil)
-        print(alert.actions.count)
         alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
     }
     
@@ -505,7 +504,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             
             if let userEmail = user.userEmail {
                 FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
-                print("circle user count after delete called \(CurrentUser.firebaseCircleMembers.count)")
             }
             
             var i = 0
@@ -514,7 +512,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                     if let emailToCheck = user.userEmail {
                         if circleUserEmail == emailToCheck {
                             CurrentUser.firebaseCircleMembers.remove(at: i)
-                            print("user removed from firebase")
                         }
                     }
                 }
@@ -580,9 +577,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         if let searchText = searchText {
             if !searchText.isEmpty {
                 self.contactsToDisplay = self.cleanContactsAsCircleUsers.filter { $0.firstName!.contains(searchText) || $0.lastName!.contains(searchText) }
-                for contact in self.contactsToDisplay {
-                    print("\(contact.firstName!) \(contact.lastName!)")
-                }
                 self.searchActive = true
             }
             else {

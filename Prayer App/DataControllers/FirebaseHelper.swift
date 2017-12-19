@@ -46,7 +46,7 @@ class FirebaseHelper {
                 if snapshot.value != nil {
                     if let userDictionary = snapshot.value as? NSDictionary {
                         if let uid = userDictionary["userUID"] as? String {
-                            if let profileImageUrl = userDictionary["profileImageURL"] as? String {
+                            if let profileImageUrlString = userDictionary["profileImageURL"] as? String {
                                 if let firstName = userDictionary["firstName"] as? String {
                                     if let lastName = userDictionary["lastName"] as? String {
                                         if let userEmail = userDictionary["userEmail"] as? String {
@@ -54,10 +54,10 @@ class FirebaseHelper {
                                                 let circleUser = CircleUser()
                                                 circleUser.firstName = firstName
                                                 circleUser.lastName = lastName
-                                                circleUser.firebaseCircleUid = uid
+                                                circleUser.userID = uid
                                                 circleUser.userEmail = userEmail
-                                                circleUser.profileImageDownloadUrlAsString = profileImageUrl
-                                                circleUser.userRelationshipToCurrentUser = relationship
+                                                circleUser.profileImageAsString = profileImageUrlString
+                                                circleUser.relationshipToCurrentUser = relationship
                                                 
                                                 var userExists = false
                                                 if CurrentUser.firebaseCircleMembers.count > 0 {
@@ -67,7 +67,6 @@ class FirebaseHelper {
                                                             if let userToCheckEmail = userToCheck.userEmail {
                                                                 if userToCheckEmail == userEmail {
                                                                     userExists = true
-                                                                    print("user exists")
                                                                     matchDetermined = true
                                                                 }
                                                             }
@@ -99,23 +98,23 @@ class FirebaseHelper {
                 if snapshot.value != nil {
                     if let userDictionary = snapshot.value as? NSDictionary {
                         if let uid = userDictionary["userID"] as? String {
-                            if let profileImageUrl = userDictionary["profileImageURL"] as? String {
+                            if let profileImageUrlString = userDictionary["profileImageURL"] as? String {
                                 if let firstName = userDictionary["firstName"] as? String {
                                     if let lastName = userDictionary["lastName"] as? String {
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("firstName").setValue(firstName)
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("lastName").setValue(lastName)
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("userEmail").setValue(userEmail)
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("userUID").setValue(uid)
-                                        ref.child("users").child(userID).child("circleUsers").child(uid).child("profileImageURL").setValue(profileImageUrl)
+                                        ref.child("users").child(userID).child("circleUsers").child(uid).child("profileImageURL").setValue(profileImageUrlString)
                                     ref.child("users").child(userID).child("circleUsers").child(uid).child("relationship").setValue(CircleUser.userRelationshipToCurrentUser.invited.rawValue)
                                         
                                         let circleUser = CircleUser()
                                         circleUser.firstName = firstName
                                         circleUser.lastName = lastName
-                                        circleUser.firebaseCircleUid = uid
+                                        circleUser.userID = uid
                                         circleUser.userEmail = userEmail
-                                        circleUser.profileImageDownloadUrlAsString = profileImageUrl
-                                        circleUser.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited.rawValue
+                                        circleUser.profileImageAsString = profileImageUrlString
+                                        circleUser.relationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited.rawValue
                                         
                                         CurrentUser.firebaseCircleMembers.append(circleUser)
                                         self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
@@ -157,7 +156,7 @@ class FirebaseHelper {
     }
     
     func setCircleUserProfileImageFromFirebase(circleUser: CircleUser) {
-        if let urlString = circleUser.profileImageDownloadUrlAsString {
+        if let urlString = circleUser.profileImageAsString {
             if let url = URL(string: urlString) {
                 URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
                     if error != nil {
@@ -166,7 +165,7 @@ class FirebaseHelper {
                     }
                     if let imageData = data {
                         if let image = UIImage(data: imageData) {
-                            circleUser.profileImageAsUIImage = image
+                            circleUser.profileImageAsImage = image
                             var i = 0
                             for user in CurrentUser.firebaseCircleMembers {
                                 if let email = user.userEmail {
@@ -189,7 +188,7 @@ class FirebaseHelper {
         for circleUser in CurrentUser.firebaseCircleMembers {
             if let savedEmail = circleUser.userEmail {
                 if savedEmail == userEmail {
-                    if let circleUserID = circleUser.firebaseCircleUid {
+                    if let circleUserID = circleUser.userID {
                         if let userID = Auth.auth().currentUser?.uid {
                             ref.child("users").child(userID).child("circleUsers").child(circleUserID).removeValue { error, _ in
                                 if let error = error {

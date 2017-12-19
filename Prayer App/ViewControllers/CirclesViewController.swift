@@ -49,7 +49,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        print("CurrentUser.firebaseCircleMembers.count: \(CurrentUser.firebaseCircleMembers.count)")
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
@@ -119,14 +118,13 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func setCircleData() {
         let circleUsers = CurrentUser.firebaseCircleMembers
-        print("circleUsers when setCircleData is showing: \(CurrentUser.firebaseCircleMembers.count)")
         let circleCount = circleUsers.count
         
         for i in 0...4 {
             switch i {
             case 0 ..< circleCount:
                 let circleUser = circleUsers[i]
-                if let image = circleUser.profileImageAsUIImage {
+                if let image = circleUser.profileImageAsImage {
                     circleProfileImages[i].image = image
                 }
                 circleSpotFilled[i] = true
@@ -227,7 +225,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .default, title: "Delete") { (action:UITableViewRowAction, indexPath:IndexPath) in
-            print("delete at:\(indexPath)")
 //            let prayer = self.fetchedResultsController.object(at: indexPath)
 //            prayer.managedObjectContext?.delete(prayer)
 //            print("attempting to delete")
@@ -244,7 +241,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             let answered = UITableViewRowAction(style: .default, title: "Answered") { (action:UITableViewRowAction, indexPath:IndexPath) in
 //                self.indexPathToMarkAnswered = indexPath
 //                Animations().animateMarkAnsweredPopup(view: self.markAnsweredPopoverView, backgroundButton: self.markAnsweredBackgroundButton, subView: self.markAnsweredSubview, viewController: self, textView: self.markAnsweredTextView)
-                print("answered at:\(indexPath)")
         }
         answered.backgroundColor = UIColor.StyleFile.DarkBlueColor
         return [delete, answered]
@@ -252,7 +248,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
-         print("Circles timer update called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {
@@ -260,7 +255,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func handleNotification3(_ notification: NSNotification) {
-        print("circleUsers updated")
         DispatchQueue.main.async {
             self.setCircleData()
         }

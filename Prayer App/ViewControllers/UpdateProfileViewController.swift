@@ -74,17 +74,15 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     func checkPermissionsAndLaunchImagePicker() {
         let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
         switch photoAuthorizationStatus {
-        case .authorized: print("Access is granted by user")
+        case .authorized:
             launchPicker()
         case .notDetermined:
-            PHPhotoLibrary.requestAuthorization({ (newStatus) in print("status is \(newStatus)")
+            PHPhotoLibrary.requestAuthorization({ (newStatus) in
                 if newStatus == PHAuthorizationStatus.authorized {
-                    /* do stuff here */ print("success")
                     self.launchPicker()
                 }
             })
-        case .restricted: /* print("User do not have access to photo album.")
-        case .denied: */
+        case .restricted:
             print("User has denied the permission.")
         default:
             print("default was called")
@@ -105,7 +103,6 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
         }
         
         if let userID = Auth.auth().currentUser?.uid {
-            print("userID: \(userID)")
             self.ref.child("users").child(userID).child("firstName").setValue(firstName)
             self.ref.child("users").child(userID).child("lastName").setValue(lastName)
             
@@ -184,7 +181,6 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
         
         profileImageButton.setBackgroundImage(sourceImage, for: .normal)
         newImageToSave = sourceImage
-        print("attempted to set image")
         picker.dismiss(animated: true, completion: nil)
     }
     

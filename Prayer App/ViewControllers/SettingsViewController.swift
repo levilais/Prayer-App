@@ -135,7 +135,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         case 1:
             tableView.deselectRow(at: indexPath, animated: true)
             SKStoreReviewController.requestReview()
-            print("Requesting Review")
         case 2:
             selectedRow = indexPath.row
             performSegue(withIdentifier: "settingsToDetailSettings", sender: self)

@@ -17,7 +17,6 @@ class FirstLoadViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("load count: \(Loads.loadCount)")
         if Loads.firstLoadPresented == true {
             self.dismiss(animated: false, completion: nil)
         }

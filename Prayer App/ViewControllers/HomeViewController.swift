@@ -60,7 +60,6 @@ class HomeViewController: UIViewController {
     
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
-        print("Home timer update called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {

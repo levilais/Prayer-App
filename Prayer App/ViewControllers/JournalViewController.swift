@@ -88,13 +88,11 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func setupObservers() {
-        print("observers Added")
         if let userID = Auth.auth().currentUser?.uid {
             Database.database().reference().child("users").child(userID).child("prayers").observe(.childAdded) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let prayer = FirebaseHelper().prayerFromDictionary(userDictionary: userDictionary)
                     self.preSortedPrayers.append(prayer)
-                    print("childAdded Fired")
                 }
                 self.reloadPrayerData()
             }
@@ -108,7 +106,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                             if let snapshotPrayerID = snapshotPrayer.prayerID {
                                 if prayerID == snapshotPrayerID {
                                     self.preSortedPrayers.remove(at: i)
-                                    print("childRemoved Fired")
                                 }
                             }
                         }
@@ -127,7 +124,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                             if let snapshotPrayerID = snapshotPrayer.prayerID {
                                 if prayerID == snapshotPrayerID {
                                     self.preSortedPrayers[i] = snapshotPrayer
-                                    print("childChanged Fired")
                                 }
                             }
                         }
@@ -244,7 +240,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @IBAction func markAnsweredSaveDidPress(_ sender: Any) {
-        print("pressed save mark answered")
         markAnswered()
         dismissMarkAnsweredPopup()
     }
@@ -377,7 +372,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if let answeredPrayer = prayer.howAnswered {
             cell.howAnsweredLabel.text = answeredPrayer
-            print("howAnswered: \(answeredPrayer) for index: \(indexPath)")
         }
         
         var prayerCount = Int()
@@ -397,7 +391,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .default, title: "Delete") { (action:UITableViewRowAction, indexPath:IndexPath) in
-            print("delete at:\(indexPath)")
             let prayer = self.prayerAtIndexPath(indexPath: indexPath)
             
             if let prayerID = prayer.prayerID {
@@ -466,7 +459,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
-         print("Journal timer update called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {

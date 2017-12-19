@@ -27,7 +27,6 @@ class CurrentUser {
     static var lastName: String?
     static var currentUserUID: String?
     
-    
     func setupCurrentUserFirstNameTextfield(textField: UITextField) -> UITextField {
         if Auth.auth().currentUser != nil {
             if let userID = Auth.auth().currentUser?.uid {
@@ -91,21 +90,21 @@ class CurrentUser {
         return button
     }
     
-    func currentUserExists() -> Bool {
-        var userExists = Bool()
-        let context = CoreDataHelper().getContext()
-        let fetchRequest: NSFetchRequest<CurrentUserMO> = CurrentUserMO.fetchRequest()
-        do {
-            // Peform Fetch Request
-            let users = try context.fetch(fetchRequest)
-            for user in users {
-                userExists = user.isLoggedInAsCurrentUser
-            }
-        } catch {
-            print("Unable to Fetch users, (\(error))")
-        }
-        return userExists
-    }
+//    func currentUserExists() -> Bool {
+//        var userExists = Bool()
+//        let context = CoreDataHelper().getContext()
+//        let fetchRequest: NSFetchRequest<CurrentUserMO> = CurrentUserMO.fetchRequest()
+//        do {
+//            // Peform Fetch Request
+//            let users = try context.fetch(fetchRequest)
+//            for user in users {
+//                userExists = user.isLoggedInAsCurrentUser
+//            }
+//        } catch {
+//            print("Unable to Fetch users, (\(error))")
+//        }
+//        return userExists
+//    }
     
     func deleteCurrentUser() {
         let delegate = UIApplication.shared.delegate as! AppDelegate
@@ -125,10 +124,8 @@ class CurrentUser {
     func profileImageFromNameAsData(firstName: String) -> Data {
         var imageDataToSave = Data()
         let firstLetter = String(describing: firstName.first!)
-        print(firstLetter)
         let uppercasedFirstLetter = firstLetter.uppercased()
         let imageNameString = "profilePlaceHolderImage" + uppercasedFirstLetter + ".pdf"
-        print(imageNameString)
         if let image = UIImage(named: imageNameString) {
             if let imageData = UIImagePNGRepresentation(image) {
                 imageDataToSave = imageData

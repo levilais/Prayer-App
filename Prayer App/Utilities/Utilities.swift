@@ -57,7 +57,6 @@ class Utilities {
             let capitalizedText = emailCheck.lowercased()
             email = capitalizedText.trimmingCharacters(in: .whitespacesAndNewlines)
         }
-        print("formattedEmailString: \(email)")
         return email
     }
     

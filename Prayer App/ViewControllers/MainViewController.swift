@@ -703,7 +703,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
-         print("Main timer update called")
     }
     
     @objc func handleNotification2(_ notification: NSNotification) {

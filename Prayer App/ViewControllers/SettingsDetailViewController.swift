@@ -27,7 +27,6 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("chosenSection: \(chosenSection)")
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
@@ -70,11 +69,9 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                 if labelText == "Log In" {
                     cell.settingsToggle.addTarget(self, action: #selector(logInLogOut), for: .touchUpInside)
                     if Auth.auth().currentUser != nil {
-                        print("is current user")
                         labelString = "Log Out Of Prayer"
                         cell.settingsToggle.setOn(true, animated: true)
                     } else {
-                        print("is not current user")
                         labelString = "Log In To Prayer"
                         cell.settingsToggle.setOn(false, animated: true)
                     }
