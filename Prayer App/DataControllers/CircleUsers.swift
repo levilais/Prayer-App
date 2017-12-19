@@ -175,7 +175,7 @@ extension CircleUser {
         }
 
         user.profileImage = imageDataToSave
-        user.circleUID = "userID.\(String(describing: user.dateAdded)).\(String(describing: user.firstName)).\(String(describing: user.lastName))"
+//        user.circleUID = "userID.\(String(describing: user.dateAdded)).\(String(describing: user.firstName)).\(String(describing: user.lastName))"
         user.circleMemberEmails = cnContact.emailAddresses
         user.circleMemberPhoneNumbers = cnContact.phoneNumbers
         

@@ -21,12 +21,10 @@ class FirebaseHelper {
                 if let email = userDictionary["email"] as? String {
                     if !FirebaseHelper.firebaseUserEmails.contains(email) {
                         FirebaseHelper.firebaseUserEmails.append(email)
-                        print("finished actual data retreival without completion handler")
                     }
                 }
             }
         }
-        print("emails inside function without completion: \(FirebaseHelper.firebaseUserEmails)")
     }
     
     func getUserEmails(completion: @escaping (Bool) -> Void) {
@@ -35,7 +33,6 @@ class FirebaseHelper {
                 if let email = userDictionary["email"] as? String {
                     if !FirebaseHelper.firebaseUserEmails.contains(email) {
                         FirebaseHelper.firebaseUserEmails.append(email)
-                        print("finished actual data retreival with completion handler")
                     }
                 }
             }
@@ -44,7 +41,6 @@ class FirebaseHelper {
     }
     
     func loadCircleMembers() {
-        print("loadCircleMembers ran")
         if let userID = Auth.auth().currentUser?.uid {
             Database.database().reference().child("users").child(userID).child("circleUsers").observe(.childAdded, with: { snapshot in
                 if snapshot.value != nil {
@@ -62,7 +58,6 @@ class FirebaseHelper {
                                                 circleUser.userEmail = userEmail
                                                 circleUser.profileImageDownloadUrlAsString = profileImageUrl
                                                 circleUser.userRelationshipToCurrentUser = relationship
-                                                print("\(firstName) \(lastName) relationship when loading: \(relationship)")
                                                 
                                                 var userExists = false
                                                 if CurrentUser.firebaseCircleMembers.count > 0 {
@@ -98,7 +93,7 @@ class FirebaseHelper {
         }
     }
     
-    func saveNewCircleUserToFirebase(userEmail: String, ref: DatabaseReference) {
+    func inviteUserToCircle(userEmail: String, ref: DatabaseReference) {
         if let userID = Auth.auth().currentUser?.uid {
             ref.child("users").queryOrdered(byChild: "email").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
                 if snapshot.value != nil {
@@ -125,7 +120,7 @@ class FirebaseHelper {
                                         CurrentUser.firebaseCircleMembers.append(circleUser)
                                         self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
                                         
-                                        print("firebaseCircleMembers.count as saving: \(CurrentUser.firebaseCircleMembers.count)")
+                                        self.sendInviteToUser(userEmail: userEmail, ref: ref)
                                     }
                                 }
                             }
@@ -133,6 +128,29 @@ class FirebaseHelper {
                     }
                 } else {
                     print ("user not found")
+                }
+            })
+        }
+    }
+    
+    func sendInviteToUser(userEmail: String, ref: DatabaseReference) {
+        if let userID = Auth.auth().currentUser?.uid {
+            ref.child("users").queryOrdered(byChild: "email").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
+                if snapshot.value != nil {
+                    if let userDictionary = snapshot.value as? NSDictionary {
+                        if let uid = userDictionary["userID"] as? String {
+//                            if let currentUserFirstName = CurrentUser.firstName {
+//                                print("6")
+//                                if let currentUserLastName = CurrentUser.lastName {
+//                                    print("7")
+//                                    ref.child("users").child(uid).child("memberships").child(userID).child("firstName").setValue(currentUserFirstName)
+//                                    ref.child("users").child(uid).child("memberships").child(userID).child("lastName").setValue(currentUserLastName)
+                                    ref.child("users").child(uid).child("memberships").child(userID).child("userID").setValue(userID)
+                                    
+//                                }
+//                            }
+                        }
+                    }
                 }
             })
         }
@@ -177,11 +195,30 @@ class FirebaseHelper {
                                 if let error = error {
                                     print("error \(error.localizedDescription)")
                                 }
+                                self.deleteCircleUser(userEmail: userEmail, ref: ref)
                             }
                         }
                     }
                 }
             }
+        }
+    }
+    
+    func deleteCircleUser(userEmail: String, ref: DatabaseReference) {
+        if let userID = Auth.auth().currentUser?.uid {
+            ref.child("users").queryOrdered(byChild: "email").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
+                if snapshot.value != nil {
+                    if let userDictionary = snapshot.value as? NSDictionary {
+                        if let uid = userDictionary["userID"] as? String {
+                            ref.child("users").child(uid).child("memberships").child(userID).removeValue { error, _ in
+                                if let error = error {
+                                    print("error \(error.localizedDescription)")
+                                }
+                            }
+                        }
+                    }
+                }
+            })
         }
     }
     

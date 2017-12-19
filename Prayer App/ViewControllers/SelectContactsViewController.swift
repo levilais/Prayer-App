@@ -14,6 +14,7 @@ import ContactsUI
 import MessageUI
 
 class SelectContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UISearchResultsUpdating {
+    var explicitDismiss = false
     
     // Authorize Contacts View
     @IBOutlet weak var contactsNotAllowedView: UIView!
@@ -215,6 +216,10 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
 
     @IBAction func doneButtonDidPress(_ sender: Any) {
+        dismissView()
+    }
+    
+    func dismissView() {
         if self.navigationController != nil {
             self.navigationController?.popToRootViewController(animated: true)
         } else if segueFromSettings == true {
@@ -222,6 +227,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         } else {
             self.view.window!.rootViewController?.dismiss(animated: true, completion: nil)
         }
+        self.explicitDismiss = true
     }
     
     @IBAction func connectToContactsDidPress(_ sender: Any) {
@@ -311,7 +317,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             user = nonMembers[indexPath.row]
         }
         
-        print("\(user.firstName!) \(user.lastName!) relationship when loading: \(user.userRelationshipToCurrentUser!)")
         updateRelationshipActions(cell: cell, user: user)
         
         if let image = user.profileImageAsUIImage {
@@ -358,7 +363,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     // SECOND ATTEMPT
     @objc func inviteMemberToCircle(sender: CellButton){
-        print("send invite fired")
         if CurrentUser.firebaseCircleMembers.count < 5 {
             let buttonTag = sender.tag
             let buttonSection = sender.section
@@ -385,8 +389,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             if user.userRelationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue {
                 // SAVE TO FIREBASE
                 if let email = user.userEmail {
-                    print("user email: \(email)")
-                    FirebaseHelper().saveNewCircleUserToFirebase(userEmail: email, ref: self.ref)
+                    FirebaseHelper().inviteUserToCircle(userEmail: email, ref: self.ref)
                 }
 
                 updateSpotsLeftLabel()
@@ -601,5 +604,8 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
 
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
+        if explicitDismiss == false {
+            dismissView()
+        }
     }
 }
