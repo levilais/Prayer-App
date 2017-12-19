@@ -14,8 +14,12 @@ import UIKit
 import CoreData
 
 class CurrentUser {
-    static var circleMembers = [CircleUser]()
-    static var firebaseCircleMembers = [CircleUser]()
+//    static var circleMembers = [CircleUser]()
+    static var firebaseCircleMembers = [CircleUser]() {
+        didSet {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil, userInfo: nil)
+        }
+    }
     
     static var isLoggedIn: Bool?
     static var hasAllowedContactAccess = false

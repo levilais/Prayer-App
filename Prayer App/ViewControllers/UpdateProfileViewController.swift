@@ -22,6 +22,7 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var lastNameLabel: UILabel!
     @IBOutlet weak var lastNameTextField: UITextField!
+    @IBOutlet weak var scrollView: UIScrollView!
     
     var imagePicker: UIImagePickerController?
     var newImageToSave = UIImage()
@@ -43,7 +44,8 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     func setupView() {
@@ -184,5 +186,26 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
         newImageToSave = sourceImage
         print("attempted to set image")
         picker.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification){
+        var userInfo = notification.userInfo!
+        var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+        var contentInset: UIEdgeInsets = self.scrollView.contentInset
+        contentInset.bottom = keyboardFrame.size.height + 60
+        scrollView.contentInset = contentInset
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification){
+        var userInfo = notification.userInfo!
+        var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+        scrollView.contentInset = UIEdgeInsets.zero
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
 }

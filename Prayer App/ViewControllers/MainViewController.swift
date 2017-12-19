@@ -62,9 +62,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     var categoryButtons: [UIButton] = [UIButton]()
     var categoryInputIsTextfield = true
     var chosenCategory = String()
-
-    // Review Popup Variables
-    var passFirstResponder = true
     
     // Data Variables
     var prayer: Prayer?
@@ -107,15 +104,16 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
         self.view.addGestureRecognizer(swipeDown)
                 
-        UserDefaultsHelper().getLoads()
-        if Loads.firstLoadPresented == false {
-            if Auth.auth().currentUser == nil {
-//                if let vc = self.storyboard?.instantiateViewController(withIdentifier: "FirstLoadViewController") {
-//                    self.navigationController?.present(vc, animated: false, completion: nil)
-//                }
-                performSegue(withIdentifier: "mainToFirstLoadSegue", sender: self)
+//        UserDefaultsHelper().getLoads()
+        
+        DispatchQueue.main.async {
+            if Loads.firstLoadPresented == false {
+                if Auth.auth().currentUser == nil {
+                    self.performSegue(withIdentifier: "mainToFirstLoadSegue", sender: self)
+                }
             }
         }
+        
         Loads.loadCount += 1
         UserDefaultsHelper().saveLoad()
         
@@ -145,14 +143,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             titleImage.isHidden = false
         }
         
-        if Loads.loadCount == 3 && passFirstResponder == true {
-            SKStoreReviewController.requestReview()
-            passFirstResponder = false
-        } else {
-            UIView.animate(withDuration: 0.0, delay: 0.5, options: [], animations: {
-                self.textField.becomeFirstResponder()
-            }, completion: nil)
-        }
+        UIView.animate(withDuration: 0.0, delay: 0.5, options: [], animations: {
+            self.textField.becomeFirstResponder()
+        }, completion: nil)
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         if !TimerStruct.timerIsRunning {
@@ -165,15 +158,12 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     override func viewDidAppear(_ animated: Bool) {
         if firstAppear {
-            if Loads.loadCount == 1 {
-//                Animations().animateFirstLoad(doneButton: doneButton, titleImage: titleImage, toolbarView: toolbarView, view: self.view, textView: textField)
-                Animations().animateLoad(doneButton: doneButton, titleImage: titleImage, toolbarView: toolbarView, view: self.view, textView: textField)
-
-            } else if Loads.loadCount == 3 {
-                Animations().animateLoad(doneButton: doneButton, titleImage: titleImage, toolbarView: toolbarView, view: self.view, textView: textField)
-            } else {
-                Animations().animateLoad(doneButton: doneButton, titleImage: titleImage, toolbarView: toolbarView, view: self.view, textView: textField)
-            }
+            Animations().animateLoad(doneButton: doneButton, titleImage: titleImage, toolbarView: toolbarView, view: self.view, textView: textField)
+        } else {
+            titleImage.alpha = 1
+            titleImage.isHidden = false
+            doneButton.alpha = 1
+            doneButton.isHidden = false
         }
         firstAppear = false
     }
@@ -494,31 +484,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     func savePrayer(prayerText: UITextView, prayerHeader: UITextField) {
-//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-//            return
-//        }
-//
-//        let managedContext = appDelegate.persistentContainer.viewContext
-//        let entity = NSEntityDescription.entity(forEntityName: "Prayer", in: managedContext)!
-//        let prayer = NSManagedObject(entity: entity, insertInto: managedContext)
-//
         setCategoryIfFromText(prayerHeader: prayerHeader)
         let prayerID = NSUUID().uuidString
-//
-//        prayer.setValue(prayerText.text, forKeyPath: "prayerText")
-//        prayer.setValue(Date(), forKey: "timeStamp")
-//        prayer.setValue(1, forKey: "prayerCount")
-//        prayer.setValue(chosenCategory, forKey: "prayerCategory")
-//        prayer.setValue(false, forKey: "isAnswered")
-//        prayer.setValue("", forKey: "howAnswered")
-//        prayer.setValue(prayerID, forKey: "prayerID")
-//
-//        do {
-//            try managedContext.save()
-//        } catch let error as NSError {
-//            print("Could not save. \(error), \(error.userInfo)")
-//        }
-//
         FirebaseHelper().saveNewPrayerToFirebase(prayerText: prayerText.text, prayerCategory: chosenCategory, prayerID: prayerID, ref: ref)
         getSectionHeaders()
     }

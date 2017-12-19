@@ -25,7 +25,7 @@ class CustomTabBarController {
         let navMain = UINavigationController(rootViewController: MainViewController)
         let navCircles = UINavigationController(rootViewController: CirclesViewController)
         let navSettings = UINavigationController(rootViewController: SettingsViewController)
-        
+                
         navHome.setNavigationBarHidden(true, animated: false)
         navJournal.setNavigationBarHidden(true, animated: false)
         navMain.setNavigationBarHidden(true, animated: false)

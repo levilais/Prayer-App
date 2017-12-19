@@ -11,7 +11,7 @@ import UIKit
 
 class Animations {
     func animateFirstLoad(doneButton: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView, textView: UITextView) {
-        view.layoutIfNeeded()
+//        view.layoutIfNeeded()
 
         let titleImageStartingPoint = CGPoint(x: titleImage.center.x, y: titleImage.center.y)
         let dismissLeftPoint = CGPoint(x: view.frame.minX - titleImage.frame.width, y: titleImage.frame.width)
@@ -65,11 +65,12 @@ class Animations {
     }
     
     func animateLoad(doneButton: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView, textView: UITextView) {
-        view.layoutIfNeeded()
+//        view.layoutIfNeeded()
         titleImage.alpha = 0
         titleImage.isHidden = false
         toolbarView.alpha = 0
         doneButton.alpha = 0
+        doneButton.isHidden = false
         
         UIView.animate(withDuration: 0.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
             titleImage.image = UIImage(named: "prayerTitle.pdf")

@@ -1337,7 +1337,7 @@
                                             <constraint firstAttribute="height" constant="80" id="aSg-6C-7VH"/>
                                             <constraint firstAttribute="width" constant="80" id="ew0-rW-Nel"/>
                                         </constraints>
-                                        <state key="normal" backgroundImage="profilImageDefault">
+                                        <state key="normal">
                                             <color key="titleColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
@@ -1356,6 +1356,7 @@
                                     </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="AIN-xP-dhc" firstAttribute="top" secondItem="yrC-nO-mkc" secondAttribute="top" constant="10" id="3av-ZJ-e9x"/>
                                     <constraint firstItem="V4Q-T2-omH" firstAttribute="top" secondItem="csX-qV-KAE" secondAttribute="bottom" constant="5" id="6xc-rE-CMx"/>
                                     <constraint firstItem="csX-qV-KAE" firstAttribute="centerX" secondItem="yrC-nO-mkc" secondAttribute="centerX" id="C7V-of-vnQ"/>
                                     <constraint firstAttribute="trailing" secondItem="aA2-gF-UeK" secondAttribute="trailing" id="Tyr-yY-1ma"/>
@@ -1380,7 +1381,6 @@
                             <constraint firstItem="SFp-qw-LHj" firstAttribute="leading" secondItem="7PI-wp-xyd" secondAttribute="leading" id="mrD-bb-hcg"/>
                             <constraint firstItem="7PI-wp-xyd" firstAttribute="trailing" secondItem="SFp-qw-LHj" secondAttribute="trailing" id="p6t-ee-TcW"/>
                             <constraint firstItem="SFp-qw-LHj" firstAttribute="top" secondItem="7PI-wp-xyd" secondAttribute="top" id="qQ9-Si-seI"/>
-                            <constraint firstItem="AIN-xP-dhc" firstAttribute="top" secondItem="SFp-qw-LHj" secondAttribute="bottom" constant="10" id="t6x-pf-6Ns"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7PI-wp-xyd"/>
                     </view>
@@ -1391,6 +1391,7 @@
                         <outlet property="lastNameLabel" destination="iQx-10-zrQ" id="HHV-Rj-kpY"/>
                         <outlet property="lastNameTextField" destination="nds-ec-FWy" id="pVM-T8-3Dp"/>
                         <outlet property="profileImageButton" destination="csX-qV-KAE" id="hoR-0i-eWP"/>
+                        <outlet property="scrollView" destination="yrC-nO-mkc" id="H4L-Nf-duX"/>
                         <outlet property="titleLabel" destination="AIN-xP-dhc" id="YJJ-hK-n5Q"/>
                     </connections>
                 </viewController>
@@ -3006,7 +3007,7 @@
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="exo-XS-mFi"/>
+        <segue reference="O3R-Xk-xiP"/>
         <segue reference="a87-y6-4BI"/>
         <segue reference="gID-Hk-yCK"/>
     </inferredMetricsTieBreakers>

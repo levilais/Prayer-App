@@ -137,47 +137,6 @@ class CircleUser {
         return user
     }
 }
-    
-//    func getRelationshipStatus(userToCheck: CircleUser) -> CircleUser {
-//        var user = userToCheck
-//        var circleMemberEmails = [CNLabeledValue<NSString>]()
-//        var userEmails = [CNLabeledValue<NSString>]()
-//
-//        var relationshipDetermined = false
-//        user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.nonMember.rawValue
-//        while relationshipDetermined == false {
-//            if let userEmailsCheck = user.circleMemberEmails {
-//                userEmails = userEmailsCheck
-//                for userEmail in userEmails {
-//                    let userEmailString = userEmail.value
-//                    for email in FirebaseHelper.firebaseUserEmails {
-//                        if userEmailString as String == email {
-//                            // user exists
-//                            user.userEmail = email
-//                            user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue
-//                            for circleMember in CurrentUser.circleMembers {
-//                                if let circleMemberEmailCheck = circleMember.circleMemberEmails {
-//                                    circleMemberEmails = circleMemberEmailCheck
-//                                }
-//                                for circleMemberEmail in circleMemberEmails {
-//                                    let circleMemberEmailString = circleMemberEmail.value
-//                                    if userEmailString == circleMemberEmailString {
-//                                        // invited
-//                                        user.userRelationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited.rawValue
-//                                        user = circleMember
-//                                        relationshipDetermined = true
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            relationshipDetermined = true
-//        }
-//        return user
-//    }
-//}
 
 extension CircleUser {
     func setFromCnContact(cnContact: CNContact) -> CircleUser {        
