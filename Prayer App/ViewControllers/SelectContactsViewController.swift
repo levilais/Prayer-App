@@ -347,6 +347,12 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             case "invited":
                 cell.inviteButton.isHidden = true
                 cell.deleteButton.isHidden = false
+                cell.relationshipStatusLabel.text = "Invited"
+                cell.relationshipStatusLabel.isHidden = false
+            case "myCircleMember":
+                cell.inviteButton.isHidden = true
+                cell.deleteButton.isHidden = false
+                cell.relationshipStatusLabel.text = "Circle Member"
                 cell.relationshipStatusLabel.isHidden = false
             case "nonMember":
                 cell.inviteButton.isHidden = false
@@ -361,7 +367,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         updateSpotsLeftLabel()
     }
     
-    // SECOND ATTEMPT
     @objc func inviteMemberToCircle(sender: CellButton){
         if CurrentUser.firebaseCircleMembers.count < 5 {
             let buttonTag = sender.tag

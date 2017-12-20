@@ -136,6 +136,7 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
             do {
                 try firebaseAuth.signOut()
                 CurrentUser.firebaseCircleMembers.removeAll()
+                CurrentUser.firebaseMembershipUsers.removeAll()
                 FirebaseHelper.firebaseUserEmails.removeAll()
                 tableView.reloadData()
             } catch let signOutError as NSError {

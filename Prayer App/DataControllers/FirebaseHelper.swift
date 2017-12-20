@@ -183,6 +183,49 @@ class FirebaseHelper {
         }
     }
     
+    func acceptInvite(userEmail: String, ref: DatabaseReference) {
+        if let userID = Auth.auth().currentUser?.uid {
+            ref.child("users").queryOrdered(byChild: "userEmail").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
+                if snapshot.value != nil {
+                    if let userDictionary = snapshot.value as? NSDictionary {
+                        if let uid = userDictionary["userID"] as? String {
+                        ref.child("users").child(uid).child("circleUsers").child(userID).child("relationship").setValue(CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue)
+                            ref.child("users").child(uid).child("circleUsers").child(userID).child("dateJoinedCircle").setValue(ServerValue.timestamp())
+                            
+                            ref.child("users").child(userID).child("memberships").child(uid).child("membershipStatus").setValue(MembershipUser.currentUserMembershipStatus.member.rawValue)
+                            ref.child("users").child(userID).child("memberships").child(uid).child("dateJoinedCircle").setValue(ServerValue.timestamp())
+                        }
+                    }
+                }
+            })
+        }
+    }
+    
+    func declineInvite(userEmail: String, ref: DatabaseReference) {
+        if let userID = Auth.auth().currentUser?.uid {
+            ref.child("users").queryOrdered(byChild: "userEmail").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
+                if snapshot.value != nil {
+                    if let userDictionary = snapshot.value as? NSDictionary {
+                        if let uid = userDictionary["userID"] as? String {
+                            ref.child("users").child(userID).child("memberships").child(uid).removeValue { error, _ in
+                                if let error = error {
+                                    print("error 1")
+                                    print("error \(error.localizedDescription)")
+                                }
+                            }
+                            ref.child("users").child(uid).child("circleUsers").child(userID).removeValue { error, _ in
+                                if let error = error {
+                                    print("error 2")
+                                    print("error \(error.localizedDescription)")
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        }
+    }
+    
     func setCircleUserProfileImageFromFirebase(circleUser: CircleUser) {
         if let urlString = circleUser.profileImageAsString {
             if let url = URL(string: urlString) {
@@ -275,6 +318,11 @@ class FirebaseHelper {
                 if snapshot.value != nil {
                     if let userDictionary = snapshot.value as? NSDictionary {
                         if let uid = userDictionary["userID"] as? String {
+                            ref.child("users").child(userID).child("circleMembers").child(uid).removeValue { error, _ in
+                                if let error = error {
+                                    print("error \(error.localizedDescription)")
+                                }
+                            }
                             ref.child("users").child(uid).child("memberships").child(userID).removeValue { error, _ in
                                 if let error = error {
                                     print("error \(error.localizedDescription)")
@@ -386,7 +434,7 @@ class FirebaseHelper {
         return prayer
     }
     
-    func addNewConnectionToCurrentUserMemberships(userDictionary: NSDictionary) {
+    func membershipUserFromDictionary(userDictionary: NSDictionary) -> MembershipUser {
         let user = MembershipUser()
         if let membershipStatus = userDictionary["membershipStatus"] as? String {
             user.membershipStatus = membershipStatus
@@ -409,6 +457,11 @@ class FirebaseHelper {
         if let dateInvitedDouble = userDictionary["dateInvited"] as? Double {
             user.dateInvited = dateInvitedDouble
         }
+        return user
+    }
+    
+    func addNewConnectionToCurrentUserMemberships(userDictionary: NSDictionary) {
+        let user = self.membershipUserFromDictionary(userDictionary: userDictionary)
         self.setMembershipUserProfileImageFromFirebase(membershipUser: user)
     }
     

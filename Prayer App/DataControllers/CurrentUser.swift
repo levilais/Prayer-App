@@ -21,7 +21,9 @@ class CurrentUser {
     }
     static var firebaseMembershipUsers = [MembershipUser]() {
         didSet {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipUserAdded"), object: nil, userInfo: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil, userInfo: nil)
+            print("didSet called")
+            print("firebaseMembershipUsers.count: \(firebaseMembershipUsers.count)")
         }
     }
     static var currentUser = User()

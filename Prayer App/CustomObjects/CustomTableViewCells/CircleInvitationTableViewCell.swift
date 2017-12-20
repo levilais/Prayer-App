@@ -14,8 +14,8 @@ class CircleInvitationTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var invitationSinceLabel: UILabel!
     @IBOutlet weak var invitationLabel: UILabel!
-    @IBOutlet weak var acceptButton: UIButton!
-    @IBOutlet weak var declineButton: UIButton!
+    @IBOutlet weak var acceptButton: CellButton!
+    @IBOutlet weak var declineButton: CellButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()

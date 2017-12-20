@@ -2480,8 +2480,8 @@
                                             <constraint firstItem="ZlR-o6-Ejd" firstAttribute="leading" secondItem="xSz-qp-uUT" secondAttribute="leading" constant="15" id="iy2-sn-uGW"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You currently have no notifications." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IdV-rP-DEZ">
-                                        <rect key="frame" x="38" y="219" width="243.5" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There are no items currently in your Prayerline" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IdV-rP-DEZ">
+                                        <rect key="frame" x="10" y="219" width="300" height="20.5"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -2525,7 +2525,7 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="RWK-gL-BjM">
                                                             <rect key="frame" x="80" y="112.5" width="160" height="30"/>
                                                             <subviews>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4b2-ni-nwn">
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4b2-ni-nwn" customClass="CellButton" customModule="Prayer_App" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="75" height="30"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="75" id="5iu-R4-MRr"/>
@@ -2533,7 +2533,7 @@
                                                                     </constraints>
                                                                     <state key="normal" backgroundImage="acceptButton"/>
                                                                 </button>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aac-lL-qs9">
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aac-lL-qs9" customClass="CellButton" customModule="Prayer_App" customModuleProvider="target">
                                                                     <rect key="frame" x="85" y="0.0" width="75" height="30"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="75" id="4qy-9z-oSc"/>
@@ -2583,11 +2583,13 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="xSz-qp-uUT" secondAttribute="trailing" id="9Es-25-YG1"/>
+                                    <constraint firstItem="IdV-rP-DEZ" firstAttribute="leading" secondItem="D2S-Ys-waE" secondAttribute="leading" constant="10" id="R1q-y3-3TH"/>
                                     <constraint firstItem="xSz-qp-uUT" firstAttribute="leading" secondItem="D2S-Ys-waE" secondAttribute="leading" id="a83-Sa-h4n"/>
                                     <constraint firstItem="IdV-rP-DEZ" firstAttribute="centerX" secondItem="D2S-Ys-waE" secondAttribute="centerX" id="eC8-cE-EoQ"/>
                                     <constraint firstAttribute="trailing" secondItem="4in-hR-VUo" secondAttribute="trailing" id="fuL-Rm-ICE"/>
                                     <constraint firstItem="IdV-rP-DEZ" firstAttribute="centerY" secondItem="D2S-Ys-waE" secondAttribute="centerY" id="ijA-Wz-0kY"/>
                                     <constraint firstItem="4in-hR-VUo" firstAttribute="top" secondItem="xSz-qp-uUT" secondAttribute="bottom" id="oug-iS-uXY"/>
+                                    <constraint firstAttribute="trailing" secondItem="IdV-rP-DEZ" secondAttribute="trailing" constant="10" id="sFM-j4-DC4"/>
                                     <constraint firstItem="4in-hR-VUo" firstAttribute="leading" secondItem="D2S-Ys-waE" secondAttribute="leading" id="ukX-RD-PEb"/>
                                     <constraint firstAttribute="bottom" secondItem="4in-hR-VUo" secondAttribute="bottom" id="us4-DG-2rv"/>
                                     <constraint firstItem="xSz-qp-uUT" firstAttribute="top" secondItem="D2S-Ys-waE" secondAttribute="top" id="vbt-ij-kXW"/>
@@ -3139,6 +3141,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="exo-XS-mFi"/>
         <segue reference="a87-y6-4BI"/>
-        <segue reference="gID-Hk-yCK"/>
+        <segue reference="7If-Zn-bA6"/>
     </inferredMetricsTieBreakers>
 </document>
