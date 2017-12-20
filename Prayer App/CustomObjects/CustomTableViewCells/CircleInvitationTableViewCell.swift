@@ -20,8 +20,8 @@ class CircleInvitationTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = .clear
-        profileImage.layer.cornerRadius = profileImage.frame.size.height / 2
-        profileImage.clipsToBounds = true
+        self.profileImage.layer.cornerRadius = profileImage.frame.size.height / 2
+        self.profileImage.clipsToBounds = true
         self.selectionStyle = .none
     }
     

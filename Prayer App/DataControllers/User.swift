@@ -14,7 +14,7 @@ import Contacts
 import ContactsUI
 
 class User {
-    var dateJoined: Double?
+    var dateJoinedPrayer: Double?
     var firstName: String?
     var lastName: String?
     var userID: String?

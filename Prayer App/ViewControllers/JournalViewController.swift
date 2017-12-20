@@ -89,7 +89,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func setupObservers() {
         if let userID = Auth.auth().currentUser?.uid {
-            Database.database().reference().child("users").child(userID).child("prayers").observe(.childAdded) { (snapshot) in
+            ref.child("users").child(userID).child("prayers").observe(.childAdded) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let prayer = FirebaseHelper().prayerFromDictionary(userDictionary: userDictionary)
                     self.preSortedPrayers.append(prayer)
@@ -97,7 +97,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.reloadPrayerData()
             }
             
-            Database.database().reference().child("users").child(userID).child("prayers").observe(.childRemoved) { (snapshot) in
+            ref.child("users").child(userID).child("prayers").observe(.childRemoved) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let snapshotPrayer = FirebaseHelper().prayerFromDictionary(userDictionary: userDictionary)
                     var i = 0
@@ -115,7 +115,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 }
             }
             
-            Database.database().reference().child("users").child(userID).child("prayers").observe(.childChanged) { (snapshot) in
+            ref.child("users").child(userID).child("prayers").observe(.childChanged) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let snapshotPrayer = FirebaseHelper().prayerFromDictionary(userDictionary: userDictionary)
                     var i = 0
@@ -291,7 +291,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        return 30
     }
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {

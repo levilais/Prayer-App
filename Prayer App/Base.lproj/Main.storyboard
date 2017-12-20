@@ -2480,7 +2480,13 @@
                                             <constraint firstItem="ZlR-o6-Ejd" firstAttribute="leading" secondItem="xSz-qp-uUT" secondAttribute="leading" constant="15" id="iy2-sn-uGW"/>
                                         </constraints>
                                     </view>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4in-hR-VUo">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You currently have no notifications." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IdV-rP-DEZ">
+                                        <rect key="frame" x="38" y="219" width="243.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4in-hR-VUo">
                                         <rect key="frame" x="0.0" y="30" width="320" height="429"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
@@ -2491,27 +2497,27 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="152.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profilImageDefault" translatesAutoresizingMaskIntoConstraints="NO" id="dyH-Py-vDb">
-                                                            <rect key="frame" x="15" y="10" width="40" height="40"/>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profilImageDefault" translatesAutoresizingMaskIntoConstraints="NO" id="dyH-Py-vDb">
+                                                            <rect key="frame" x="10" y="10" width="40" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="40" id="c7R-Ul-ASc"/>
                                                                 <constraint firstAttribute="height" constant="40" id="ipn-9x-HOh"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Firstname Lastname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8RM-Kd-6ya">
-                                                            <rect key="frame" x="65" y="10" width="160" height="20.5"/>
+                                                            <rect key="frame" x="60" y="10" width="250" height="20.5"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                                             <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Request sent 2 days ago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vpN-w1-vzZ">
-                                                            <rect key="frame" x="65" y="30.5" width="129.5" height="23.5"/>
+                                                            <rect key="frame" x="60" y="30.5" width="250" height="14.5"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                                             <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Firstname has invited you to be one of their 5 Prayer Circle members" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k8b-Eg-d7o">
-                                                            <rect key="frame" x="15" y="69.5" width="290" height="28"/>
+                                                            <rect key="frame" x="15" y="60" width="290" height="37.5"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                                             <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -2543,16 +2549,17 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="8RM-Kd-6ya" firstAttribute="leading" secondItem="dyH-Py-vDb" secondAttribute="trailing" constant="10" id="0FS-Wk-WSe"/>
+                                                        <constraint firstItem="k8b-Eg-d7o" firstAttribute="top" secondItem="dyH-Py-vDb" secondAttribute="bottom" constant="10" id="3Lc-mI-HHs"/>
                                                         <constraint firstItem="k8b-Eg-d7o" firstAttribute="leading" secondItem="dEO-aX-ZcH" secondAttribute="leading" constant="15" id="6j7-Mc-RJg"/>
                                                         <constraint firstItem="RWK-gL-BjM" firstAttribute="top" secondItem="k8b-Eg-d7o" secondAttribute="bottom" constant="15" id="7bw-T8-Xea"/>
-                                                        <constraint firstItem="k8b-Eg-d7o" firstAttribute="top" secondItem="vpN-w1-vzZ" secondAttribute="bottom" constant="15" id="CVq-7J-XqR"/>
-                                                        <constraint firstAttribute="bottom" secondItem="RWK-gL-BjM" secondAttribute="bottom" constant="10" id="SsO-uT-F4H"/>
+                                                        <constraint firstAttribute="trailing" secondItem="8RM-Kd-6ya" secondAttribute="trailing" constant="10" id="MQX-JU-iKZ"/>
+                                                        <constraint firstItem="dyH-Py-vDb" firstAttribute="leading" secondItem="dEO-aX-ZcH" secondAttribute="leading" constant="10" id="P1z-mV-VDj"/>
                                                         <constraint firstItem="vpN-w1-vzZ" firstAttribute="leading" secondItem="dyH-Py-vDb" secondAttribute="trailing" constant="10" id="UHD-V6-QU7"/>
-                                                        <constraint firstItem="dyH-Py-vDb" firstAttribute="leading" secondItem="dEO-aX-ZcH" secondAttribute="leadingMargin" id="Uet-3v-9On"/>
-                                                        <constraint firstItem="k8b-Eg-d7o" firstAttribute="centerX" secondItem="dEO-aX-ZcH" secondAttribute="centerX" id="cKO-f1-lu6"/>
+                                                        <constraint firstAttribute="bottom" secondItem="RWK-gL-BjM" secondAttribute="bottom" constant="10" id="Yvq-GL-iaB"/>
                                                         <constraint firstItem="8RM-Kd-6ya" firstAttribute="top" secondItem="dyH-Py-vDb" secondAttribute="top" id="fAe-7t-8wT"/>
                                                         <constraint firstAttribute="trailing" secondItem="k8b-Eg-d7o" secondAttribute="trailing" constant="15" id="fwC-ab-rAM"/>
                                                         <constraint firstItem="dyH-Py-vDb" firstAttribute="top" secondItem="dEO-aX-ZcH" secondAttribute="top" constant="10" id="jS7-xa-Igz"/>
+                                                        <constraint firstAttribute="trailing" secondItem="vpN-w1-vzZ" secondAttribute="trailing" constant="10" id="kJE-Gp-zBL"/>
                                                         <constraint firstItem="RWK-gL-BjM" firstAttribute="centerX" secondItem="dEO-aX-ZcH" secondAttribute="centerX" id="t6U-Pm-fS9"/>
                                                         <constraint firstItem="vpN-w1-vzZ" firstAttribute="top" secondItem="8RM-Kd-6ya" secondAttribute="bottom" id="tNy-TH-PlO"/>
                                                     </constraints>
@@ -2577,7 +2584,9 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="xSz-qp-uUT" secondAttribute="trailing" id="9Es-25-YG1"/>
                                     <constraint firstItem="xSz-qp-uUT" firstAttribute="leading" secondItem="D2S-Ys-waE" secondAttribute="leading" id="a83-Sa-h4n"/>
+                                    <constraint firstItem="IdV-rP-DEZ" firstAttribute="centerX" secondItem="D2S-Ys-waE" secondAttribute="centerX" id="eC8-cE-EoQ"/>
                                     <constraint firstAttribute="trailing" secondItem="4in-hR-VUo" secondAttribute="trailing" id="fuL-Rm-ICE"/>
+                                    <constraint firstItem="IdV-rP-DEZ" firstAttribute="centerY" secondItem="D2S-Ys-waE" secondAttribute="centerY" id="ijA-Wz-0kY"/>
                                     <constraint firstItem="4in-hR-VUo" firstAttribute="top" secondItem="xSz-qp-uUT" secondAttribute="bottom" id="oug-iS-uXY"/>
                                     <constraint firstItem="4in-hR-VUo" firstAttribute="leading" secondItem="D2S-Ys-waE" secondAttribute="leading" id="ukX-RD-PEb"/>
                                     <constraint firstAttribute="bottom" secondItem="4in-hR-VUo" secondAttribute="bottom" id="us4-DG-2rv"/>
@@ -2605,6 +2614,7 @@
                     <connections>
                         <outlet property="greetingLabel" destination="ZlR-o6-Ejd" id="KsB-hI-RLM"/>
                         <outlet property="headerView" destination="9u0-0B-sBe" id="VGM-jU-RlX"/>
+                        <outlet property="messageLabel" destination="IdV-rP-DEZ" id="lBs-n1-Gge"/>
                         <outlet property="tableView" destination="4in-hR-VUo" id="Cfh-Gw-N8d"/>
                         <outlet property="timerHeaderButton" destination="BE6-7F-B5k" id="7uH-D2-8Ey"/>
                         <outlet property="titleImage" destination="h9c-5U-ebE" id="CMv-VS-gV7"/>

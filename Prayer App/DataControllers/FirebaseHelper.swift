@@ -128,6 +128,7 @@ class FirebaseHelper {
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("userUID").setValue(uid)
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("profileImageURL").setValue(profileImageUrlString)
                                     ref.child("users").child(userID).child("circleUsers").child(uid).child("relationship").setValue(CircleUser.userRelationshipToCurrentUser.invited.rawValue)
+                                        ref.child("users").child(userID).child("circleUsers").child(uid).child("dateInvited").setValue(ServerValue.timestamp())
                                         
                                         let circleUser = CircleUser()
                                         circleUser.firstName = firstName
@@ -168,7 +169,9 @@ class FirebaseHelper {
                                             ref.child("users").child(uid).child("memberships").child(userID).child("userID").setValue(userID)
                                             ref.child("users").child(uid).child("memberships").child(userID).child("profileImageURL").setValue(currentUserProfileImageUrl)
                                             ref.child("users").child(uid).child("memberships").child(userID).child("userEmail").setValue(currentUserEmail)
-                                            ref.child("users").child(uid).child("memberships").child(userID).child("membershipStatus").setValue("invited")
+                                            ref.child("users").child(uid).child("memberships").child(userID).child("membershipStatus").setValue(MembershipUser.currentUserMembershipStatus.invited.rawValue)
+                                            
+                                            ref.child("users").child(uid).child("memberships").child(userID).child("dateInvited").setValue(ServerValue.timestamp())
                                         }
                                     }
                                 }
@@ -201,6 +204,44 @@ class FirebaseHelper {
                                     }
                                 }
                                 i += 1
+                            }
+                        }
+                    }
+                }).resume()
+            }
+        }
+    }
+    
+    func setMembershipUserProfileImageFromFirebase(membershipUser: MembershipUser) {
+        if let urlString = membershipUser.profileImageAsString {
+            if let url = URL(string: urlString) {
+                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                    if error != nil {
+                        print(error!.localizedDescription)
+                        return
+                    }
+                    if let imageData = data {
+                        if let image = UIImage(data: imageData) {
+                            membershipUser.profileImageAsImage = image
+                            var userExists = false
+                            var i = 0
+                            var userExistsDetermined = false
+                            while userExistsDetermined == false {
+                                for user in CurrentUser.firebaseMembershipUsers {
+                                    if let email = user.userEmail {
+                                        if let userEmail = membershipUser.userEmail {
+                                            if email == userEmail {
+                                                userExists = true
+                                                userExistsDetermined = true
+                                            }
+                                        }
+                                    }
+                                    i += 1
+                                }
+                                userExistsDetermined = true
+                            }
+                            if userExists == false {
+                                 CurrentUser.firebaseMembershipUsers.append(membershipUser)
                             }
                         }
                     }
@@ -343,6 +384,32 @@ class FirebaseHelper {
             prayer.howAnswered = howAnsweredCheck
         }
         return prayer
+    }
+    
+    func addNewConnectionToCurrentUserMemberships(userDictionary: NSDictionary) {
+        let user = MembershipUser()
+        if let membershipStatus = userDictionary["membershipStatus"] as? String {
+            user.membershipStatus = membershipStatus
+        }
+        if let firstName = userDictionary["firstName"] as? String {
+            user.firstName = firstName
+        }
+        if let lastName = userDictionary["lastName"] as? String {
+            user.lastName = lastName
+        }
+        if let userID = userDictionary["userID"] as? String {
+            user.userID = userID
+        }
+        if let userEmail = userDictionary["userEmail"] as? String {
+            user.userEmail = userEmail
+        }
+        if let profileImageUrlString = userDictionary["profileImageURL"] as? String {
+            user.profileImageAsString = profileImageUrlString
+        }
+        if let dateInvitedDouble = userDictionary["dateInvited"] as? Double {
+            user.dateInvited = dateInvitedDouble
+        }
+        self.setMembershipUserProfileImageFromFirebase(membershipUser: user)
     }
     
     func createPrayerCategories(prayers: [CurrentUserPrayer]) {

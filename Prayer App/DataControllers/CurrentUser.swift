@@ -19,7 +19,11 @@ class CurrentUser {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil, userInfo: nil)
         }
     }
-    static var firebaseMembershipUsers = [MembershipUser]()
+    static var firebaseMembershipUsers = [MembershipUser]() {
+        didSet {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipUserAdded"), object: nil, userInfo: nil)
+        }
+    }
     static var currentUser = User()
     
     func setupCurrentUserFirstNameWelcomeLabel(label: UILabel) -> UILabel {

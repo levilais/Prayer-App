@@ -14,8 +14,9 @@ import Firebase
 
 class CircleUser: User {
 
-    var dateAddedToCircle: Date?
-    var lastAgreedInPrayerDate: Date?
+    var dateJoinedCircle: Double?
+    var dateInvited: Double?
+    var lastAgreedInPrayerDate: Double?
     var agreedInPrayerCount: Int?
     var relationshipToCurrentUser: String?
     var circleMemberEmails: [CNLabeledValue<NSString>]?
@@ -88,8 +89,6 @@ extension CircleUser {
         user.firstName = cnContact.givenName
         user.lastName = cnContact.familyName
         user.hasBeenInvited = false
-        user.dateAddedToCircle = Date()
-        user.lastAgreedInPrayerDate = Date()
         user.agreedInPrayerCount = 0
         
         var imageDataToSave = Data()

@@ -11,6 +11,8 @@ import UIKit
 import Firebase
 
 class MembershipUser: CircleUser {
+    var membershipStatus = String()
+    
     enum currentUserMembershipStatus: String {
         case invited = "invited"
         case member = "member"

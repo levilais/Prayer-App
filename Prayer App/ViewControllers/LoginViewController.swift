@@ -285,7 +285,6 @@ class LoginViewController: UIViewController {
         var firstName = String()
         var lastName = String()
         let email = Utilities().formattedEmailString(emailTextFieldString: signupEmailTextField.text)
-        let dateJoined = String(Date().timeIntervalSince1970)
         if let password = signupPasswordTextField.text {
             if let firstNameCheck = firstNameTextField.text {
                 if let lastNameCheck = lastNameTextField.text {
@@ -301,7 +300,7 @@ class LoginViewController: UIViewController {
                                 Database.database().reference().child("users").child(user.uid).child("userEmail").setValue(email)
                                 Database.database().reference().child("users").child(user.uid).child("firstName").setValue(firstName)
                                 Database.database().reference().child("users").child(user.uid).child("lastName").setValue(lastName)
-                                Database.database().reference().child("users").child(user.uid).child("dateJoined").setValue(dateJoined)
+                                Database.database().reference().child("users").child(user.uid).child("dateJoinedPrayer").setValue(ServerValue.timestamp())
                                 Database.database().reference().child("users").child(user.uid).child("userID").setValue(user.uid)
                                 
                                 let profileImageData = CurrentUser().profileImageFromNameAsData(firstName: firstName)
