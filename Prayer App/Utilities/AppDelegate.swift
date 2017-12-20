@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FirebaseApp.configure()
         Database.database().isPersistenceEnabled = true
-        FirebaseHelper().loadCircleMembers()
+        FirebaseHelper().loadFirebaseData()
         UserDefaultsHelper().getLoads()
         
         UserDefaultsHelper().getLastContactAuthStatus()

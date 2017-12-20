@@ -178,11 +178,11 @@
 				04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */,
 				04F0E4E01FA12762006D1244 /* LoadsStruct.swift */,
 				04FA1FF21FC4A77B00234033 /* ContactsController.swift */,
+				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
+				0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */,
+				044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */,
 				04410F171FCA2BC5002EC8F9 /* CircleUsers.swift */,
 				04410F191FCA398F002EC8F9 /* CurrentUser.swift */,
-				0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */,
-				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
-				044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */,
 				04A1F3151FE6F1CA00E56771 /* User.swift */,
 			);
 			path = DataControllers;

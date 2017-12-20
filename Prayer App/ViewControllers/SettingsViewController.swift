@@ -41,7 +41,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         if Auth.auth().currentUser != nil {
             settingsProfileButtonImage = CurrentUser().setProfileImageButton(button: settingsProfileButtonImage)
             settingsProfileButtonImage.isEnabled = true
-            welcomeLabel = CurrentUser().setupCurrentUserFirstNameWelcomeLabel(label: welcomeLabel)
+            if let currentUserFirstName = CurrentUser.currentUser.firstName {
+                welcomeLabel.text = Utilities().greetingString() + currentUserFirstName
+            }
         } else {
             settingsProfileButtonImage.isEnabled = false
             settingsProfileButtonImage.setBackgroundImage(UIImage(named: "settingsPrayerIcon.pdf"), for: .normal)

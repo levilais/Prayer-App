@@ -44,7 +44,6 @@ class PrayerTableViewCell: UITableViewCell {
             cell.prayedLastLabel.font = UIFont.StyleFile.LastPrayedMedium
             cell.recentlyPrayed = false
         }
-        print("markRecentlyPrayed - recentlyPrayed: \(cell.recentlyPrayed)")
     }
 
 }

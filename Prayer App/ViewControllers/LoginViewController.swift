@@ -298,7 +298,7 @@ class LoginViewController: UIViewController {
                             return
                         } else {
                             if let user = user {
-                                Database.database().reference().child("users").child(user.uid).child("email").setValue(email)
+                                Database.database().reference().child("users").child(user.uid).child("userEmail").setValue(email)
                                 Database.database().reference().child("users").child(user.uid).child("firstName").setValue(firstName)
                                 Database.database().reference().child("users").child(user.uid).child("lastName").setValue(lastName)
                                 Database.database().reference().child("users").child(user.uid).child("dateJoined").setValue(dateJoined)
@@ -327,17 +327,7 @@ class LoginViewController: UIViewController {
                                     }
                                 }
                                 
-//                                // if this works, it means the user doesn't exist.  If this is the case, we need to create another "Current User" and have all data app-wide be whatever Firebase has saved for that new user ID.  CircleUsers, Prayers, and CirclePrayers are all relative to who the logged in uid is.  We don't necessarily want to delete the current user.  Rather - update how we fetch data everywhere we call on the database.  THis exact process is also what needs to be done when loggin in.
-//
-//                                // there is now a property that is "isLoggedInAsCurrentUser".  Do a for loop and change all uid's that dont' match this uid to "false" - and this one to "true".  Then, when fetching info, make sure that there is a predicate that calls for only objects where "isCurrentUser" is true
-//
-//                                if CurrentUser().currentUserExists() {
-//                                    // remove all Core Data from the previous user and replace it with this new user on the device.  Likely need to remove Prayers from previous user, too.  Need to do this on login, too.  Core Data should be relevant to signed-in UID.
-//                                    CurrentUser().deleteCurrentUser()
-//                                    self.saveUserToCoreData(firstName: firstName, lastName: lastName, dateJoined: dateJoined, profileImageData: profileImageData, uid: user.uid)
-//                                } else {
-//                                    self.saveUserToCoreData(firstName: firstName, lastName: lastName, dateJoined: dateJoined, profileImageData: profileImageData, uid: user.uid)
-//                                }
+                                FirebaseHelper().loadFirebaseData()
                             }
                             
                             if ContactsHandler().contactsAuthStatus() != ".authorized"  {
@@ -352,30 +342,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-//    func saveUserToCoreData(firstName: String, lastName: String, dateJoined: String, profileImageData: Data, uid: String) {
-//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-//            return
-//        }
-//        
-//        let managedContext = appDelegate.persistentContainer.viewContext
-//        if let entity = NSEntityDescription.entity(forEntityName: "CurrentUserMO", in: managedContext) {
-//            let currentUser = NSManagedObject(entity: entity, insertInto: managedContext)
-//            
-//            currentUser.setValue(firstName, forKey: "firstName")
-//            currentUser.setValue(lastName, forKey: "lastName")
-//            currentUser.setValue(dateJoined, forKey: "dateJoinedPrayer")
-//            currentUser.setValue(profileImageData, forKey: "profileImage")
-//            currentUser.setValue(uid, forKey: "uid")
-//            currentUser.setValue(true, forKey: "isLoggedInAsCurrentUser")
-//            
-//            do {
-//                try managedContext.save()
-//            } catch let error as NSError {
-//                print("Could not save. \(error), \(error.userInfo)")
-//            }
-//        }
-//    }
-//    
     func attemptLogin() {
         if let email = loginEmailTextField.text {
             if let password = loginPasswordTextField.text {
@@ -386,10 +352,8 @@ class LoginViewController: UIViewController {
                         self.loginPasswordTextField.text = ""
                         return
                     }
-                    FirebaseHelper().loadCircleMembers()
-                    // Check if UID matches saved UID in Core Data.
-                    // If yes, proceed by adding any new data
-                    // If no, remove all Core Data and replace with Firebase data
+                    
+                    FirebaseHelper().loadFirebaseData()
                     
                     if ContactsHandler().contactsAuthStatus() != ".authorized"  {
                         self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)

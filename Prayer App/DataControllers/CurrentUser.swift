@@ -20,27 +20,10 @@ class CurrentUser {
         }
     }
     
-    static var isLoggedIn: Bool?
-    static var hasAllowedContactAccess = false
-    static var profileImage: UIImage?
-    static var firstName: String?
-    static var lastName: String?
-    static var currentUserUID: String?
+    static var currentUser = User()
     
-    func setupCurrentUserFirstNameTextfield(textField: UITextField) -> UITextField {
-        if Auth.auth().currentUser != nil {
-            if let userID = Auth.auth().currentUser?.uid {
-                Database.database().reference().child("users").child(userID).observe(.value) { (snapshot) in
-                    if let userDictionary = snapshot.value as? NSDictionary {
-                        if let firstName = userDictionary["firstName"] as? String {
-                            textField.text = firstName
-                        }
-                    }
-                }
-            }
-        }
-        return textField
-    }
+//    static var isLoggedIn: Bool?
+//    static var hasAllowedContactAccess = false
     
     func setupCurrentUserFirstNameWelcomeLabel(label: UILabel) -> UILabel {
         if Auth.auth().currentUser != nil {
@@ -55,21 +38,6 @@ class CurrentUser {
             }
         }
         return label
-    }
-    
-    func setupCurrentUserLastNameTextfield(textField: UITextField) -> UITextField {
-        if Auth.auth().currentUser != nil {
-            if let userID = Auth.auth().currentUser?.uid {
-                Database.database().reference().child("users").child(userID).observe(.value) { (snapshot) in
-                    if let userDictionary = snapshot.value as? NSDictionary {
-                        if let lastName = userDictionary["lastName"] as? String {
-                            textField.text = lastName
-                        }
-                    }
-                }
-            }
-        }
-        return textField
     }
     
     func setProfileImageButton(button: UIButton) -> UIButton {
@@ -88,36 +56,6 @@ class CurrentUser {
             }
         }
         return button
-    }
-    
-//    func currentUserExists() -> Bool {
-//        var userExists = Bool()
-//        let context = CoreDataHelper().getContext()
-//        let fetchRequest: NSFetchRequest<CurrentUserMO> = CurrentUserMO.fetchRequest()
-//        do {
-//            // Peform Fetch Request
-//            let users = try context.fetch(fetchRequest)
-//            for user in users {
-//                userExists = user.isLoggedInAsCurrentUser
-//            }
-//        } catch {
-//            print("Unable to Fetch users, (\(error))")
-//        }
-//        return userExists
-//    }
-    
-    func deleteCurrentUser() {
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        let context = delegate.persistentContainer.viewContext
-        
-        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CurrentUserMO")
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-        do {
-            try context.execute(deleteRequest)
-            try context.save()
-        } catch {
-            print ("There was an error")
-        }
     }
     
     // HELPER METHOD FOR SETTING INITIAL PROFILE IMAGE

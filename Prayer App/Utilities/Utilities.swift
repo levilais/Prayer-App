@@ -16,6 +16,19 @@ class Utilities {
         vc.present(alert, animated: true, completion: nil)
     }
     
+    func greetingString() -> String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        var greeting = String()
+        if hour >= 0 && hour < 12 {
+            greeting = "Good morning, "
+        } else if hour >= 12 && hour < 17 {
+            greeting = "Good afternoon, "
+        } else if hour >= 17 {
+            greeting = "Good evening, "
+        }
+        return greeting
+    }
+    
     func dayDifference(timeStampAsDouble: Double) -> String {
         let calendar = NSCalendar.current
         let interval = timeStampAsDouble / 1000

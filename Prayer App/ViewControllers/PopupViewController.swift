@@ -21,8 +21,5 @@ class PopupViewController: UIViewController {
         super.viewDidLoad()
         bottomConstraint.constant = bottomConstraint.constant + 50
         topContraint.constant = topContraint.constant + 50
-        
-        // Do any additional setup after loading the view.
-        
     }
 }
