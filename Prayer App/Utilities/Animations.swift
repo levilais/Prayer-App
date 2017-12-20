@@ -10,62 +10,8 @@ import Foundation
 import UIKit
 
 class Animations {
-    func animateFirstLoad(doneButton: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView, textView: UITextView) {
-//        view.layoutIfNeeded()
-
-        let titleImageStartingPoint = CGPoint(x: titleImage.center.x, y: titleImage.center.y)
-        let dismissLeftPoint = CGPoint(x: view.frame.minX - titleImage.frame.width, y: titleImage.frame.width)
-        let dismissRightPoint = CGPoint(x: view.frame.maxX + titleImage.frame.width, y: titleImage.frame.width)
-
-        titleImage.image = UIImage(named: "swipeToSave.pdf")
-        titleImage.alpha = 0
-        toolbarView.alpha = 0
-        doneButton.alpha = 0
-
-        titleImage.isHidden = false
-
-        UIView.animate(withDuration: 1.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-            titleImage.alpha = 1
-        }, completion: { finish in
-            UIView.animate(withDuration: 0.5, delay: 2.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                titleImage.center.x = dismissLeftPoint.x
-            }, completion: { finish in
-                UIView.animate(withDuration: 0.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                    titleImage.alpha = 0
-                    titleImage.center = titleImageStartingPoint
-                    titleImage.image = UIImage(named: "swipeToSend.pdf")
-                }, completion: { finish in
-                    UIView.animate(withDuration: 1.0, delay: 1.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                        titleImage.alpha = 1
-                    }, completion: { finish in
-                        UIView.animate(withDuration: 0.5, delay: 2.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                            titleImage.center.x = dismissRightPoint.x
-                        }, completion: { finish in
-                            UIView.animate(withDuration: 0.0, delay: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                                titleImage.alpha = 0
-                                titleImage.center = titleImageStartingPoint
-                                titleImage.image = UIImage(named: "prayerTitle.pdf")
-                            }, completion: { finish in
-                                UIView.animate(withDuration: 1.5, delay: 1.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                                    titleImage.alpha = 1
-                                }, completion: { finish in
-                                    UIView.animate(withDuration: 1.5, delay: 1.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                                        if textView.isFirstResponder {
-                                            toolbarView.alpha = 1
-                                        }
-                                        doneButton.alpha = 1
-                                    })
-                                })
-                            })
-                        })
-                    })
-                })
-            })
-        })
-    }
     
     func animateLoad(doneButton: UIButton, titleImage: UIImageView, toolbarView: UIView, view: UIView, textView: UITextView) {
-//        view.layoutIfNeeded()
         titleImage.alpha = 0
         titleImage.isHidden = false
         toolbarView.alpha = 0
@@ -235,25 +181,6 @@ class Animations {
             }, completion: nil)
         })
     }
-    
-//    func animateSpinner(spinnerView: UIView, spinnerImage: UIImageView, spinnerLabel: UILabel, spinnerString: String, textView: UITextView, viewController: UIViewController) {
-//        spinnerLabel.text = spinnerString
-//        UIView.animate(withDuration: 0.8, delay: 0.0, options: [.curveEaseIn], animations: {
-//            spinnerImage.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-//            spinnerLabel.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-//            spinnerView.alpha = 1.0
-//            spinnerImage.alpha = 1.0
-//            spinnerLabel.alpha = 1.0
-//        }) { (completed) in
-//            UIView.animate(withDuration: 0.5, delay: 1.0, options: [.curveEaseIn], animations: {
-//                spinnerImage.alpha = 0
-//                spinnerLabel.alpha = 0
-//                spinnerView.alpha = 0
-//            }, completion: { (completed) in
-//                textView.becomeFirstResponder()
-//            })
-//        }
-//    }
     
     func showPopup(labelText: String, presentingVC: UIViewController) {
         let popupVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "popupViewControllerID") as! PopupViewController
