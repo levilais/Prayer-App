@@ -42,6 +42,8 @@
 		04D325321F9EA88400EC615D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D325311F9EA88400EC615D /* MainViewController.swift */; };
 		04E17B9A1FDB6C8900396136 /* UpdateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E17B991FDB6C8900396136 /* UpdateProfileViewController.swift */; };
 		04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */; };
+		04E83A6F1FE9FC8600CC3628 /* CircleInvitationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E83A6E1FE9FC8600CC3628 /* CircleInvitationTableViewCell.swift */; };
+		04E83A711FEA0BD800CC3628 /* MembershipUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E83A701FEA0BD800CC3628 /* MembershipUser.swift */; };
 		04EFA65F1FCB3058001C291D /* AddCircleMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EFA65E1FCB3058001C291D /* AddCircleMemberTableViewCell.swift */; };
 		04F0E4DF1FA1271E006D1244 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */; };
 		04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4E01FA12762006D1244 /* LoadsStruct.swift */; };
@@ -94,6 +96,8 @@
 		04D325311F9EA88400EC615D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		04E17B991FDB6C8900396136 /* UpdateProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileViewController.swift; sourceTree = "<group>"; };
 		04E421AA1FB4E2FA002E1D1B /* CustomUIScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIScrollView.swift; sourceTree = "<group>"; };
+		04E83A6E1FE9FC8600CC3628 /* CircleInvitationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleInvitationTableViewCell.swift; sourceTree = "<group>"; };
+		04E83A701FEA0BD800CC3628 /* MembershipUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipUser.swift; sourceTree = "<group>"; };
 		04EFA65E1FCB3058001C291D /* AddCircleMemberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCircleMemberTableViewCell.swift; sourceTree = "<group>"; };
 		04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
 		04F0E4E01FA12762006D1244 /* LoadsStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadsStruct.swift; sourceTree = "<group>"; };
@@ -134,6 +138,7 @@
 				042FCA861FAF7BC500545786 /* PrayerTableViewCell.swift */,
 				047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */,
 				04EFA65E1FCB3058001C291D /* AddCircleMemberTableViewCell.swift */,
+				04E83A6E1FE9FC8600CC3628 /* CircleInvitationTableViewCell.swift */,
 			);
 			path = CustomTableViewCells;
 			sourceTree = "<group>";
@@ -181,6 +186,7 @@
 				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
 				0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */,
 				044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */,
+				04E83A701FEA0BD800CC3628 /* MembershipUser.swift */,
 				04410F171FCA2BC5002EC8F9 /* CircleUsers.swift */,
 				04410F191FCA398F002EC8F9 /* CurrentUser.swift */,
 				04A1F3151FE6F1CA00E56771 /* User.swift */,
@@ -389,6 +395,7 @@
 				04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */,
 				044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */,
 				04E421AB1FB4E2FA002E1D1B /* CustomUIScrollView.swift in Sources */,
+				04E83A711FEA0BD800CC3628 /* MembershipUser.swift in Sources */,
 				04EFA65F1FCB3058001C291D /* AddCircleMemberTableViewCell.swift in Sources */,
 				04695D491FD9FDE50063B5B7 /* PopupViewController.swift in Sources */,
 				044A0EE51FD1AF8C004164D0 /* FirebaseHelper.swift in Sources */,
@@ -398,6 +405,7 @@
 				04A1F3161FE6F1CA00E56771 /* User.swift in Sources */,
 				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,
 				04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */,
+				04E83A6F1FE9FC8600CC3628 /* CircleInvitationTableViewCell.swift in Sources */,
 				043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */,
 				04FCD4FA1FC269DD0030557B /* SettingsTableViewCell.swift in Sources */,
 				04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */,

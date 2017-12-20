@@ -41,9 +41,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         if Auth.auth().currentUser != nil {
             settingsProfileButtonImage = CurrentUser().setProfileImageButton(button: settingsProfileButtonImage)
             settingsProfileButtonImage.isEnabled = true
-            if let currentUserFirstName = CurrentUser.currentUser.firstName {
-                welcomeLabel.text = Utilities().greetingString() + currentUserFirstName
-            }
+            welcomeLabel.text = Utilities().greetingString()
         } else {
             settingsProfileButtonImage.isEnabled = false
             settingsProfileButtonImage.setBackgroundImage(UIImage(named: "settingsPrayerIcon.pdf"), for: .normal)
@@ -65,7 +63,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        return 40
     }
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {

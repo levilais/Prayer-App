@@ -186,15 +186,15 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if (view is UITableViewHeaderFooterView) {
             if let tableViewHeaderFooterView = view as? UITableViewHeaderFooterView {
-                tableViewHeaderFooterView.contentView.backgroundColor = UIColor.StyleFile.GoldColor
+                tableViewHeaderFooterView.contentView.backgroundColor = UIColor.StyleFile.LightGrayColor
                 tableViewHeaderFooterView.textLabel?.font = UIFont.StyleFile.SectionHeaderFont
-                tableViewHeaderFooterView.textLabel?.textColor = UIColor.StyleFile.BackgroundColor
+                tableViewHeaderFooterView.textLabel?.textColor = UIColor.StyleFile.DarkGrayColor
             }
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        return 40
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

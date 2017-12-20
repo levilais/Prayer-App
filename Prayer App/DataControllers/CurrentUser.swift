@@ -11,7 +11,7 @@ import Foundation
 import Firebase
 import FirebaseStorage
 import UIKit
-import CoreData
+//import CoreData
 
 class CurrentUser {
     static var firebaseCircleMembers = [CircleUser]() {
@@ -19,11 +19,8 @@ class CurrentUser {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil, userInfo: nil)
         }
     }
-    
+    static var firebaseMembershipUsers = [MembershipUser]()
     static var currentUser = User()
-    
-//    static var isLoggedIn: Bool?
-//    static var hasAllowedContactAccess = false
     
     func setupCurrentUserFirstNameWelcomeLabel(label: UILabel) -> UILabel {
         if Auth.auth().currentUser != nil {

@@ -19,6 +19,7 @@ class Utilities {
     func greetingString() -> String {
         let hour = Calendar.current.component(.hour, from: Date())
         var greeting = String()
+        
         if hour >= 0 && hour < 12 {
             greeting = "Good morning, "
         } else if hour >= 12 && hour < 17 {
@@ -26,6 +27,11 @@ class Utilities {
         } else if hour >= 17 {
             greeting = "Good evening, "
         }
+        
+        if let currentUserFirstName = CurrentUser.currentUser.firstName {
+            greeting = greeting + currentUserFirstName
+        }
+        
         return greeting
     }
     

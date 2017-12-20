@@ -13,27 +13,10 @@ import ContactsUI
 import Firebase
 
 class CircleUser: User {
-    
-//    var firstName: String?
-//    var lastName: String?
-//    var userID: String?
-//    var userEmail: String?
-//    var profileImageUrlString: String? // will be converted to url then image
-//    var profileImageAsPlaceHolderImageData: Data?
-//    var profileImageAsUIImage: UIImage?
-//    var relationship: String? // use enum.rawValue
-    
-//    var firstName: String?
-//    var lastName: String?
+
     var dateAddedToCircle: Date?
-//    var userEmail: String?
     var lastAgreedInPrayerDate: Date?
     var agreedInPrayerCount: Int?
-//    var profileImage: Data?
-//    var profileImageAsUIImage: UIImage?
-//    var profileImageDownloadUrlAsString: String?
-//    var circleUID: String?
-//    var firebaseCircleUid: String?
     var relationshipToCurrentUser: String?
     var circleMemberEmails: [CNLabeledValue<NSString>]?
     var circleMemberPhoneNumbers: [CNLabeledValue<CNPhoneNumber>]?
@@ -60,52 +43,6 @@ class CircleUser: User {
         }
         return fullName
     }
-    
-//    func printCircleUser(user: CircleUser) {
-//        if let firstNameCheck = user.firstName {
-//            print("firstName: \(firstNameCheck)")
-//        }
-//        if let lastNameCheck = user.lastName {
-//            print("lastName: \(lastNameCheck)")
-//        }
-//        if let hasBeenInvitedCheck = user.hasBeenInvited {
-//            print("hasBeenInvited: \(hasBeenInvitedCheck)")
-//        }
-//        if let dateAddedCheck = user.dateAdded {
-//            print("dateAdded: \(dateAddedCheck)")
-//        }
-//        if let lastAgreeCheck = user.lastAgreedInPrayerDate {
-//            print("lastAgreedInPrayerDate: \(lastAgreeCheck)")
-//        }
-//        if let agreedCountCheck = user.agreedInPrayerCount {
-//            print("agreedInPrayerCount: \(agreedCountCheck)")
-//        }
-//
-//        if let profilImageCheck = user.profileImage {
-//                print("profileImage: \(profilImageCheck)")
-//        } else {
-//            print("profileImage: no image")
-//        }
-//
-//        if let circleUserIdCheck = user.circleUID {
-//            print("circleUserID: \(circleUserIdCheck)")
-//        }
-//        if let circleMemberEmailsCheck = user.circleMemberEmails {
-//            print("circleMemberEmails: \(circleMemberEmailsCheck)")
-//        }
-//        if let emailsCount = user.circleMemberEmails?.count {
-//            print("circleMemberEmails.count: \(emailsCount)")
-//        }
-//        if let phoneNumbers = user.circleMemberPhoneNumbers {
-//            print("circleMemberPhoneNumbers: \(phoneNumbers)")
-//        }
-//        if let phoneNumbersCount = user.circleMemberPhoneNumbers?.count {
-//            print("circleMemberPhoneNumbers.count: \(phoneNumbersCount))")
-//        }
-//        if let userRelationshipCheck = user.userRelationshipToCurrentUser {
-//            print("userRelationshipToCurrentUser: \(userRelationshipCheck))")
-//        }
-//    }
     
     func getRelationshipStatus(userToCheck: CircleUser) -> CircleUser {
         var user = userToCheck
