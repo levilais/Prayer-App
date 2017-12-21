@@ -156,6 +156,7 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
             self.present(alert, animated: true, completion: {
                 toggleSwitch.setOn(true, animated: true)
             })
+            alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
         } else {
             performSegue(withIdentifier: "settingsDetailToContactsAuth", sender: self)
         }

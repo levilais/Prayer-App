@@ -470,7 +470,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                             composeVC.recipients = [number]
                             composeVC.body = "I want to invite you to download Prayer - Swipe To Send."
                             self.present(composeVC, animated: true, completion: nil)
-                            
                         })
                         alert.addAction(action)
                         i += 1
@@ -533,6 +532,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         present(alert, animated: true) {
             print("completed alert")
         }
+        alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
     }
     
     func mailComposeController(_ controller: MFMailComposeViewController,

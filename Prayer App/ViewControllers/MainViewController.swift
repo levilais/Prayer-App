@@ -63,6 +63,12 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     var categoryInputIsTextfield = true
     var chosenCategory = String()
     
+    // Post To Prayer Circle Popup
+    @IBOutlet weak var postToPrayerCircleView: UIView!
+    @IBOutlet weak var postToPrayerCirclePopupBackgroundButton: UIButton!
+    @IBOutlet var postToPrayerCircleMembers: [UIImageView]!
+    @IBOutlet weak var postToPrayerCircleSubview: UIView!
+    
     // Data Variables
     var prayer: Prayer?
     var managedObjectContext: NSManagedObjectContext?
@@ -74,6 +80,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     var swipeRight = UISwipeGestureRecognizer()
     var swipeLeft = UISwipeGestureRecognizer()
     var swipeDown = UISwipeGestureRecognizer()
+    
+    // Segue Variables
+    var signupShowing = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,8 +112,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
         self.view.addGestureRecognizer(swipeDown)
-                
-//        UserDefaultsHelper().getLoads()
         
         DispatchQueue.main.async {
             if Loads.firstLoadPresented == false {
@@ -166,6 +173,13 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             doneButton.isHidden = false
         }
         firstAppear = false
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "mainViewToSignupViewSegue" {
+            let destinationVC = segue.destination as? LoginViewController
+            destinationVC?.signupShowing = signupShowing
+        }
     }
     
     @IBAction func doneButtonDidPress(_ sender: Any) {
@@ -230,6 +244,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @IBAction func shareButtonDidPress(_ sender: Any) {
+//        textField.resignFirstResponder()
         shareText()
     }
     
@@ -251,6 +266,26 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
             textField.becomeFirstResponder()
         }
+    }
+    
+    @IBAction func shareToPrayerCircleBackgroundButtonDidPress(_ sender: Any) {
+        dismissShareToPrayerCirclePopup()
+    }
+    
+    @IBAction func shareToPrayerCircleButtonDidPress(_ sender: Any) {
+        // post the share here
+        dismissShareToPrayerCirclePopup()
+    }
+    
+    @IBAction func cancelShareToPrayerCircleButtonDidPress(_ sender: Any) {
+        dismissShareToPrayerCirclePopup()
+    }
+    
+    func dismissShareToPrayerCirclePopup() {
+        self.postToPrayerCircleView.alpha = 0
+        self.swipeLeft.isEnabled = true
+        self.swipeRight.isEnabled = true
+        textField.becomeFirstResponder()
     }
     
     func getSectionHeaders() {
@@ -505,12 +540,51 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     func shareText() {
-        if textField.text != "" {
-            displayShareSheet(shareContent: textField.text!)
-        } else {
-            let alert = UIAlertController(title: "Nothing To Share", message: "Please enter text and try again.", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        if CurrentUser.firebaseCircleMembers.count > 0 {
+            print("firebase circle member count: \(CurrentUser.firebaseCircleMembers.count)")
+            if textField.text != "" {
+                for imageView in postToPrayerCircleMembers {
+                    imageView.layer.cornerRadius = imageView.frame.height / 2
+                    imageView.clipsToBounds = true
+                }
+                
+                var i = 0
+                for circleUser in CurrentUser.firebaseCircleMembers {
+                    if let image = circleUser.profileImageAsImage {
+                        postToPrayerCircleMembers[i].image = image
+                    }
+                    i += 1
+                }
+                
+                Animations().animateShareToCirclePopup(view: postToPrayerCircleView, backgroundButton: postToPrayerCirclePopupBackgroundButton, subView: postToPrayerCircleSubview, viewController: self, textView: textField)
+                self.swipeLeft.isEnabled = false
+                self.swipeRight.isEnabled = false
+                //            displayShareSheet(shareContent: textField.text!)
+            } else {
+                let alert = UIAlertController(title: "Nothing To Share", message: "Please enter text and try again.", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alert.addAction(action)
+                self.present(alert, animated: true, completion: nil)
+                alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+            }
+        } else if Auth.auth().currentUser != nil {
+            let alert = UIAlertController(title: "No Circle Members Found", message: "You will need to add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Add Members", style: .default, handler: { (action) in
+                self.performSegue(withIdentifier: "mainViewToAddContactsViewSegue", sender: self)
+            })
             alert.addAction(action)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+            alert.addAction(cancelAction)
+            self.present(alert, animated: true, completion: nil)
+            alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+        } else {
+            let alert = UIAlertController(title: "No Account Found", message: "You will need to create an account and add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Create Account", style: .default, handler: { (action) in
+                self.performSegue(withIdentifier: "mainViewToSignupViewSegue", sender: self)
+            })
+            alert.addAction(action)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+            alert.addAction(cancelAction)
             self.present(alert, animated: true, completion: nil)
             alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
         }
@@ -720,6 +794,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         if timerPopupShowing == true {
             dismissTimerPopup()
         }
+        dismissShareToPrayerCirclePopup()
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)

@@ -37,9 +37,11 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var circleSpotFilled = [false,false,false,false,false]
     var selectedCircleMember = 0
+    var ref: DatabaseReference!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
         for circleButton in circleProfileImageButtons {
             circleButton.addTarget(self, action: #selector(circleProfileButtonDidPress(sender:)), for: .touchUpInside)
         }
@@ -180,7 +182,19 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
             let circleUser = CurrentUser.firebaseCircleMembers[self.selectedCircleMember]
             
-            CurrentUser.firebaseCircleMembers.remove(at: self.selectedCircleMember)
+            if let userEmail = circleUser.userEmail {
+                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
+                
+                var i = 0
+                for circleUserToRemove in CurrentUser.firebaseCircleMembers {
+                    if let circleUserEmail = circleUserToRemove.userEmail {
+                        if circleUserEmail == userEmail {
+                            CurrentUser.firebaseCircleMembers.remove(at: i)
+                        }
+                    }
+                    i += 1
+                }
+            }
             
             if let email = circleUser.userEmail {
                 FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: email, ref: Database.database().reference())

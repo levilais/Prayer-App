@@ -136,6 +136,7 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
             })
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
+            alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
         } else {
             firstNameTextField.resignFirstResponder()
             lastNameTextField.resignFirstResponder()

@@ -174,6 +174,7 @@ class LoginViewController: UIViewController {
                         let alert = UIAlertController(title: "Email Sent!", message: "Please check your inbox for password reset instructions.", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
+                        alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
                     })
                 }
             } else {
@@ -316,6 +317,7 @@ class LoginViewController: UIViewController {
                                                 })
                                                 alert.addAction(action)
                                                 self.present(alert, animated: true, completion: nil)
+                                                alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
                                                 print(error)
                                             } else {
                                                 if let downloadURL = metadata?.downloadURL()?.absoluteString {

@@ -417,6 +417,150 @@
                                     <action selector="touchToPrayButtonDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FQH-7O-Apv"/>
                                 </connections>
                             </button>
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mGO-w0-lSN">
+                                <rect key="frame" x="0.0" y="-26" width="320" height="619"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7tj-Yl-lMN">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="619"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <action selector="markAnsweredBackgroundButtonDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="ORd-iE-6tM"/>
+                                            <action selector="saveToJournalBackgroundShadowDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Tcj-2O-Vjf"/>
+                                            <action selector="shareToPrayerCircleBackgroundButtonDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8FZ-vn-HWG"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-L9-Vqt">
+                                        <rect key="frame" x="10" y="156" width="300" height="287"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TdM-dX-xxw">
+                                                <rect key="frame" x="0.0" y="0.0" width="300" height="242"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Post To Prayer Circle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W27-mZ-zl1">
+                                                        <rect key="frame" x="47.5" y="10" width="205" height="32"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="32" id="1oR-4W-Hs8"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="24"/>
+                                                        <color key="textColor" red="0.333293438" green="0.33335629109999998" blue="0.33328947419999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="largeShareIcon" translatesAutoresizingMaskIntoConstraints="NO" id="cMz-T8-peB">
+                                                        <rect key="frame" x="114" y="145" width="72" height="87"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="72" id="Bpm-lf-TQ4"/>
+                                                            <constraint firstAttribute="height" constant="87" id="sVi-Fr-c44"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profilImageDefault" translatesAutoresizingMaskIntoConstraints="NO" id="VCq-Q8-bcO">
+                                                        <rect key="frame" x="39" y="153.5" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="50" id="bFq-mH-3cA"/>
+                                                            <constraint firstAttribute="height" constant="50" id="vX0-UN-GuH"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profilImageDefault" translatesAutoresizingMaskIntoConstraints="NO" id="W0Y-vE-rrd">
+                                                        <rect key="frame" x="59" y="90" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="50" id="BQt-zs-bGQ"/>
+                                                            <constraint firstAttribute="height" constant="50" id="Xhd-Ml-ibv"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profilImageDefault" translatesAutoresizingMaskIntoConstraints="NO" id="YGV-Nf-Sqf">
+                                                        <rect key="frame" x="191" y="90" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="50" id="5T8-1J-LuH"/>
+                                                            <constraint firstAttribute="height" constant="50" id="pCd-fV-K1S"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profilImageDefault" translatesAutoresizingMaskIntoConstraints="NO" id="QSz-fo-pp5">
+                                                        <rect key="frame" x="211" y="153.5" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="50" id="5QY-Bi-ksI"/>
+                                                            <constraint firstAttribute="height" constant="50" id="OdP-Cx-VSc"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profilImageDefault" translatesAutoresizingMaskIntoConstraints="NO" id="wT7-h6-dEc">
+                                                        <rect key="frame" x="125" y="70" width="50" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="50" id="ESK-sA-o6Y"/>
+                                                            <constraint firstAttribute="width" constant="50" id="b8w-5C-gTh"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                                <color key="backgroundColor" red="0.92920595409999995" green="0.93340748549999997" blue="0.93326789139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstItem="W27-mZ-zl1" firstAttribute="centerX" secondItem="TdM-dX-xxw" secondAttribute="centerX" id="Ikv-tY-0xy"/>
+                                                    <constraint firstItem="QSz-fo-pp5" firstAttribute="leading" secondItem="cMz-T8-peB" secondAttribute="trailing" constant="25" id="JRd-M5-3SW"/>
+                                                    <constraint firstItem="cMz-T8-peB" firstAttribute="top" secondItem="wT7-h6-dEc" secondAttribute="bottom" constant="25" id="RV8-FU-tJc"/>
+                                                    <constraint firstItem="cMz-T8-peB" firstAttribute="leading" secondItem="W0Y-vE-rrd" secondAttribute="trailing" constant="5" id="TIG-hn-hlr"/>
+                                                    <constraint firstItem="cMz-T8-peB" firstAttribute="leading" secondItem="VCq-Q8-bcO" secondAttribute="trailing" constant="25" id="Umq-ID-tj2"/>
+                                                    <constraint firstItem="W27-mZ-zl1" firstAttribute="top" secondItem="TdM-dX-xxw" secondAttribute="top" constant="10" id="VYP-0Z-FIA"/>
+                                                    <constraint firstItem="QSz-fo-pp5" firstAttribute="centerY" secondItem="cMz-T8-peB" secondAttribute="centerY" constant="-10" id="ZaF-4Q-QeY"/>
+                                                    <constraint firstItem="YGV-Nf-Sqf" firstAttribute="leading" secondItem="cMz-T8-peB" secondAttribute="trailing" constant="5" id="aXb-Dg-2ld"/>
+                                                    <constraint firstItem="cMz-T8-peB" firstAttribute="top" secondItem="YGV-Nf-Sqf" secondAttribute="bottom" constant="5" id="cW9-qM-psR"/>
+                                                    <constraint firstItem="cMz-T8-peB" firstAttribute="centerX" secondItem="TdM-dX-xxw" secondAttribute="centerX" id="gPT-8z-097"/>
+                                                    <constraint firstAttribute="bottom" secondItem="cMz-T8-peB" secondAttribute="bottom" constant="10" id="gaE-OV-aO5"/>
+                                                    <constraint firstItem="cMz-T8-peB" firstAttribute="top" secondItem="W0Y-vE-rrd" secondAttribute="bottom" constant="5" id="hUE-bj-lLc"/>
+                                                    <constraint firstItem="wT7-h6-dEc" firstAttribute="centerX" secondItem="cMz-T8-peB" secondAttribute="centerX" id="jkU-7f-72L"/>
+                                                    <constraint firstAttribute="height" constant="242" id="klE-hn-05K"/>
+                                                    <constraint firstItem="VCq-Q8-bcO" firstAttribute="centerY" secondItem="cMz-T8-peB" secondAttribute="centerY" constant="-10" id="nvm-YJ-7Qa"/>
+                                                </constraints>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RjZ-6b-eAs">
+                                                <rect key="frame" x="0.0" y="247" width="147.5" height="40"/>
+                                                <color key="backgroundColor" red="0.92920595409999995" green="0.93340748549999997" blue="0.93326789139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="24"/>
+                                                <state key="normal" title="Share">
+                                                    <color key="titleColor" red="0.333293438" green="0.33335629109999998" blue="0.33328947419999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="confirmSaveToJournalDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QME-Kc-buN"/>
+                                                    <action selector="markAnsweredSaveDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="Rzb-Yd-laO"/>
+                                                    <action selector="shareToPrayerCircleButtonDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="f0P-oJ-0n5"/>
+                                                    <action selector="timerButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n7N-wg-ddz"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pU3-Uj-ixl">
+                                                <rect key="frame" x="152.5" y="247" width="147.5" height="40"/>
+                                                <color key="backgroundColor" red="0.92920595409999995" green="0.93340748549999997" blue="0.93326789139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="24"/>
+                                                <state key="normal" title="Cancel">
+                                                    <color key="titleColor" red="0.333293438" green="0.33335629109999998" blue="0.33328947419999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="cancelSaveToJournalDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="epf-i1-nlT"/>
+                                                    <action selector="cancelShareToPrayerCircleButtonDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bvJ-Fn-tow"/>
+                                                    <action selector="markAnsweredCancelDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="K78-HS-zWH"/>
+                                                    <action selector="timerButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="04z-Ex-qA2"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="pU3-Uj-ixl" secondAttribute="bottom" id="7ab-Iz-6d9"/>
+                                            <constraint firstItem="pU3-Uj-ixl" firstAttribute="leading" secondItem="RjZ-6b-eAs" secondAttribute="trailing" constant="5" id="FMJ-ik-Wmb"/>
+                                            <constraint firstAttribute="trailing" secondItem="TdM-dX-xxw" secondAttribute="trailing" id="IKq-6r-szJ"/>
+                                            <constraint firstItem="TdM-dX-xxw" firstAttribute="top" secondItem="LDb-L9-Vqt" secondAttribute="top" id="O2R-BO-u0w"/>
+                                            <constraint firstItem="RjZ-6b-eAs" firstAttribute="top" secondItem="TdM-dX-xxw" secondAttribute="bottom" constant="5" id="XVE-Vl-WAh"/>
+                                            <constraint firstItem="RjZ-6b-eAs" firstAttribute="leading" secondItem="LDb-L9-Vqt" secondAttribute="leading" id="ly5-f1-2i2"/>
+                                            <constraint firstAttribute="bottom" secondItem="RjZ-6b-eAs" secondAttribute="bottom" id="nQn-So-yJT"/>
+                                            <constraint firstItem="pU3-Uj-ixl" firstAttribute="top" secondItem="TdM-dX-xxw" secondAttribute="bottom" constant="5" id="oKB-X3-Aru"/>
+                                            <constraint firstAttribute="trailing" secondItem="pU3-Uj-ixl" secondAttribute="trailing" id="vqj-pg-qsm"/>
+                                            <constraint firstItem="TdM-dX-xxw" firstAttribute="leading" secondItem="LDb-L9-Vqt" secondAttribute="leading" id="wrF-5e-Ogi"/>
+                                            <constraint firstItem="pU3-Uj-ixl" firstAttribute="width" secondItem="RjZ-6b-eAs" secondAttribute="width" id="zQf-ZD-z1O"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="7tj-Yl-lMN" firstAttribute="centerY" secondItem="mGO-w0-lSN" secondAttribute="centerY" id="2py-OE-2Aa"/>
+                                    <constraint firstAttribute="trailing" secondItem="LDb-L9-Vqt" secondAttribute="trailing" constant="10" id="2up-eQ-CPh"/>
+                                    <constraint firstItem="7tj-Yl-lMN" firstAttribute="width" secondItem="mGO-w0-lSN" secondAttribute="width" id="Pbr-VM-Aqf"/>
+                                    <constraint firstItem="LDb-L9-Vqt" firstAttribute="centerY" secondItem="mGO-w0-lSN" secondAttribute="centerY" constant="-10" id="m8d-xc-FPU"/>
+                                    <constraint firstItem="LDb-L9-Vqt" firstAttribute="centerX" secondItem="mGO-w0-lSN" secondAttribute="centerX" id="peZ-u3-ol9"/>
+                                    <constraint firstItem="7tj-Yl-lMN" firstAttribute="height" secondItem="mGO-w0-lSN" secondAttribute="height" id="qV2-gj-5xw"/>
+                                    <constraint firstItem="LDb-L9-Vqt" firstAttribute="leading" secondItem="mGO-w0-lSN" secondAttribute="leading" constant="10" id="sgJ-so-QUN"/>
+                                    <constraint firstItem="7tj-Yl-lMN" firstAttribute="centerX" secondItem="mGO-w0-lSN" secondAttribute="centerX" id="tLv-4F-Md4"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.92920595407485962" green="0.9334074854850769" blue="0.93326789140701294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -427,6 +571,7 @@
                             <constraint firstItem="LbA-iS-0jX" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="-50" id="5mE-EW-qVq"/>
                             <constraint firstItem="gDR-Yt-3Z2" firstAttribute="centerX" secondItem="1M3-r6-N83" secondAttribute="centerX" id="8dz-Zt-UX4"/>
                             <constraint firstItem="LbA-iS-0jX" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="8gy-I2-e1H"/>
+                            <constraint firstItem="mGO-w0-lSN" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="74" id="BAa-bz-WRO"/>
                             <constraint firstItem="1M3-r6-N83" firstAttribute="top" secondItem="gDR-Yt-3Z2" secondAttribute="bottom" constant="10" id="Jnt-wM-pwv"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="btz-e3-sPt" secondAttribute="trailing" constant="8" id="JoE-gL-gat"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1M3-r6-N83" secondAttribute="bottom" id="KHT-yr-zCM"/>
@@ -435,7 +580,9 @@
                             <constraint firstItem="9fH-KU-zgW" firstAttribute="top" secondItem="doJ-F1-KKm" secondAttribute="bottom" constant="10" id="SmA-5q-hlp"/>
                             <constraint firstItem="usa-lR-xEX" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="45" id="VH2-Xp-FXe"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4kn-BK-NRx" secondAttribute="trailing" id="X4P-bq-5bT"/>
+                            <constraint firstItem="mGO-w0-lSN" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="X5E-MN-rxh"/>
                             <constraint firstItem="lIw-kX-sKa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Yg1-7h-AAE"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="mGO-w0-lSN" secondAttribute="top" constant="46" id="Z0K-Xk-xL2"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="4kn-BK-NRx" secondAttribute="bottom" constant="-50" id="ZSj-GC-8rK"/>
                             <constraint firstItem="4kn-BK-NRx" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="-50" id="ZaZ-J0-axW"/>
                             <constraint firstItem="1M3-r6-N83" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="aQJ-Es-2MF"/>
@@ -444,6 +591,7 @@
                             <constraint firstItem="zUo-yK-VwH" firstAttribute="centerY" secondItem="gDR-Yt-3Z2" secondAttribute="centerY" id="ngF-cl-ZeH"/>
                             <constraint firstItem="btz-e3-sPt" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="oNB-dJ-cF2"/>
                             <constraint firstItem="btz-e3-sPt" firstAttribute="top" secondItem="lIw-kX-sKa" secondAttribute="bottom" id="ptD-bg-cHF"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mGO-w0-lSN" secondAttribute="trailing" id="rSg-JN-GFM"/>
                             <constraint firstItem="zUo-yK-VwH" firstAttribute="trailing" secondItem="gDR-Yt-3Z2" secondAttribute="trailing" constant="-5" id="zgH-lG-MVN"/>
                             <constraint firstItem="lIw-kX-sKa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="zoy-HQ-LqB"/>
                         </constraints>
@@ -457,6 +605,9 @@
                         <outlet property="countLabel" destination="SnF-R5-QNZ" id="aRI-IT-jk7"/>
                         <outlet property="doneButton" destination="doJ-F1-KKm" id="7ns-40-McS"/>
                         <outlet property="headerView" destination="lIw-kX-sKa" id="G0F-69-ejL"/>
+                        <outlet property="postToPrayerCirclePopupBackgroundButton" destination="7tj-Yl-lMN" id="q5W-uA-YHG"/>
+                        <outlet property="postToPrayerCircleSubview" destination="LDb-L9-Vqt" id="Onb-Gk-MCO"/>
+                        <outlet property="postToPrayerCircleView" destination="mGO-w0-lSN" id="d4V-Kr-yAp"/>
                         <outlet property="saveToJournalBackgroundButton" destination="4tY-ta-qGA" id="Ir1-kp-BxP"/>
                         <outlet property="saveToJournalSubview" destination="usa-lR-xEX" id="wfF-in-CzF"/>
                         <outlet property="saveToJournalView" destination="LbA-iS-0jX" id="GXi-D2-cgp"/>
@@ -476,12 +627,19 @@
                         <outletCollection property="timerButtons" destination="lWK-ab-4tI" collectionClass="NSMutableArray" id="qh0-jm-emz"/>
                         <outletCollection property="timerButtons" destination="9eM-E9-XKT" collectionClass="NSMutableArray" id="QR2-fE-O78"/>
                         <outletCollection property="timerButtons" destination="Bgd-rY-K5x" collectionClass="NSMutableArray" id="BCT-Ie-o5p"/>
+                        <outletCollection property="postToPrayerCircleMembers" destination="VCq-Q8-bcO" collectionClass="NSMutableArray" id="DGO-Ue-CXb"/>
+                        <outletCollection property="postToPrayerCircleMembers" destination="W0Y-vE-rrd" collectionClass="NSMutableArray" id="b3H-hY-DGc"/>
+                        <outletCollection property="postToPrayerCircleMembers" destination="wT7-h6-dEc" collectionClass="NSMutableArray" id="XpB-ye-CgL"/>
+                        <outletCollection property="postToPrayerCircleMembers" destination="YGV-Nf-Sqf" collectionClass="NSMutableArray" id="qMJ-8E-0D5"/>
+                        <outletCollection property="postToPrayerCircleMembers" destination="QSz-fo-pp5" collectionClass="NSMutableArray" id="Eue-pX-y4u"/>
                         <segue destination="065-iI-ujC" kind="presentation" identifier="mainToFirstLoadSegue" animates="NO" id="r59-Wm-l96"/>
+                        <segue destination="n3B-qY-OVx" kind="presentation" identifier="mainViewToAddContactsViewSegue" modalTransitionStyle="flipHorizontal" id="JFD-5x-ZFN"/>
+                        <segue destination="e92-fH-MMI" kind="presentation" identifier="mainViewToSignupViewSegue" id="Db2-Hu-Ozc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-219" y="1573"/>
+            <point key="canvasLocation" x="-219.375" y="1572.8873239436621"/>
         </scene>
         <!--Item-->
         <scene sceneID="GUw-ys-mhk">
@@ -3125,6 +3283,7 @@
         <image name="ideaIcon" width="38" height="58"/>
         <image name="inviteButton" width="118" height="60"/>
         <image name="journalTitleImage" width="372" height="60"/>
+        <image name="largeShareIcon" width="143" height="171"/>
         <image name="prayerTitle" width="372" height="60"/>
         <image name="profilImageDefault" width="160" height="160"/>
         <image name="saveButton" width="108" height="60"/>
@@ -3139,8 +3298,8 @@
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="exo-XS-mFi"/>
+        <segue reference="JFD-5x-ZFN"/>
         <segue reference="a87-y6-4BI"/>
-        <segue reference="7If-Zn-bA6"/>
+        <segue reference="Db2-Hu-Ozc"/>
     </inferredMetricsTieBreakers>
 </document>
