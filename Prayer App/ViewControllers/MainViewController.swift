@@ -248,6 +248,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
+            alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
             textField.becomeFirstResponder()
         }
     }
@@ -386,6 +387,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @IBAction func cancelSaveToJournalDidPress(_ sender: Any) {
+        self.swipeLeft.isEnabled = true
+        self.swipeRight.isEnabled = true
         resetCountLabel()
         dismissSaveToJournalPopup()
     }
@@ -509,6 +512,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
+            alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
         }
     }
     
@@ -551,6 +555,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
+            alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+
         }
     }
     

@@ -51,13 +51,23 @@ class Utilities {
         }
     }
     
-    func dayAnswered(timeStampAsDouble: Double) -> String {
+    func numberOfTimesString(count: Int) -> String {
+        var timeVsTimesString = "\(count) "
+        if count == 1 {
+            timeVsTimesString = timeVsTimesString + "time"
+        } else {
+            timeVsTimesString = timeVsTimesString + "times"
+        }
+        return timeVsTimesString
+    }
+    
+    func dateFromDouble(timeStampAsDouble: Double) -> String {
         var dateString = String()
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .short
         let interval = timeStampAsDouble / 1000
         let date = Date(timeIntervalSince1970: interval)
-        dateString = "Answered on \(dateFormatter.string(from: date))"
+        dateString = dateFormatter.string(from: date)
         return dateString
     }
     

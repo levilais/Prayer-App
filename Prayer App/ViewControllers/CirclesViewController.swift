@@ -108,11 +108,47 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                     button.layer.backgroundColor = UIColor.clear.cgColor
                 }
             }
-            circleNameLabel.text = circleUser.getFullName(user: circleUser)
-            circleJoinedLabel.text = "You are still waiting for your invitation to be accepted"
-            circleAgreedLabel.text = ""
-            circleAgreedCountLabel.text = ""
-            deleteFromCircleButton.isHidden = false
+            
+            var agreedCount = Int()
+            var lastAgreedDate = Double()
+            var joinedCircleDate = Double()
+            
+            if let agreedCountCheck = circleUser.agreedInPrayerCount {
+                agreedCount = agreedCountCheck
+            } else {
+                agreedCount = 0
+            }
+            if let lastAgreedDateCheck = circleUser.lastAgreedInPrayerDate {
+                lastAgreedDate = lastAgreedDateCheck
+            } else {
+                lastAgreedDate = 0 as Double
+            }
+            if let joinedCircleDateCheck = circleUser.dateJoinedCircle {
+                joinedCircleDate = joinedCircleDateCheck
+            }
+            
+            if let userRelationship = circleUser.relationshipToCurrentUser {
+                switch userRelationship {
+                case "invited":
+                    circleNameLabel.text = circleUser.getFullName(user: circleUser)
+                    circleJoinedLabel.text = "You are still waiting for your invitation to be accepted"
+                    circleAgreedLabel.text = ""
+                    circleAgreedCountLabel.text = ""
+                    deleteFromCircleButton.isHidden = false
+                case "myCircleMember":
+                    circleNameLabel.text = circleUser.getFullName(user: circleUser)
+                    circleJoinedLabel.text = "Joined your Circle on \(Utilities().dateFromDouble(timeStampAsDouble: joinedCircleDate))"
+                    circleAgreedCountLabel.text = "Agreed in Prayer \(Utilities().numberOfTimesString(count: agreedCount))"
+                    if lastAgreedDate != 0 {
+                        circleAgreedLabel.text = "Last agreed in Prayer on \(Utilities().dateFromDouble(timeStampAsDouble: lastAgreedDate))"
+                    } else {
+                        circleAgreedLabel.text = ""
+                    }
+                    deleteFromCircleButton.isHidden = false
+                default:
+                    print("default called")
+                }
+            }
         }
     }
     
@@ -160,6 +196,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         present(alert, animated: true) {
             print("completed alert")
         }
+        alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
     }
     
     @IBAction func timerButtonDidPress(_ sender: Any) {

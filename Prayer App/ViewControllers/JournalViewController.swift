@@ -353,14 +353,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             prayerCount = prayerCountCheck
         }
         
-        var timeVsTimesString = ""
-        if prayerCount == 1 {
-            timeVsTimesString = "time"
-        } else {
-            timeVsTimesString = "times"
-        }
-        
-        cell.prayedCountLabel.text = "Prayed \(prayerCount) \(timeVsTimesString)"
+        cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: prayerCount))"
         cell.selectionStyle = .none
     }
     

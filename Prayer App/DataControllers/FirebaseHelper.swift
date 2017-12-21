@@ -51,34 +51,43 @@ class FirebaseHelper {
                                     if let lastName = userDictionary["lastName"] as? String {
                                         if let userEmail = userDictionary["userEmail"] as? String {
                                             if let relationship = userDictionary["relationship"] as? String {
-                                                let circleUser = CircleUser()
-                                                circleUser.firstName = firstName
-                                                circleUser.lastName = lastName
-                                                circleUser.userID = uid
-                                                circleUser.userEmail = userEmail
-                                                circleUser.profileImageAsString = profileImageUrlString
-                                                circleUser.relationshipToCurrentUser = relationship
-                                                
-                                                var userExists = false
-                                                if CurrentUser.firebaseCircleMembers.count > 0 {
-                                                    var matchDetermined = false
-                                                    while matchDetermined == false {
-                                                        for userToCheck in CurrentUser.firebaseCircleMembers {
-                                                            if let userToCheckEmail = userToCheck.userEmail {
-                                                                if userToCheckEmail == userEmail {
-                                                                    userExists = true
-                                                                    matchDetermined = true
+                                                    let circleUser = CircleUser()
+                                                    circleUser.firstName = firstName
+                                                    circleUser.lastName = lastName
+                                                    circleUser.userID = uid
+                                                    circleUser.userEmail = userEmail
+                                                    circleUser.profileImageAsString = profileImageUrlString
+                                                    circleUser.relationshipToCurrentUser = relationship
+                                                if let dateJoinedCircleCheck = userDictionary["dateJoinedCircle"] as? Double {
+                                                    circleUser.dateJoinedCircle = dateJoinedCircleCheck
+                                                }
+                                                if let agreedCountCheck = userDictionary["agreedCount"] as? Int {
+                                                    circleUser.agreedInPrayerCount = agreedCountCheck
+                                                }
+                                                if let lastAgreedDateCheck = userDictionary["lastAgreedDateCheck"] as? Double {
+                                                    circleUser.lastAgreedInPrayerDate = lastAgreedDateCheck
+                                                }
+                                                    
+                                                    var userExists = false
+                                                    if CurrentUser.firebaseCircleMembers.count > 0 {
+                                                        var matchDetermined = false
+                                                        while matchDetermined == false {
+                                                            for userToCheck in CurrentUser.firebaseCircleMembers {
+                                                                if let userToCheckEmail = userToCheck.userEmail {
+                                                                    if userToCheckEmail == userEmail {
+                                                                        userExists = true
+                                                                        matchDetermined = true
+                                                                    }
                                                                 }
                                                             }
+                                                            matchDetermined = true
                                                         }
-                                                        matchDetermined = true
                                                     }
+                                                    if userExists != true {
+                                                        CurrentUser.firebaseCircleMembers.append(circleUser)
+                                                    }
+                                                    self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
                                                 }
-                                                if userExists != true {
-                                                    CurrentUser.firebaseCircleMembers.append(circleUser)
-                                                }
-                                                self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
-                                            }
                                         }
                                     }
                                 }
@@ -361,8 +370,8 @@ class FirebaseHelper {
                     Database.database().reference().child("users").child(userID).child("prayers").child(prayerID).observe(.value) { (snapshot) in
                         if let userDictionary = snapshot.value as? NSDictionary {
                             if let timeStampAsDouble = userDictionary["lastPrayedDate"] as? Double {
-                                let dayAnsweredString = Utilities().dayAnswered(timeStampAsDouble: timeStampAsDouble)
-                                cellLabel.text = dayAnsweredString
+                                let dayAnsweredString = Utilities().dateFromDouble(timeStampAsDouble: timeStampAsDouble)
+                                cellLabel.text = "Answered on \(dayAnsweredString)"
                             }
                         }
                     }
