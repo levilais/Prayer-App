@@ -143,6 +143,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "clearTextViewOnLogOut"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "clearTextViewOnLogOut"), object: nil)
+        
         touchToPrayButton.alpha = 0
         
         titleImage.isHidden = true
@@ -244,7 +247,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @IBAction func shareButtonDidPress(_ sender: Any) {
-//        textField.resignFirstResponder()
         shareText()
     }
     
@@ -541,29 +543,50 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     func shareText() {
         if CurrentUser.firebaseCircleMembers.count > 0 {
-            print("firebase circle member count: \(CurrentUser.firebaseCircleMembers.count)")
-            if textField.text != "" {
-                for imageView in postToPrayerCircleMembers {
-                    imageView.layer.cornerRadius = imageView.frame.height / 2
-                    imageView.clipsToBounds = true
-                }
-                
-                var i = 0
-                for circleUser in CurrentUser.firebaseCircleMembers {
-                    if let image = circleUser.profileImageAsImage {
-                        postToPrayerCircleMembers[i].image = image
+            var actualMembers = [CircleUser]()
+            for circleUser in CurrentUser.firebaseCircleMembers {
+                if let relationship = circleUser.relationshipToCurrentUser {
+                    if relationship == CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue {
+                        actualMembers.append(circleUser)
                     }
-                    i += 1
                 }
-                
-                Animations().animateShareToCirclePopup(view: postToPrayerCircleView, backgroundButton: postToPrayerCirclePopupBackgroundButton, subView: postToPrayerCircleSubview, viewController: self, textView: textField)
-                self.swipeLeft.isEnabled = false
-                self.swipeRight.isEnabled = false
-                //            displayShareSheet(shareContent: textField.text!)
+            }
+            
+            if actualMembers.count > 0 {
+                print("firebase circle member count: \(CurrentUser.firebaseCircleMembers.count)")
+                if textField.text != "" {
+                    for imageView in postToPrayerCircleMembers {
+                        imageView.layer.cornerRadius = imageView.frame.height / 2
+                        imageView.clipsToBounds = true
+                    }
+                    
+                    var i = 0
+                    for circleUser in actualMembers {
+                        if let image = circleUser.profileImageAsImage {
+                            postToPrayerCircleMembers[i].image = image
+                        }
+                        i += 1
+                    }
+                    
+                    Animations().animateShareToCirclePopup(view: postToPrayerCircleView, backgroundButton: postToPrayerCirclePopupBackgroundButton, subView: postToPrayerCircleSubview, viewController: self, textView: textField)
+                    self.swipeLeft.isEnabled = false
+                    self.swipeRight.isEnabled = false
+                    //            displayShareSheet(shareContent: textField.text!)
+                } else {
+                    let alert = UIAlertController(title: "Nothing To Share", message: "Please enter text and try again.", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alert.addAction(action)
+                    self.present(alert, animated: true, completion: nil)
+                    alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                }
             } else {
-                let alert = UIAlertController(title: "Nothing To Share", message: "Please enter text and try again.", preferredStyle: .alert)
-                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                let alert = UIAlertController(title: "No Circle Members Found", message: "You will need to add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
+                let action = UIAlertAction(title: "Add Members", style: .default, handler: { (action) in
+                    self.performSegue(withIdentifier: "mainViewToAddContactsViewSegue", sender: self)
+                })
                 alert.addAction(action)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+                alert.addAction(cancelAction)
                 self.present(alert, animated: true, completion: nil)
                 alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
             }
@@ -787,6 +810,10 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     @objc func handleNotification2(_ notification: NSNotification) {
         Animations().endTimerMainViewAnimation(timerIcon: timerIcon, timerButton: timerHeaderButton, titleImage: titleImage)
+    }
+    
+    @objc func handleNotification3(_ notification: NSNotification) {
+        textField.text = ""
     }
     
     override func viewWillDisappear(_ animated: Bool) {

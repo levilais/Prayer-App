@@ -202,8 +202,14 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             if let relationshipCheck = user.relationshipToCurrentUser {
                 var sectionHeader = String()
                 if relationshipCheck != CircleUser.userRelationshipToCurrentUser.nonMember.rawValue {
-                    sectionHeader = "Invite member to your Circle"
-                    members.append(user)
+                    if let email = user.userEmail {
+                        if let currentUserEmail = CurrentUser.currentUser.userEmail {
+                            if email != currentUserEmail {
+                                sectionHeader = "Invite member to your Circle"
+                                members.append(user)
+                            }
+                        }
+                    }
                 } else {
                     sectionHeader = "Invite to join Prayer"
                     nonMembers.append(user)

@@ -138,6 +138,7 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                 CurrentUser.firebaseCircleMembers.removeAll()
                 CurrentUser.firebaseMembershipUsers.removeAll()
                 FirebaseHelper.firebaseUserEmails.removeAll()
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearTextViewOnLogOut"), object: nil, userInfo: nil)
                 tableView.reloadData()
             } catch let signOutError as NSError {
                 Utilities().showAlert(title: "Error", message: signOutError.localizedDescription, vc: self)
