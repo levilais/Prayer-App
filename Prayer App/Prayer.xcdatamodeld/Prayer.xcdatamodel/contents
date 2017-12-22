@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13771" systemVersion="17C88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="CirclePrayerMO" representedClassName="CirclePrayerMO" parentEntity="Prayer" syncable="YES" codeGenerationType="class">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13771" systemVersion="17D25b" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CirclePrayerMO" representedClassName="CirclePrayerMO" parentEntity="PrayerMO" syncable="YES" codeGenerationType="class">
         <attribute name="membersAgreedCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="CircleUserMO" representedClassName="CircleUserMO" parentEntity="UserMO" syncable="YES" codeGenerationType="class">
@@ -10,7 +10,7 @@
     <entity name="CurrentUserMO" representedClassName="CurrentUserMO" parentEntity="UserMO" syncable="YES" codeGenerationType="class">
         <attribute name="isLoggedInAsCurrentUser" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
     </entity>
-    <entity name="Prayer" representedClassName="Prayer" syncable="YES" codeGenerationType="class">
+    <entity name="PrayerMO" representedClassName="PrayerMO" syncable="YES" codeGenerationType="class">
         <attribute name="howAnswered" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAnswered" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="prayerCategory" optional="YES" attributeType="String" syncable="YES"/>
@@ -32,7 +32,7 @@
         <element name="CirclePrayerMO" positionX="-36" positionY="-36" width="128" height="60"/>
         <element name="CircleUserMO" positionX="-54" positionY="-36" width="128" height="75"/>
         <element name="CurrentUserMO" positionX="-18" positionY="-27" width="128" height="60"/>
-        <element name="Prayer" positionX="-63" positionY="-18" width="128" height="150"/>
+        <element name="PrayerMO" positionX="-63" positionY="-18" width="128" height="150"/>
         <element name="UserMO" positionX="-63" positionY="-171" width="128" height="150"/>
     </elements>
 </model>

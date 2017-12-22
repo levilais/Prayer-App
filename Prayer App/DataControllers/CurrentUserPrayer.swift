@@ -8,12 +8,6 @@
 
 import Foundation
 
-class CurrentUserPrayer {
-    var prayerText : String?
-    var prayerID : String?
+class CurrentUserPrayer: Prayer {
     var prayerCategory : String?
-    var prayerCount : Int?
-    var lastPrayed : Double?
-    var isAnswered : Bool?
-    var howAnswered : String?
 }

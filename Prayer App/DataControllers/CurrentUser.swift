@@ -21,12 +21,60 @@ class CurrentUser {
     }
     static var firebaseMembershipUsers = [MembershipUser]() {
         didSet {
+            CurrentUser().updateMemberPrayers()
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil, userInfo: nil)
-            print("didSet called")
-            print("firebaseMembershipUsers.count: \(firebaseMembershipUsers.count)")
         }
     }
+    static var membershipCirclePrayers = [CirclePrayer]() {
+        didSet {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil, userInfo: nil)
+        }
+    }
+    
     static var currentUser = User()
+    
+    func updateMemberPrayers() {
+        print("1")
+        for membershipUser in CurrentUser.firebaseMembershipUsers {
+            if let relationship = membershipUser.membershipStatus {
+                if relationship == MembershipUser.currentUserMembershipStatus.member.rawValue {
+                    if let membershipUserID = membershipUser.userID {
+                        Database.database().reference().child("users").child(membershipUserID).child("circlePrayers").observe(.childAdded) { (snapshot) in
+                            if let userDictionary = snapshot.value as? NSDictionary {
+                                let circlePrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary)
+                                if CurrentUser.membershipCirclePrayers.count > 0 {
+                                    var matchDetermined = false
+                                    var matchExists = false
+                                    var i = 0
+                                    while matchDetermined == false {
+                                        for membershipCirclePrayer in CurrentUser.membershipCirclePrayers {
+                                            if let membershipCirclePrayerID = membershipCirclePrayer.prayerID {
+                                                if let circlePrayerID = circlePrayer.prayerID {
+                                                    if membershipCirclePrayerID != circlePrayerID {
+                                                        CurrentUser.membershipCirclePrayers[i] = circlePrayer
+                                                        matchExists = true
+                                                        matchDetermined = true
+                                                    }
+                                                }
+                                            }
+                                            i += 1
+                                        }
+                                        matchDetermined = true
+                                    }
+                                    if matchExists == false {
+                                        CurrentUser.membershipCirclePrayers.append(circlePrayer)
+                                    }
+                                } else {
+                                    CurrentUser.membershipCirclePrayers.append(circlePrayer)
+                                }
+                            }
+                            // reload data here if necessary
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     func setupCurrentUserFirstNameWelcomeLabel(label: UILabel) -> UILabel {
         if Auth.auth().currentUser != nil {

@@ -70,7 +70,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBOutlet weak var postToPrayerCircleSubview: UIView!
     
     // Data Variables
-    var prayer: Prayer?
+//    var prayer: Prayer?
     var managedObjectContext: NSManagedObjectContext?
     var ref: DatabaseReference!
     
@@ -275,8 +275,14 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @IBAction func shareToPrayerCircleButtonDidPress(_ sender: Any) {
-        // post the share here
+        // share to prayer circle
+        let prayer = CirclePrayer()
+        if let text = textField.text {
+            prayer.prayerText = text.trimmingCharacters(in: .whitespaces)
+        }
+        FirebaseHelper().saveNewCirclePrayerToFirebase(prayer: prayer, ref: ref)
         dismissShareToPrayerCirclePopup()
+        Animations().showPopup(labelText: "Shared!", presentingVC: self)
     }
     
     @IBAction func cancelShareToPrayerCircleButtonDidPress(_ sender: Any) {
@@ -613,17 +619,17 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         }
     }
     
-    func displayShareSheet(shareContent: String) {
-        let activityViewController = UIActivityViewController(activityItems: [shareContent as NSString], applicationActivities: nil)
-        activityViewController.completionWithItemsHandler = {(activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
-            if !completed {
-                return
-            }
-            Animations().showPopup(labelText: "Shared!", presentingVC: self)
-            self.textField.becomeFirstResponder()
-        }
-        present(activityViewController, animated: true, completion: nil)
-    }
+//    func displayShareSheet(shareContent: String) {
+//        let activityViewController = UIActivityViewController(activityItems: [shareContent as NSString], applicationActivities: nil)
+//        activityViewController.completionWithItemsHandler = {(activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
+//            if !completed {
+//                return
+//            }
+//            Animations().showPopup(labelText: "Shared!", presentingVC: self)
+//            self.textField.becomeFirstResponder()
+//        }
+//        present(activityViewController, animated: true, completion: nil)
+//    }
     
     func sendText() {
         if textField.text != "" {

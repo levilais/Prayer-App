@@ -23,6 +23,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var showSignUp = true
     var ref: DatabaseReference!
     var invitationUsers = [MembershipUser]()
+    var membershipPrayers = [CirclePrayer]()
+    var cleanData = [String:[Any]]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +36,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
+        
+        
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         if Auth.auth().currentUser != nil {
@@ -78,9 +83,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 // reload data here if necessary
             }
-        
-    
-  
+            
             ref.child("users").child(userID).child("memberships").observe(.childRemoved) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
@@ -102,6 +105,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
 
+
     func loadHomeScreenData() {
         
     }
@@ -121,46 +125,90 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Action Items"
+        var title = String()
+        let sectionKey = Array(cleanData.keys)[section] as String
+        switch sectionKey {
+        case "invitationUsers":
+            title = "Action Items"
+        case "membershipPrayers":
+            title = "Prayer Requests"
+        default:
+            break
+        }
+        return title
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return cleanData.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return invitationUsers.count
+        var rowCount = Int()
+        
+        let sectionTitles = Array(cleanData.keys) as [String]
+        let section = sectionTitles[section]
+        if let objectArray = cleanData[section] {
+            rowCount = objectArray.count
+        }
+        
+        return rowCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "invitationCell", for: indexPath) as! CircleInvitationTableViewCell
-        let membershipUser = invitationUsers[indexPath.row]
         
-        if let membershipStatus = membershipUser.membershipStatus {
-            if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
-                if let image = membershipUser.profileImageAsImage {
-                    cell.profileImage.image = image
+        let sectionTitles = Array(cleanData.keys) as [String]
+        let section = sectionTitles[indexPath.section]
+        
+        switch section {
+        case "invitationUsers":
+            print("invitation cell")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "invitationCell", for: indexPath) as! CircleInvitationTableViewCell
+            let membershipUser = invitationUsers[indexPath.row]
+            
+            if let membershipStatus = membershipUser.membershipStatus {
+                if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
+                    if let image = membershipUser.profileImageAsImage {
+                        cell.profileImage.image = image
+                    }
+                    
+                    if let currentUserFirstName = CurrentUser.currentUser.firstName {
+                        let name = User().getFullName(user: membershipUser)
+                        cell.invitationLabel.text = "\(currentUserFirstName), \(name) has invited you to be one of their 5 Prayer Circle members.  Would you like to accept their invitation?"
+                        cell.nameLabel.text = name
+                    }
+                    if let dateInvitedString = membershipUser.dateInvited {
+                        cell.invitationSinceLabel.text = "Request sent \(Utilities().dayDifference(timeStampAsDouble: dateInvitedString))"
+                    }
+                    
+                    cell.acceptButton.tag = indexPath.row
+                    cell.acceptButton.section = indexPath.section
+                    cell.acceptButton.addTarget(self, action: #selector(acceptInvite(sender:)), for: .touchUpInside)
+                    cell.declineButton.tag = indexPath.row
+                    cell.declineButton.section = indexPath.section
+                    cell.declineButton.addTarget(self, action: #selector(declineInvite(sender:)), for: .touchUpInside)
                 }
-                
-                if let currentUserFirstName = CurrentUser.currentUser.firstName {
-                    let name = User().getFullName(user: membershipUser)
-                    cell.invitationLabel.text = "\(currentUserFirstName), \(name) has invited you to be one of their 5 Prayer Circle members.  Would you like to accept their invitation?"
-                    cell.nameLabel.text = name
-                }
-                if let dateInvitedString = membershipUser.dateInvited {
-                    cell.invitationSinceLabel.text = "Request sent \(Utilities().dayDifference(timeStampAsDouble: dateInvitedString))"
-                }
-                
-                cell.acceptButton.tag = indexPath.row
-                cell.acceptButton.section = indexPath.section
-                cell.acceptButton.addTarget(self, action: #selector(acceptInvite(sender:)), for: .touchUpInside)
-                cell.declineButton.tag = indexPath.row
-                cell.declineButton.section = indexPath.section
-                cell.declineButton.addTarget(self, action: #selector(declineInvite(sender:)), for: .touchUpInside)
             }
+            return cell
+        case "membershipPrayers":
+            print("membership cell")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "circlePrayerCell", for: indexPath) as! CirclePrayerTableViewCell
+            if let prayerArray = cleanData["membershipPrayers"] as? [CirclePrayer] {
+                let prayer = prayerArray[indexPath.row]
+                if let firstName = prayer.firstName {
+                    if let lastName = prayer.lastName {
+                        let fullName = firstName + " " + lastName
+                        cell.fullNameLabel.text = fullName
+                        if let prayerText = prayer.prayerText {
+                            cell.prayerTextLabel.text = prayerText
+                        }
+                    }
+                }
+            }
+            return cell
+        default:
+            let cell = UITableViewCell()
+            return cell
         }
-        
-        return cell
     }
     
     @objc func acceptInvite(sender: CellButton) {
@@ -220,40 +268,58 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @objc func handleNotification3(_ notification: NSNotification) {
-        DispatchQueue.main.async {
-            
-            self.invitationUsers = []
-            print("1")
-            var matchDetermined = false
-            print("2")
-            while matchDetermined == false {
-                print("3")
-                for user in CurrentUser.firebaseMembershipUsers {
-                    print("4")
-                    if let membershipStatus = user.membershipStatus {
-                        print("5")
-                        if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
-                            print("6")
-                            self.invitationUsers.append(user)
-                            print("7")
-                            matchDetermined = true
-                        }
+        loadData()
+        print("cleanData when invites updated: \(cleanData)")
+    }
+    
+    @objc func handleNotification4(_ notification: NSNotification) {
+       loadData()
+        print("cleanData when prayers updated: \(cleanData)")
+    }
+    
+    func loadData() {
+        self.cleanData = [:]
+        self.invitationUsers = []
+        self.membershipPrayers = []
+
+        var matchDetermined = false
+        while matchDetermined == false {
+            for user in CurrentUser.firebaseMembershipUsers {
+                if let membershipStatus = user.membershipStatus {
+                    if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
+                        self.invitationUsers.append(user)
+                        matchDetermined = true
                     }
                 }
-                print("8")
-                matchDetermined = true
             }
-            if self.invitationUsers.count > 0 {
-                print("9")
-                self.tableView.isHidden = false
-                self.messageLabel.isHidden = true
-            } else {
-                print("10")
-                self.tableView.isHidden = true
-                self.messageLabel.isHidden = false
-            }
-            print("11")
+            matchDetermined = true
+        }
+        
+        for prayer in CurrentUser.membershipCirclePrayers {
+            self.membershipPrayers.append(prayer)
+        }
+        
+        if self.invitationUsers.count > 0 {
+            self.cleanData["invitationUsers"] = self.invitationUsers
+        }
+    
+        if self.membershipPrayers.count > 0 {
+            self.cleanData["membershipPrayers"] = self.membershipPrayers
+        }
+        
+        DispatchQueue.main.async {
+            self.showHideTable()
             self.tableView.reloadData()
+        }
+    }
+    
+    func showHideTable() {
+        if self.cleanData.count > 0 {
+            self.tableView.isHidden = false
+            self.messageLabel.isHidden = true
+        } else {
+            self.tableView.isHidden = true
+            self.messageLabel.isHidden = false
         }
     }
     
@@ -261,6 +327,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
     }
 
 }

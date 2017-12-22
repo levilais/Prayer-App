@@ -24,6 +24,10 @@
 		046203301FA39ACE00BDF8ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */; };
 		04695D491FD9FDE50063B5B7 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04695D481FD9FDE50063B5B7 /* PopupViewController.swift */; };
 		047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */; };
+		0473D3851FEC79F60074921D /* To Do List in Resources */ = {isa = PBXBuildFile; fileRef = 0473D3841FEC79F60074921D /* To Do List */; };
+		0473D3871FEC7C360074921D /* Prayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0473D3861FEC7C360074921D /* Prayer.swift */; };
+		0473D3891FEC7C800074921D /* CirclePrayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0473D3881FEC7C800074921D /* CirclePrayer.swift */; };
+		0473D38B1FECBA9A0074921D /* CirclePrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0473D38A1FECBA9A0074921D /* CirclePrayerTableViewCell.swift */; };
 		0474DD6C1F9FE7B4008D79E3 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474DD6B1F9FE7B4008D79E3 /* Animations.swift */; };
 		0485B3501FD37DF200BC85F0 /* CustomUIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0485B34F1FD37DF200BC85F0 /* CustomUIAlertController.swift */; };
 		04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04933D601FBFA50C0023A6FA /* LoginViewController.swift */; };
@@ -76,6 +80,10 @@
 		0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		04695D481FD9FDE50063B5B7 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnsweredPrayerTableViewCell.swift; sourceTree = "<group>"; };
+		0473D3841FEC79F60074921D /* To Do List */ = {isa = PBXFileReference; lastKnownFileType = text; path = "To Do List"; sourceTree = "<group>"; };
+		0473D3861FEC7C360074921D /* Prayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prayer.swift; sourceTree = "<group>"; };
+		0473D3881FEC7C800074921D /* CirclePrayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclePrayer.swift; sourceTree = "<group>"; };
+		0473D38A1FECBA9A0074921D /* CirclePrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclePrayerTableViewCell.swift; sourceTree = "<group>"; };
 		0474DD6B1F9FE7B4008D79E3 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		0485B34F1FD37DF200BC85F0 /* CustomUIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIAlertController.swift; sourceTree = "<group>"; };
 		04933D601FBFA50C0023A6FA /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -139,6 +147,7 @@
 				047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */,
 				04EFA65E1FCB3058001C291D /* AddCircleMemberTableViewCell.swift */,
 				04E83A6E1FE9FC8600CC3628 /* CircleInvitationTableViewCell.swift */,
+				0473D38A1FECBA9A0074921D /* CirclePrayerTableViewCell.swift */,
 			);
 			path = CustomTableViewCells;
 			sourceTree = "<group>";
@@ -184,12 +193,14 @@
 				04F0E4E01FA12762006D1244 /* LoadsStruct.swift */,
 				04FA1FF21FC4A77B00234033 /* ContactsController.swift */,
 				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
-				0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */,
 				044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */,
 				04E83A701FEA0BD800CC3628 /* MembershipUser.swift */,
 				04410F171FCA2BC5002EC8F9 /* CircleUsers.swift */,
 				04410F191FCA398F002EC8F9 /* CurrentUser.swift */,
 				04A1F3151FE6F1CA00E56771 /* User.swift */,
+				0473D3881FEC7C800074921D /* CirclePrayer.swift */,
+				0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */,
+				0473D3861FEC7C360074921D /* Prayer.swift */,
 			);
 			path = DataControllers;
 			sourceTree = "<group>";
@@ -208,6 +219,7 @@
 		04D325131F9E8EA700EC615D = {
 			isa = PBXGroup;
 			children = (
+				0473D3841FEC79F60074921D /* To Do List */,
 				04D3251E1F9E8EA700EC615D /* Prayer App */,
 				04D3251D1F9E8EA700EC615D /* Products */,
 				128C96B4FBCAE0C87DE46D2A /* Pods */,
@@ -322,6 +334,7 @@
 				04D3252A1F9E8EA700EC615D /* LaunchScreen.storyboard in Resources */,
 				04CDE8631FC0A74600F20EFB /* GoogleService-Info.plist in Resources */,
 				04D325271F9E8EA700EC615D /* Assets.xcassets in Resources */,
+				0473D3851FEC79F60074921D /* To Do List in Resources */,
 				04D325251F9E8EA700EC615D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -383,10 +396,12 @@
 			files = (
 				042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */,
 				042FCA811FAE458500545786 /* Utilities.swift in Sources */,
+				0473D38B1FECBA9A0074921D /* CirclePrayerTableViewCell.swift in Sources */,
 				04FE7CDA1FBE074A00E500A5 /* HomeViewController.swift in Sources */,
 				04410F181FCA2BC5002EC8F9 /* CircleUsers.swift in Sources */,
 				04FA1FF11FC3906500234033 /* SelectContactsViewController.swift in Sources */,
 				049E04D81FC6A40800705766 /* SettingsButtonTableViewCell.swift in Sources */,
+				0473D3871FEC7C360074921D /* Prayer.swift in Sources */,
 				04D325321F9EA88400EC615D /* MainViewController.swift in Sources */,
 				04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */,
 				04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */,
@@ -404,6 +419,7 @@
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				04A1F3161FE6F1CA00E56771 /* User.swift in Sources */,
 				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,
+				0473D3891FEC7C800074921D /* CirclePrayer.swift in Sources */,
 				04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */,
 				04E83A6F1FE9FC8600CC3628 /* CircleInvitationTableViewCell.swift in Sources */,
 				043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */,

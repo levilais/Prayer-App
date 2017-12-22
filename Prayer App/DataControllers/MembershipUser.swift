@@ -12,6 +12,7 @@ import Firebase
 
 class MembershipUser: CircleUser {
     var membershipStatus: String?
+    var membershipCirclePrayers: [CirclePrayer]?
     
     enum currentUserMembershipStatus: String {
         case invited = "invited"
