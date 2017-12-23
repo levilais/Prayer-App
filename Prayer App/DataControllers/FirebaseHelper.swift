@@ -235,6 +235,53 @@ class FirebaseHelper {
         }
     }
     
+    func getMembershipUserCircleUsersProfileImage(membershipUser: MembershipUser) {
+        if let membershipUserID = membershipUser.userID {
+            Database.database().reference().child("users").child(membershipUserID).child("circleUsers").observe(.childAdded, with: { (snapshot) in
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    if let profileImageString = userDictionary["profileImageURL"] as? String {
+                        if let url = URL(string: profileImageString) {
+                            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                                if error != nil {
+                                    print(error!.localizedDescription)
+                                    return
+                                }
+                                if let imageData = data {
+                                    if let image = UIImage(data: imageData) {
+                                        var i = 0
+                                        for user in CurrentUser.firebaseMembershipUsers {
+                                            if let email = user.userEmail {
+                                                if let userEmail = membershipUser.userEmail {
+                                                    if email == userEmail {
+                                                        var newImagesArray = [UIImage]()
+                                                        if let existingUserImagesArray = user.membershipUserCircleImages {
+                                                            newImagesArray = existingUserImagesArray
+                                                            newImagesArray.append(image)
+                                                            user.membershipUserCircleImages = newImagesArray
+                                                            CurrentUser.firebaseMembershipUsers[i] = user
+                                                        } else {
+                                                            newImagesArray.append(image)
+                                                            user.membershipUserCircleImages = newImagesArray
+                                                            CurrentUser.firebaseMembershipUsers[i] = user
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            i += 1
+                                        }
+                                    }
+                                }
+                            }).resume()
+                        }
+                    }
+
+                }
+            })
+        }
+    }
+    
+    
+    
     func setCircleUserProfileImageFromFirebase(circleUser: CircleUser) {
         if let urlString = circleUser.profileImageAsString {
             if let url = URL(string: urlString) {
@@ -264,7 +311,7 @@ class FirebaseHelper {
         }
     }
     
-    func setMembershipUserProfileImageFromFirebase(membershipUser: MembershipUser) {
+    func downloadAdditionalMembershipUserDataFromFirebase(membershipUser: MembershipUser) {
         if let urlString = membershipUser.profileImageAsString {
             if let url = URL(string: urlString) {
                 URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
@@ -294,6 +341,7 @@ class FirebaseHelper {
                             }
                             if userExists == false {
                                  CurrentUser.firebaseMembershipUsers.append(membershipUser)
+                                 self.getMembershipUserCircleUsersProfileImage(membershipUser: membershipUser)
                             }
                         }
                     }
@@ -524,7 +572,7 @@ class FirebaseHelper {
     
     func addNewConnectionToCurrentUserMemberships(userDictionary: NSDictionary) {
         let user = self.membershipUserFromDictionary(userDictionary: userDictionary)
-        self.setMembershipUserProfileImageFromFirebase(membershipUser: user)
+        self.downloadAdditionalMembershipUserDataFromFirebase(membershipUser: user)
     }
     
     func circlePrayerFromUserDictionary(userDictionary: NSDictionary) -> CirclePrayer {

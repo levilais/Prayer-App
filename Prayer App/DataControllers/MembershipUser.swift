@@ -12,6 +12,8 @@ import Firebase
 
 class MembershipUser: CircleUser {
     var membershipStatus: String?
+    var membershipUserCircleIds: [String]?
+    var membershipUserCircleImages: [UIImage]?
     var membershipCirclePrayers: [CirclePrayer]?
     
     enum currentUserMembershipStatus: String {

@@ -37,7 +37,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
-        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification5(_:)), name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
         
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
@@ -62,7 +63,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 if let userDictionary = snapshot.value as? NSDictionary {
                     FirebaseHelper().addNewConnectionToCurrentUserMemberships(userDictionary: userDictionary)
                 }
-                // reload data here if necessary
             }
         
             
@@ -131,7 +131,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         case "invitationUsers":
             title = "Action Items"
         case "membershipPrayers":
-            title = "Prayer Requests"
+            title = "Circle Prayers"
         default:
             break
         }
@@ -203,6 +203,41 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         }
                     }
                 }
+                if let ownerUserID = prayer.prayerOwnerUserID {
+                    for membershipUser in CurrentUser.firebaseMembershipUsers {
+                        if let memberUserID = membershipUser.userID {
+                            if ownerUserID == memberUserID {
+                                if let profileImage = membershipUser.profileImageAsImage {
+                                    cell.profileImageView.image = profileImage
+                                }
+                                if let membershipUserCircleUserProfileImages = membershipUser.membershipUserCircleImages {
+                                    print("HomeViewController Stage 6")
+                                    if membershipUserCircleUserProfileImages.count > 0 {
+                                        var i = 0
+                                        for pImageView in cell.senderPrayerCircleMembers {
+                                            if i < membershipUserCircleUserProfileImages.count {
+                                                pImageView.image = membershipUserCircleUserProfileImages[i]
+                                                pImageView.isHidden = false
+                                                cell.senderPrayerCircleMembersTintImage[i].isHidden = false
+                                            } else {
+                                                pImageView.isHidden = true
+                                                cell.senderPrayerCircleMembersTintImage[i].isHidden = true
+                                            }
+                                            i += 1
+                                        }
+                                    } else {
+                                        for pImageView in cell.senderPrayerCircleMembers {
+                                            pImageView.isHidden = true
+                                        }
+                                        for imageTint in cell.senderPrayerCircleMembersTintImage {
+                                            imageTint.isHidden = false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             return cell
         default:
@@ -219,8 +254,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if let memberEmail = memberUser.userEmail {
             FirebaseHelper().acceptInvite(userEmail: memberEmail, ref: ref)
         }
-        
-//        let cell = tableView.cellForRow(at: indexPath as IndexPath) as! CircleInvitationTableViewCell
     }
     
     @objc func declineInvite(sender: CellButton) {
@@ -275,6 +308,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @objc func handleNotification4(_ notification: NSNotification) {
        loadData()
         print("cleanData when prayers updated: \(cleanData)")
+    }
+    
+    @objc func handleNotification5(_ notification: NSNotification) {
+        loadData()
+        print("clear data because logout was called")
     }
     
     func loadData() {

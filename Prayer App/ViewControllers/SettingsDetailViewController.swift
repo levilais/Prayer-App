@@ -137,8 +137,9 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                 try firebaseAuth.signOut()
                 CurrentUser.firebaseCircleMembers.removeAll()
                 CurrentUser.firebaseMembershipUsers.removeAll()
+                CurrentUser.membershipCirclePrayers.removeAll()
                 FirebaseHelper.firebaseUserEmails.removeAll()
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearTextViewOnLogOut"), object: nil, userInfo: nil)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil, userInfo: nil)
                 tableView.reloadData()
             } catch let signOutError as NSError {
                 Utilities().showAlert(title: "Error", message: signOutError.localizedDescription, vc: self)

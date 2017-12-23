@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class CirclePrayer: Prayer {
     var prayerOwnerUserID: String?
