@@ -16,12 +16,14 @@ class CirclePrayerTableViewCell: UITableViewCell {
     @IBOutlet weak var prayerTextLabel: UILabel!
     @IBOutlet var senderPrayerCircleMembers: [UIImageView]!
     @IBOutlet weak var whoAgreedInPrayerLabel: UILabel!
-    @IBOutlet weak var agreeButton: UIButton!
+    @IBOutlet weak var agreeButton: CellButton!
     
     @IBOutlet var senderPrayerCircleMembersTintImage: [UIImageView]!
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = .clear
+        self.selectionStyle = .none
+        
         profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
         profileImageView.clipsToBounds = true
         

@@ -275,7 +275,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @IBAction func shareToPrayerCircleButtonDidPress(_ sender: Any) {
-        // share to prayer circle
         let prayer = CirclePrayer()
         if let text = textField.text {
             prayer.prayerText = text.trimmingCharacters(in: .whitespaces)

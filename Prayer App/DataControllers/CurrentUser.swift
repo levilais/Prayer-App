@@ -34,14 +34,19 @@ class CurrentUser {
     static var currentUser = User()
     
     func updateMemberPrayers() {
-        print("1")
         for membershipUser in CurrentUser.firebaseMembershipUsers {
             if let relationship = membershipUser.membershipStatus {
                 if relationship == MembershipUser.currentUserMembershipStatus.member.rawValue {
                     if let membershipUserID = membershipUser.userID {
                         Database.database().reference().child("users").child(membershipUserID).child("circlePrayers").observe(.childAdded) { (snapshot) in
                             if let userDictionary = snapshot.value as? NSDictionary {
-                                let circlePrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary)
+                                var whoAgreedDict = NSDictionary()
+                                if let whoAgreedDictCheck = snapshot.childSnapshot(forPath: "whoAgreed").value as? NSDictionary {
+                                    whoAgreedDict = whoAgreedDictCheck
+                                }
+                                
+                                let circlePrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: whoAgreedDict)
+                                
                                 if CurrentUser.membershipCirclePrayers.count > 0 {
                                     var matchDetermined = false
                                     var matchExists = false

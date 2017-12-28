@@ -145,10 +145,10 @@
                                         <rect key="frame" x="20" y="6" width="280" height="28"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4U7-g3-AwP">
-                                                <rect key="frame" x="0.0" y="0.0" width="22" height="28"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="24" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="28" id="1cS-Da-hEk"/>
-                                                    <constraint firstAttribute="width" constant="22" id="E7C-2G-yV7"/>
+                                                    <constraint firstAttribute="width" constant="24" id="E7C-2G-yV7"/>
                                                 </constraints>
                                                 <state key="normal" backgroundImage="shareIcon"/>
                                                 <connections>
@@ -156,7 +156,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NrV-Ez-EcN">
-                                                <rect key="frame" x="66" y="0.0" width="18" height="28"/>
+                                                <rect key="frame" x="67" y="0.0" width="18" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="18" id="aQ7-nc-X0V"/>
                                                     <constraint firstAttribute="height" constant="28" id="r2V-Qf-HmX"/>
@@ -167,7 +167,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AhI-R0-vat">
-                                                <rect key="frame" x="126.5" y="0.0" width="25" height="28"/>
+                                                <rect key="frame" x="127" y="0.0" width="25" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="25" id="Lux-sG-prT"/>
                                                     <constraint firstAttribute="height" constant="28" id="bSB-Cj-LHT"/>
@@ -178,7 +178,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0v-om-x6K">
-                                                <rect key="frame" x="189" y="0.0" width="28" height="28"/>
+                                                <rect key="frame" x="189.5" y="0.0" width="28" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="28" id="96o-H9-ASU"/>
                                                     <constraint firstAttribute="width" constant="28" id="haq-eo-wHw"/>
@@ -367,7 +367,6 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="confirmSaveToJournalDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rBO-Gx-IZK"/>
-                                                    <action selector="timerButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pSa-8E-8jV"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="twe-GR-6dh">
@@ -379,7 +378,6 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="cancelSaveToJournalDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NgV-W1-Ray"/>
-                                                    <action selector="timerButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sVk-AB-Otr"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -514,10 +512,7 @@
                                                     <color key="titleColor" red="0.333293438" green="0.33335629109999998" blue="0.33328947419999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="confirmSaveToJournalDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QME-Kc-buN"/>
-                                                    <action selector="markAnsweredSaveDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="Rzb-Yd-laO"/>
                                                     <action selector="shareToPrayerCircleButtonDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="f0P-oJ-0n5"/>
-                                                    <action selector="timerButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n7N-wg-ddz"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pU3-Uj-ixl">
@@ -528,10 +523,7 @@
                                                     <color key="titleColor" red="0.333293438" green="0.33335629109999998" blue="0.33328947419999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="cancelSaveToJournalDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="epf-i1-nlT"/>
                                                     <action selector="cancelShareToPrayerCircleButtonDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bvJ-Fn-tow"/>
-                                                    <action selector="markAnsweredCancelDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="K78-HS-zWH"/>
-                                                    <action selector="timerButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="04z-Ex-qA2"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -2676,7 +2668,7 @@
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Firstname has invited you to be one of their 5 Prayer Circle members" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k8b-Eg-d7o">
                                                             <rect key="frame" x="15" y="60" width="290" height="37.5"/>
-                                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                                             <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -2752,8 +2744,8 @@
                                                             <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prayer requested today" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rln-ML-EAv">
-                                                            <rect key="frame" x="60" y="30.5" width="250" height="14.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last prayed on ___" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rln-ML-EAv">
+                                                            <rect key="frame" x="60" y="30.5" width="250" height="15"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                                             <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -2779,63 +2771,63 @@
                                                             </constraints>
                                                         </imageView>
                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Lbz-RD-RmO">
-                                                            <rect key="frame" x="45" y="120.5" width="25" height="25"/>
+                                                            <rect key="frame" x="40" y="120.5" width="25" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="25" id="lRv-be-p9I"/>
                                                                 <constraint firstAttribute="height" constant="25" id="zAj-LP-l2y"/>
                                                             </constraints>
                                                         </imageView>
                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BXG-54-ln0">
-                                                            <rect key="frame" x="45" y="120.5" width="25" height="25"/>
+                                                            <rect key="frame" x="40" y="120.5" width="25" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="25" id="etP-pA-LcO"/>
                                                                 <constraint firstAttribute="width" constant="25" id="yKW-43-AaL"/>
                                                             </constraints>
                                                         </imageView>
                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="unR-Sj-1f0">
-                                                            <rect key="frame" x="80" y="120.5" width="25" height="25"/>
+                                                            <rect key="frame" x="70" y="120.5" width="25" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="25" id="8Op-gc-xAy"/>
                                                                 <constraint firstAttribute="width" constant="25" id="u0X-C9-jRa"/>
                                                             </constraints>
                                                         </imageView>
                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pmU-3k-cod">
-                                                            <rect key="frame" x="80" y="120.5" width="25" height="25"/>
+                                                            <rect key="frame" x="70" y="120.5" width="25" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="25" id="Rdr-eN-DUo"/>
                                                                 <constraint firstAttribute="width" constant="25" id="mpW-WH-tCL"/>
                                                             </constraints>
                                                         </imageView>
                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Mnl-p7-vbD">
-                                                            <rect key="frame" x="115" y="120.5" width="25" height="25"/>
+                                                            <rect key="frame" x="100" y="120.5" width="25" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="25" id="SF8-fI-amx"/>
                                                                 <constraint firstAttribute="height" constant="25" id="qlb-Bj-hW9"/>
                                                             </constraints>
                                                         </imageView>
                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="h0b-g1-Y5k">
-                                                            <rect key="frame" x="115" y="120.5" width="25" height="25"/>
+                                                            <rect key="frame" x="100" y="120.5" width="25" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="25" id="HCh-Eq-zCF"/>
                                                                 <constraint firstAttribute="height" constant="25" id="QHe-w3-bmL"/>
                                                             </constraints>
                                                         </imageView>
                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zV4-QQ-Gvo">
-                                                            <rect key="frame" x="150" y="120.5" width="25" height="25"/>
+                                                            <rect key="frame" x="130" y="120.5" width="25" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="25" id="NPB-Ze-zdu"/>
                                                                 <constraint firstAttribute="width" constant="25" id="qtV-N7-GJk"/>
                                                             </constraints>
                                                         </imageView>
                                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zc7-u6-xq2">
-                                                            <rect key="frame" x="150" y="120.5" width="25" height="25"/>
+                                                            <rect key="frame" x="130" y="120.5" width="25" height="25"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="25" id="dXm-TW-0Bs"/>
                                                                 <constraint firstAttribute="height" constant="25" id="rTu-l4-beJ"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 of 5 have agreed in Prayer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2sY-PZ-3X7">
-                                                            <rect key="frame" x="10" y="155.5" width="125.5" height="20"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prayed 1 time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2sY-PZ-3X7">
+                                                            <rect key="frame" x="10" y="155.5" width="62" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="20" id="50j-u2-zX4"/>
                                                             </constraints>
@@ -2843,7 +2835,7 @@
                                                             <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h8I-Ux-fwu">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h8I-Ux-fwu" customClass="CellButton" customModule="Prayer_App" customModuleProvider="target">
                                                             <rect key="frame" x="284" y="152.5" width="26" height="23"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="26" id="01v-Jz-kQL"/>
@@ -2881,23 +2873,23 @@
                                                         <constraint firstItem="2sY-PZ-3X7" firstAttribute="leading" secondItem="qLn-lM-Lm8" secondAttribute="leading" constant="10" id="XOl-7v-zVZ"/>
                                                         <constraint firstItem="h0b-g1-Y5k" firstAttribute="height" secondItem="Mnl-p7-vbD" secondAttribute="height" id="aHp-Eu-Kts"/>
                                                         <constraint firstItem="gKs-qy-IuC" firstAttribute="centerY" secondItem="Ogz-K4-8JQ" secondAttribute="centerY" id="ahD-BL-hGI"/>
-                                                        <constraint firstItem="Lbz-RD-RmO" firstAttribute="leading" secondItem="Ogz-K4-8JQ" secondAttribute="trailing" constant="10" id="e3A-2B-tJr"/>
+                                                        <constraint firstItem="Lbz-RD-RmO" firstAttribute="leading" secondItem="Ogz-K4-8JQ" secondAttribute="trailing" constant="5" id="e3A-2B-tJr"/>
                                                         <constraint firstItem="Lbz-RD-RmO" firstAttribute="centerY" secondItem="Ogz-K4-8JQ" secondAttribute="centerY" id="fYA-O5-YdG"/>
                                                         <constraint firstItem="h0b-g1-Y5k" firstAttribute="centerX" secondItem="Mnl-p7-vbD" secondAttribute="centerX" id="fkh-Bn-r7p"/>
                                                         <constraint firstItem="Rln-ML-EAv" firstAttribute="leading" secondItem="gZD-4h-Cxx" secondAttribute="trailing" constant="10" id="gJ0-xY-OL0"/>
                                                         <constraint firstItem="Zc7-u6-xq2" firstAttribute="centerY" secondItem="zV4-QQ-Gvo" secondAttribute="centerY" id="gqW-4o-v8Z"/>
                                                         <constraint firstItem="pmU-3k-cod" firstAttribute="height" secondItem="unR-Sj-1f0" secondAttribute="height" id="hDS-VZ-DPp"/>
-                                                        <constraint firstItem="Mnl-p7-vbD" firstAttribute="leading" secondItem="unR-Sj-1f0" secondAttribute="trailing" constant="10" id="j3q-dC-LlE"/>
+                                                        <constraint firstItem="Mnl-p7-vbD" firstAttribute="leading" secondItem="unR-Sj-1f0" secondAttribute="trailing" constant="5" id="j3q-dC-LlE"/>
                                                         <constraint firstItem="h0b-g1-Y5k" firstAttribute="centerY" secondItem="Mnl-p7-vbD" secondAttribute="centerY" id="lBG-nR-Xx2"/>
                                                         <constraint firstItem="Zc7-u6-xq2" firstAttribute="height" secondItem="zV4-QQ-Gvo" secondAttribute="height" id="lrE-VR-9xw"/>
                                                         <constraint firstItem="Zc7-u6-xq2" firstAttribute="centerX" secondItem="zV4-QQ-Gvo" secondAttribute="centerX" id="o4v-gc-18X"/>
                                                         <constraint firstItem="Rln-ML-EAv" firstAttribute="top" secondItem="aUc-cx-gpb" secondAttribute="bottom" id="onq-QS-Wqp"/>
                                                         <constraint firstItem="Zc7-u6-xq2" firstAttribute="width" secondItem="zV4-QQ-Gvo" secondAttribute="width" id="rCr-6G-3TM"/>
-                                                        <constraint firstItem="zV4-QQ-Gvo" firstAttribute="leading" secondItem="Mnl-p7-vbD" secondAttribute="trailing" constant="10" id="rY6-Ae-sSa"/>
+                                                        <constraint firstItem="zV4-QQ-Gvo" firstAttribute="leading" secondItem="Mnl-p7-vbD" secondAttribute="trailing" constant="5" id="rY6-Ae-sSa"/>
                                                         <constraint firstItem="BXG-54-ln0" firstAttribute="height" secondItem="Lbz-RD-RmO" secondAttribute="height" id="tQB-0Y-Yf1"/>
                                                         <constraint firstAttribute="bottom" secondItem="2sY-PZ-3X7" secondAttribute="bottom" constant="10" id="uCz-O8-rGN"/>
                                                         <constraint firstAttribute="trailing" secondItem="aUc-cx-gpb" secondAttribute="trailing" constant="10" id="wnr-CS-dTt"/>
-                                                        <constraint firstItem="unR-Sj-1f0" firstAttribute="leading" secondItem="Lbz-RD-RmO" secondAttribute="trailing" constant="10" id="ws2-Cq-MRu"/>
+                                                        <constraint firstItem="unR-Sj-1f0" firstAttribute="leading" secondItem="Lbz-RD-RmO" secondAttribute="trailing" constant="5" id="ws2-Cq-MRu"/>
                                                         <constraint firstItem="aUc-cx-gpb" firstAttribute="leading" secondItem="gZD-4h-Cxx" secondAttribute="trailing" constant="10" id="ya9-gx-EuS"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
@@ -3488,7 +3480,7 @@
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="exo-XS-mFi"/>
+        <segue reference="JFD-5x-ZFN"/>
         <segue reference="a87-y6-4BI"/>
         <segue reference="gID-Hk-yCK"/>
     </inferredMetricsTieBreakers>

@@ -250,18 +250,31 @@ class FirebaseHelper {
                                     if let image = UIImage(data: imageData) {
                                         var i = 0
                                         for user in CurrentUser.firebaseMembershipUsers {
-                                            if let email = user.userEmail {
-                                                if let userEmail = membershipUser.userEmail {
-                                                    if email == userEmail {
-                                                        var newImagesArray = [UIImage]()
-                                                        if let existingUserImagesArray = user.membershipUserCircleImages {
-                                                            newImagesArray = existingUserImagesArray
-                                                            newImagesArray.append(image)
-                                                            user.membershipUserCircleImages = newImagesArray
+                                            if let userID = user.userID {
+                                                if let membershipUserID = membershipUser.userID {
+                                                    if userID == membershipUserID {
+                                                        let newUser = User()
+                                                        var newUsersArray = [User]()
+                                                        var circleUserID = String()
+                                                        
+                                                        if let circleUserIDCheck = userDictionary["userUID"] as? String {
+                                                            circleUserID = circleUserIDCheck
+                                                        }
+                                                        
+                                                        if let existingUserArray = user.membershipUserCircleUsers {
+                                                            newUsersArray = existingUserArray
+                                                            newUser.profileImageAsImage = image
+                                                            newUser.userID = circleUserID
+                                                            print("userID if able to make existing array: \(circleUserID)")
+                                                            newUsersArray.append(newUser)
+                                                            user.membershipUserCircleUsers = newUsersArray
                                                             CurrentUser.firebaseMembershipUsers[i] = user
                                                         } else {
-                                                            newImagesArray.append(image)
-                                                            user.membershipUserCircleImages = newImagesArray
+                                                            newUser.profileImageAsImage = image
+                                                            newUser.userID = circleUserID
+                                                            print("userID if not able to make existing array: \(circleUserID)")
+                                                            newUsersArray.append(newUser)
+                                                            user.membershipUserCircleUsers = newUsersArray
                                                             CurrentUser.firebaseMembershipUsers[i] = user
                                                         }
                                                     }
@@ -508,6 +521,20 @@ class FirebaseHelper {
         }
     }
     
+    func markCirlePrayerPrayedInFirebase(prayer: CirclePrayer, newAgreedCount: Int, ref: DatabaseReference) {
+        if let userID = Auth.auth().currentUser?.uid {
+            
+            if let prayerOwnerID = prayer.prayerOwnerUserID {
+                if let prayerID = prayer.prayerID {
+                    ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
+                    ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("agreedCount").setValue(newAgreedCount)
+                    ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("whoAgreed").child(userID).setValue(userID)
+                    
+                }
+            }
+        }
+    }
+    
     func markAnsweredInFirebase(prayerID: String, howAnswered: String, isAnswered: Bool, ref: DatabaseReference) {
         if let userID = Auth.auth().currentUser?.uid {
             ref.child("users").child(userID).child("prayers").child(prayerID).child("howAnswered").setValue(howAnswered)
@@ -575,8 +602,7 @@ class FirebaseHelper {
         self.downloadAdditionalMembershipUserDataFromFirebase(membershipUser: user)
     }
     
-    func circlePrayerFromUserDictionary(userDictionary: NSDictionary) -> CirclePrayer {
-        print("fired")
+    func circlePrayerFromUserDictionary(userDictionary: NSDictionary, whoAgreedDict: NSDictionary) -> CirclePrayer {
         let prayer = CirclePrayer()
         if let firstNameCheck = userDictionary["firstName"] as? String {
             prayer.firstName = firstNameCheck
@@ -605,9 +631,9 @@ class FirebaseHelper {
         if let prayerOwnerUserIDCheck = userDictionary["prayerOwnerUserID"] as? String {
             prayer.prayerOwnerUserID = prayerOwnerUserIDCheck
         }
-        if let whoAgreedUserIdsCheck = userDictionary["whoAgreedUserIds"] as? [String] {
-            prayer.whoAgreedUserIds = whoAgreedUserIdsCheck
-        }
+        
+        prayer.whoAgreed = whoAgreedDict.allKeys as? [String]
+        
         return prayer
     }
     

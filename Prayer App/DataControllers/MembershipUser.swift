@@ -13,7 +13,8 @@ import Firebase
 class MembershipUser: CircleUser {
     var membershipStatus: String?
     var membershipUserCircleIds: [String]?
-    var membershipUserCircleImages: [UIImage]?
+//    var membershipUserCircleImages: [UIImage]?
+    var membershipUserCircleUsers: [User]?
     var membershipCirclePrayers: [CirclePrayer]?
     
     enum currentUserMembershipStatus: String {

@@ -197,7 +197,9 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
         if viewAlreadyAppeared == true {
-            tableView.reloadData()
+            UIView.performWithoutAnimation {
+                self.tableView.reloadData()
+            }
         }
     }
     

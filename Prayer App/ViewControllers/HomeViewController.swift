@@ -81,7 +81,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         i += 1
                     }
                 }
-                // reload data here if necessary
+                // reload data here if not repsonding automatically to change in static var
             }
             
             ref.child("users").child(userID).child("memberships").observe(.childRemoved) { (snapshot) in
@@ -93,21 +93,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                             if let snapshotUserID = snapshotMembershipUser.userID {
                                 if userID == snapshotUserID {
                                     CurrentUser.firebaseMembershipUsers.remove(at: i)
-                                    print("removedMember at: \(i)")
                                 }
                             }
                         }
                         i += 1
                     }
-                    // reload data here
+                    // reload data here if not repsonding automatically to change in static var
                 }
             }
         }
-    }
-
-
-    func loadHomeScreenData() {
-        
     }
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -161,7 +155,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         switch section {
         case "invitationUsers":
-            print("invitation cell")
             let cell = tableView.dequeueReusableCell(withIdentifier: "invitationCell", for: indexPath) as! CircleInvitationTableViewCell
             let membershipUser = invitationUsers[indexPath.row]
             
@@ -190,10 +183,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             return cell
         case "membershipPrayers":
-            print("membership cell")
             let cell = tableView.dequeueReusableCell(withIdentifier: "circlePrayerCell", for: indexPath) as! CirclePrayerTableViewCell
+            
             if let prayerArray = cleanData["membershipPrayers"] as? [CirclePrayer] {
                 let prayer = prayerArray[indexPath.row]
+                
+                if let agreedCount = prayer.agreedCount {
+                    cell.whoAgreedInPrayerLabel.text = "Members have agreed in Prayer \(Utilities().numberOfTimesString(count: agreedCount))"
+                }
+                
+                if let lastPrayedDate = prayer.lastPrayed {
+                    cell.prayerRequestedDate.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedDate))"
+                }
+                
                 if let firstName = prayer.firstName {
                     if let lastName = prayer.lastName {
                         let fullName = firstName + " " + lastName
@@ -203,6 +205,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         }
                     }
                 }
+                
+                var whoAgreed = [String]()
+                if let whoAgreedCheck = prayer.whoAgreed {
+                    whoAgreed = whoAgreedCheck
+                }
+                
                 if let ownerUserID = prayer.prayerOwnerUserID {
                     for membershipUser in CurrentUser.firebaseMembershipUsers {
                         if let memberUserID = membershipUser.userID {
@@ -210,27 +218,36 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 if let profileImage = membershipUser.profileImageAsImage {
                                     cell.profileImageView.image = profileImage
                                 }
-                                if let membershipUserCircleUserProfileImages = membershipUser.membershipUserCircleImages {
-                                    print("HomeViewController Stage 6")
-                                    if membershipUserCircleUserProfileImages.count > 0 {
-                                        var i = 0
-                                        for pImageView in cell.senderPrayerCircleMembers {
-                                            if i < membershipUserCircleUserProfileImages.count {
-                                                pImageView.image = membershipUserCircleUserProfileImages[i]
-                                                pImageView.isHidden = false
-                                                cell.senderPrayerCircleMembersTintImage[i].isHidden = false
+                                if let membershipUserCircleUsers = membershipUser.membershipUserCircleUsers {
+                                    if membershipUserCircleUsers.count > 0 {
+                                        
+                                        for i in 0...4 {
+                                            if i < membershipUserCircleUsers.count {
+                                                let circleUser = membershipUserCircleUsers[i]
+                                                if let circleUserProfileImage = circleUser.profileImageAsImage {
+                                                    if let circleUserID = circleUser.userID {
+                                                        
+                                                        if whoAgreed.contains(circleUserID) {
+                                                            let imageView = cell.senderPrayerCircleMembers[i]
+                                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
+                                                            imageView.image = circleUserProfileImage
+                                                            imageView.isHidden = false
+                                                            tint.isHidden = true
+                                                        } else {
+                                                            let imageView = cell.senderPrayerCircleMembers[i]
+                                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
+                                                            imageView.image = circleUserProfileImage
+                                                            imageView.isHidden = false
+                                                            tint.isHidden = false
+                                                        }
+                                                    }
+                                                }
                                             } else {
-                                                pImageView.isHidden = true
-                                                cell.senderPrayerCircleMembersTintImage[i].isHidden = true
+                                                let imageView = cell.senderPrayerCircleMembers[i]
+                                                let tint = cell.senderPrayerCircleMembersTintImage[i]
+                                                imageView.isHidden = true
+                                                tint.isHidden = true
                                             }
-                                            i += 1
-                                        }
-                                    } else {
-                                        for pImageView in cell.senderPrayerCircleMembers {
-                                            pImageView.isHidden = true
-                                        }
-                                        for imageTint in cell.senderPrayerCircleMembersTintImage {
-                                            imageTint.isHidden = false
                                         }
                                     }
                                 }
@@ -238,6 +255,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         }
                     }
                 }
+                cell.agreeButton.tag = indexPath.row
+                cell.agreeButton.section = indexPath.section
+                cell.agreeButton.addTarget(self, action: #selector(markAgreed(sender:)), for: .touchUpInside)
             }
             return cell
         default:
@@ -246,6 +266,68 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        var amenAction = UIContextualAction()
+        amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            self.markPrayed(indexPath: indexPath)
+            CurrentUser().updateMemberPrayers()
+            success(true)
+        })
+        amenAction.backgroundColor = UIColor.StyleFile.TealColor
+        return UISwipeActionsConfiguration(actions: [amenAction])
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.none
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        var isPrayerCell = false
+        let sectionTitles = Array(cleanData.keys) as [String]
+        let section = sectionTitles[indexPath.section]
+        if let objectArray = cleanData[section] {
+            if objectArray[indexPath.row] is CirclePrayer {
+                isPrayerCell = true
+            }
+        }
+        return isPrayerCell
+    }
+    
+    func markPrayed(indexPath: IndexPath) {
+        if let prayer = prayerAtIndexPath(indexPath: indexPath) {
+            if let agreedCountCheck = prayer.agreedCount {
+                let newCount = agreedCountCheck + 1
+                FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount), ref: ref)
+            }
+        }
+    }
+    
+    @objc func markAgreed(sender: CellButton) {
+        let row = sender.tag
+        let section = sender.section
+        let indexPath = NSIndexPath(row: row, section: section)
+        print("pressed button at: \(indexPath as IndexPath)")
+        if let prayer = prayerAtIndexPath(indexPath: indexPath as IndexPath) {
+            if let agreedCountCheck = prayer.agreedCount {
+                let newCount = agreedCountCheck + 1
+                FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount), ref: ref)
+            }
+        }
+        CurrentUser().updateMemberPrayers()
+    }
+    
+    func prayerAtIndexPath(indexPath: IndexPath) -> CirclePrayer? {
+        var prayer = CirclePrayer()
+        let sectionTitles = Array(cleanData.keys) as [String]
+        let section = sectionTitles[indexPath.section]
+        if let objectArray = cleanData[section] {
+            if let prayerCheck = objectArray[indexPath.row] as? CirclePrayer {
+                prayer = prayerCheck
+            }
+        }
+        return prayer
+    }
+
     @objc func acceptInvite(sender: CellButton) {
         let buttonTag = sender.tag
         let buttonSection = sender.section
@@ -264,7 +346,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if let memberEmail = memberUser.userEmail {
             FirebaseHelper().declineInvite(userEmail: memberEmail, ref: ref)
         }
-//        let cell = tableView.cellForRow(at: indexPath as IndexPath) as! CircleInvitationTableViewCell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -302,17 +383,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc func handleNotification3(_ notification: NSNotification) {
         loadData()
-        print("cleanData when invites updated: \(cleanData)")
     }
     
     @objc func handleNotification4(_ notification: NSNotification) {
        loadData()
-        print("cleanData when prayers updated: \(cleanData)")
     }
     
     @objc func handleNotification5(_ notification: NSNotification) {
         loadData()
-        print("clear data because logout was called")
     }
     
     func loadData() {
@@ -347,7 +425,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         DispatchQueue.main.async {
             self.showHideTable()
-            self.tableView.reloadData()
+            UIView.performWithoutAnimation {
+                self.tableView.reloadData()
+            }
         }
     }
     

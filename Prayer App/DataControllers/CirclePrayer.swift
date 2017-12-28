@@ -11,7 +11,7 @@ import UIKit
 
 class CirclePrayer: Prayer {
     var prayerOwnerUserID: String?
-    var whoAgreedUserIds: [String]?
+    var whoAgreed: [String]?
     var agreedCount: Int?
     var firstName: String?
     var lastName: String?
