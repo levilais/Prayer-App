@@ -564,12 +564,15 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                         imageView.clipsToBounds = true
                     }
                     
-                    var i = 0
-                    for circleUser in actualMembers {
-                        if let image = circleUser.profileImageAsImage {
-                            postToPrayerCircleMembers[i].image = image
+                    for i in 0...4 {
+                        if i < actualMembers.count {
+                            let circleUser = actualMembers[i]
+                            if let image = circleUser.profileImageAsImage {
+                                postToPrayerCircleMembers[i].image = image
+                            }
+                        } else {
+                            postToPrayerCircleMembers[i].image = UIImage(named: "profilImageDefault")
                         }
-                        i += 1
                     }
                     
                     Animations().animateShareToCirclePopup(view: postToPrayerCircleView, backgroundButton: postToPrayerCirclePopupBackgroundButton, subView: postToPrayerCircleSubview, viewController: self, textView: textField)
