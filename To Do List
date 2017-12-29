@@ -1,4 +1,9 @@
 Add "My Circle Posts" functionality on Circle screen
+Update CircleUser stats on Circle screen
 Add ability to leave someone's circle
+Add notificaiton label to HomeScreen (for things like accepted invites)
 Add a notification that someone accepted your invite to Prayer
 Add notification badge for "new items" in Home screen
+Add give feedback (email) to Settings
+Add Privacy Policy
+Make sure link to disclaimer is on Sign Up screen

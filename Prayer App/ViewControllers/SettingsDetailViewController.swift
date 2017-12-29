@@ -138,6 +138,7 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                 CurrentUser.firebaseCircleMembers.removeAll()
                 CurrentUser.firebaseMembershipUsers.removeAll()
                 CurrentUser.membershipCirclePrayers.removeAll()
+                CurrentUser.currentUserCirclePrayers.removeAll()
                 FirebaseHelper.firebaseUserEmails.removeAll()
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil, userInfo: nil)
                 tableView.reloadData()

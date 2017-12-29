@@ -45,7 +45,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         for circleButton in circleProfileImageButtons {
             circleButton.addTarget(self, action: #selector(circleProfileButtonDidPress(sender:)), for: .touchUpInside)
         }
-
         tableView.tableFooterView = UIView()
     }
     
@@ -55,6 +54,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
          NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "currentUserCirclePrayersUpdated"), object: nil)
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         
@@ -62,7 +62,10 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             userNotLoggedInView.isHidden = true
             userLoggedInView.isHidden = false
             selectedCircleMember = 0
+            CurrentUser.currentUserCirclePrayers = []
+            setupObservers()
             setCircleData()
+            toggleTableIsHidden()
         } else {
             userNotLoggedInView.isHidden = false
             userLoggedInView.isHidden = true
@@ -78,6 +81,59 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         for imageView in circleProfileImages {
             imageView.layer.cornerRadius = imageView.frame.size.height / 2
             imageView.clipsToBounds = true
+        }
+    }
+    
+    func toggleTableIsHidden() {
+        if CurrentUser.currentUserCirclePrayers.count > 0 {
+            tableView.isHidden = false
+        } else {
+            tableView.isHidden = true
+        }
+    }
+    
+    func setupObservers() {
+        if let userID = Auth.auth().currentUser?.uid {
+            ref.child("users").child(userID).child("circlePrayers").observe(.childAdded) { (snapshot) in
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    let prayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: NSDictionary())
+                    CurrentUser.currentUserCirclePrayers.append(prayer)
+                }
+            }
+            
+            ref.child("users").child(userID).child("circlePrayers").observe(.childRemoved) { (snapshot) in
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    let snapshotPrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: NSDictionary())
+                    var i = 0
+                    for prayer in CurrentUser.currentUserCirclePrayers {
+                        if let prayerID = prayer.prayerID {
+                            if let snapshotPrayerID = snapshotPrayer.prayerID {
+                                if prayerID == snapshotPrayerID {
+                                    CurrentUser.currentUserCirclePrayers.remove(at: i)
+                                }
+                            }
+                        }
+                        i += 1
+                    }
+                }
+            }
+            
+            ref.child("users").child(userID).child("circlePrayers").observe(.childChanged) { (snapshot) in
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    let snapshotPrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: NSDictionary())
+                    var i = 0
+                    for prayer in CurrentUser.currentUserCirclePrayers {
+                        if let prayerID = prayer.prayerID {
+                            if let snapshotPrayerID = snapshotPrayer.prayerID {
+                                if prayerID == snapshotPrayerID {
+                                    CurrentUser.currentUserCirclePrayers[i] = snapshotPrayer
+                                }
+                            }
+                        }
+                        i += 1
+                    }
+                }
+            }
         }
     }
     
@@ -116,8 +172,10 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             var joinedCircleDate = Double()
             
             if let agreedCountCheck = circleUser.agreedInPrayerCount {
+                print("found the count")
                 agreedCount = agreedCountCheck
             } else {
+                print("didn't find the count")
                 agreedCount = 0
             }
             if let lastAgreedDateCheck = circleUser.lastAgreedInPrayerDate {
@@ -165,6 +223,22 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if let image = circleUser.profileImageAsImage {
                     circleProfileImages[i].image = image
                 }
+//
+//                if let dateJoined = circleUser.dateJoinedCircle {
+//                    print("dateJoined worked")
+//                    circleJoinedLabel.text = "Member of your Circle since \(Utilities().dateFromDouble(timeStampAsDouble: dateJoined))"
+//                }
+//
+//                if let agreedCount = circleUser.agreedInPrayerCount {
+//                    print("agreedCount worked")
+//                    circleAgreedLabel.text = "Agreed in prayer \(Utilities().numberOfTimesString(count: agreedCount))"
+//                }
+//
+//                if let lastPrayed = circleUser.lastAgreedInPrayerDate {
+//                    print("lastPrayed worked")
+//                    circleAgreedLabel.text = "Last agreed in prayer on \(Utilities().dateFromDouble(timeStampAsDouble: lastPrayed))"
+//                }
+                
                 circleSpotFilled[i] = true
             case circleCount ... 4:
                 circleProfileImages[i].image = UIImage(named: "addCircleMemberIcon.pdf")
@@ -257,16 +331,24 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return CurrentUser.currentUserCirclePrayers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as! PrayerTableViewCell
+        let prayer = CurrentUser.currentUserCirclePrayers[indexPath.row]
         
-        cell.prayerTextView.text = "placeholder text"
-        cell.prayedLastLabel.text = "prayed last"
-        cell.prayedCountLabel.text = "prayer count"
+        if let prayerText = prayer.prayerText {
+            cell.prayerTextView.text = prayerText
+        }
         
+        if let lastPrayedCheck = prayer.lastPrayed {
+            cell.prayedLastLabel.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedCheck))"
+        }
+        
+        if let agreedCountCheck = prayer.agreedCount {
+            cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: agreedCountCheck))"
+        }
         return cell
     }
     
@@ -276,25 +358,39 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .default, title: "Delete") { (action:UITableViewRowAction, indexPath:IndexPath) in
-//            let prayer = self.fetchedResultsController.object(at: indexPath)
-//            prayer.managedObjectContext?.delete(prayer)
-//            print("attempting to delete")
-//            do {
-//                try prayer.managedObjectContext?.save()
-//                print("saved!")
-//                tableView.reloadData()
-//            } catch let error as NSError  {
-//                print("Could not save \(error), \(error.userInfo)")
-//            } catch {
-//            }
+            let prayer = CurrentUser.currentUserCirclePrayers[indexPath.row]
+            if let prayerID = prayer.prayerID {
+                FirebaseHelper().deleteCirclePrayerFromFirebase(prayerID: prayerID, ref: self.ref)
+            }
         }
         delete.backgroundColor = UIColor.StyleFile.WineColor
-            let answered = UITableViewRowAction(style: .default, title: "Answered") { (action:UITableViewRowAction, indexPath:IndexPath) in
-//                self.indexPathToMarkAnswered = indexPath
-//                Animations().animateMarkAnsweredPopup(view: self.markAnsweredPopoverView, backgroundButton: self.markAnsweredBackgroundButton, subView: self.markAnsweredSubview, viewController: self, textView: self.markAnsweredTextView)
+        return [delete]
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        var amenAction = UIContextualAction()
+        amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            self.markPrayed(indexPath: indexPath)
+            success(true)
+        })
+        amenAction.backgroundColor = UIColor.StyleFile.TealColor
+        return UISwipeActionsConfiguration(actions: [amenAction])
+    }
+
+    
+    func markPrayed(indexPath: IndexPath) {
+        let prayer = CurrentUser.currentUserCirclePrayers[indexPath.row]
+        if let agreedCountCheck = prayer.agreedCount {
+            let newCount = agreedCountCheck + 1
+            FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount), ref: ref)
         }
-        answered.backgroundColor = UIColor.StyleFile.DarkBlueColor
-        return [delete, answered]
+    }
+    
+    func loadData() {
+        UIView.performWithoutAnimation {
+            self.tableView.reloadData()
+            self.toggleTableIsHidden()
+        }
     }
     
     @objc func handleNotification(_ notification: NSNotification) {
@@ -310,10 +406,17 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.setCircleData()
         }
     }
-    
+
+    @objc func handleNotification4(_ notification: NSNotification) {
+        loadData()
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "currentUserCirclePrayersUpdated"), object: nil)
+        CurrentUser.currentUserCirclePrayers = []
+        loadData()
     }
 }

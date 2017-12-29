@@ -61,10 +61,10 @@ class FirebaseHelper {
                                                 if let dateJoinedCircleCheck = userDictionary["dateJoinedCircle"] as? Double {
                                                     circleUser.dateJoinedCircle = dateJoinedCircleCheck
                                                 }
-                                                if let agreedCountCheck = userDictionary["agreedCount"] as? Int {
+                                                if let agreedCountCheck = userDictionary["agreedInPrayerCount"] as? Int {
                                                     circleUser.agreedInPrayerCount = agreedCountCheck
                                                 }
-                                                if let lastAgreedDateCheck = userDictionary["lastAgreedDateCheck"] as? Double {
+                                                if let lastAgreedDateCheck = userDictionary["lastAgreedInPrayerDate"] as? Double {
                                                     circleUser.lastAgreedInPrayerDate = lastAgreedDateCheck
                                                 }
                                                     
@@ -201,6 +201,7 @@ class FirebaseHelper {
                         ref.child("users").child(uid).child("circleUsers").child(userID).child("relationship").setValue(CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue)
                             ref.child("users").child(uid).child("circleUsers").child(userID).child("dateJoinedCircle").setValue(ServerValue.timestamp())
                             
+                            ref.child("users").child(uid).child("circleUsers").child(userID).child("agreedInPrayerCount").setValue(0)
                             ref.child("users").child(userID).child("memberships").child(uid).child("membershipStatus").setValue(MembershipUser.currentUserMembershipStatus.member.rawValue)
                             ref.child("users").child(userID).child("memberships").child(uid).child("dateJoinedCircle").setValue(ServerValue.timestamp())
                         }
@@ -253,26 +254,30 @@ class FirebaseHelper {
                                             if let userID = user.userID {
                                                 if let membershipUserID = membershipUser.userID {
                                                     if userID == membershipUserID {
-                                                        let newUser = User()
-                                                        var newUsersArray = [User]()
+                                                        let newUser = CircleUser()
+                                                        var newUsersArray = [CircleUser]()
                                                         var circleUserID = String()
-                                                        
+                                                        var circleUserAgreedCount = Int()
                                                         if let circleUserIDCheck = userDictionary["userUID"] as? String {
                                                             circleUserID = circleUserIDCheck
+                                                        }
+                                                        
+                                                        if let circleUserAgreedCheck = userDictionary["agreedInPrayerCount"] as? Int {
+                                                            circleUserAgreedCount = circleUserAgreedCheck
                                                         }
                                                         
                                                         if let existingUserArray = user.membershipUserCircleUsers {
                                                             newUsersArray = existingUserArray
                                                             newUser.profileImageAsImage = image
                                                             newUser.userID = circleUserID
-                                                            print("userID if able to make existing array: \(circleUserID)")
+                                                            newUser.agreedInPrayerCount = circleUserAgreedCount
                                                             newUsersArray.append(newUser)
                                                             user.membershipUserCircleUsers = newUsersArray
                                                             CurrentUser.firebaseMembershipUsers[i] = user
                                                         } else {
                                                             newUser.profileImageAsImage = image
                                                             newUser.userID = circleUserID
-                                                            print("userID if not able to make existing array: \(circleUserID)")
+                                                            newUser.agreedInPrayerCount = circleUserAgreedCount
                                                             newUsersArray.append(newUser)
                                                             user.membershipUserCircleUsers = newUsersArray
                                                             CurrentUser.firebaseMembershipUsers[i] = user
@@ -446,33 +451,8 @@ class FirebaseHelper {
         if let userID = Auth.auth().currentUser?.uid {
             let prayerID = NSUUID().uuidString
                 postCirclePrayer(userID: userID, prayerID: prayerID, prayer: prayer, ref: ref)
-//            if CurrentUser.firebaseCircleMembers.count > 0 {
-//                for user in CurrentUser.firebaseCircleMembers {
-//                    if let relationship = user.relationshipToCurrentUser {
-//                        if relationship == CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue {
-//                            if let circleUserID = user.userID {
-//                                postCirclePrayerToCircle(circleUserID: circleUserID, userID: userID, prayerID: prayerID, prayer: prayer, ref: ref)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
         }
-        
     }
-    
-//    func postCirclePrayerToCircle(circleUserID: String, userID: String, prayerID: String, prayer: CirclePrayer, ref: DatabaseReference) {
-//        if let prayerText = prayer.prayerText {
-//            ref.child("users").child(circleUserID).child("memberships").child(userID).child("circlePrayers").child(prayerID).child("prayerText").setValue(prayerText)
-//        }
-//
-//        ref.child("users").child(circleUserID).child("memberships").child(userID).child("circlePrayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
-//        ref.child("users").child(circleUserID).child("memberships").child(userID).child("circlePrayers").child(prayerID).child("howAnswered").setValue("")
-//        ref.child("users").child(circleUserID).child("memberships").child(userID).child("circlePrayers").child(prayerID).child("isAnswered").setValue(false)
-//        ref.child("users").child(circleUserID).child("memberships").child(userID).child("circlePrayers").child(prayerID).child("agreedCount").setValue(0)
-//        ref.child("users").child(circleUserID).child("memberships").child(userID).child("circlePrayers").child(prayerID).child("prayerID").setValue(prayerID)
-//        ref.child("users").child(circleUserID).child("memberships").child(userID).child("circlePrayers").child(prayerID).child("prayerOwnerUserID").setValue(userID)
-//    }
     
     func postCirclePrayer(userID: String, prayerID: String, prayer: CirclePrayer, ref: DatabaseReference) {
         if let prayerText = prayer.prayerText {
@@ -514,6 +494,16 @@ class FirebaseHelper {
         }
     }
     
+    func deleteCirclePrayerFromFirebase(prayerID: String, ref: DatabaseReference) {
+        if let userID = Auth.auth().currentUser?.uid {
+            ref.child("users").child(userID).child("circlePrayers").child(prayerID).removeValue { error, _ in
+                if let error = error {
+                    print("error \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
     func markPrayedInFirebase(prayerID: String, newPrayerCount: Int, ref: DatabaseReference) {
         if let userID = Auth.auth().currentUser?.uid {
             ref.child("users").child(userID).child("prayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
@@ -523,13 +513,50 @@ class FirebaseHelper {
     
     func markCirlePrayerPrayedInFirebase(prayer: CirclePrayer, newAgreedCount: Int, ref: DatabaseReference) {
         if let userID = Auth.auth().currentUser?.uid {
-            
             if let prayerOwnerID = prayer.prayerOwnerUserID {
                 if let prayerID = prayer.prayerID {
                     ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
                     ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("agreedCount").setValue(newAgreedCount)
-                    ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("whoAgreed").child(userID).setValue(userID)
                     
+                    if prayerOwnerID != userID {
+                        ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("whoAgreed").child(userID).setValue(userID)
+                        ref.child("users").child(prayerOwnerID).child("circleUsers").child(userID).child("lastAgreedInPrayerDate").setValue(ServerValue.timestamp())
+                        var parentIndex = 0
+                        for user in CurrentUser.firebaseMembershipUsers {
+                            if let membershipUserID = user.userID {
+                                if membershipUserID == prayerOwnerID {
+                                    if let memberCircleUsers = user.membershipUserCircleUsers {
+                                        print("memberCircleUsers.count: \(memberCircleUsers.count)")
+                                        var circleUserIndex = 0
+                                        for membershipCircleUser in memberCircleUsers {
+                                            if let membershipCircleUserID = membershipCircleUser.userID {
+                                                print("1")
+                                                if membershipCircleUserID == userID {
+                                                    print("2")
+                                                    if let agreedCount = membershipCircleUser.agreedInPrayerCount {
+                                                        print("3")
+                                                        let newCount = agreedCount + 1
+                                                        ref.child("users").child(prayerOwnerID).child("circleUsers").child(userID).child("agreedInPrayerCount").setValue(newCount)
+                                                        
+                                                        var updatedCircleUserArray = memberCircleUsers
+                                                        let updatedUser = membershipCircleUser
+                                                        updatedUser.agreedInPrayerCount = newCount
+                                                        updatedCircleUserArray[circleUserIndex] = updatedUser
+                                                        
+                                                        var updatedMembershipUserArray = CurrentUser.firebaseMembershipUsers
+                                                        updatedMembershipUserArray[parentIndex].membershipUserCircleUsers = updatedCircleUserArray
+                                                        CurrentUser.firebaseMembershipUsers = updatedMembershipUserArray
+                                                    }
+                                                }
+                                            }
+                                            circleUserIndex += 1
+                                        }
+                                    }
+                                }
+                            }
+                            parentIndex += 1
+                        }
+                    }
                 }
             }
         }

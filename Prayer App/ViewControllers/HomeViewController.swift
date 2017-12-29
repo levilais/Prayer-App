@@ -64,8 +64,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     FirebaseHelper().addNewConnectionToCurrentUserMemberships(userDictionary: userDictionary)
                 }
             }
-        
-            
             ref.child("users").child(userID).child("memberships").observe(.childChanged) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
@@ -83,7 +81,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 // reload data here if not repsonding automatically to change in static var
             }
-            
             ref.child("users").child(userID).child("memberships").observe(.childRemoved) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
@@ -189,7 +186,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let prayer = prayerArray[indexPath.row]
                 
                 if let agreedCount = prayer.agreedCount {
-                    cell.whoAgreedInPrayerLabel.text = "Members have agreed in Prayer \(Utilities().numberOfTimesString(count: agreedCount))"
+                    cell.whoAgreedInPrayerLabel.text = "Your Circle has agreed in Prayer \(Utilities().numberOfTimesString(count: agreedCount))"
                 }
                 
                 if let lastPrayedDate = prayer.lastPrayed {
@@ -294,26 +291,24 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func markPrayed(indexPath: IndexPath) {
-        if let prayer = prayerAtIndexPath(indexPath: indexPath) {
-            if let agreedCountCheck = prayer.agreedCount {
-                let newCount = agreedCountCheck + 1
-                FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount), ref: ref)
-            }
-        }
+        agreeInPrayer(indexPath: indexPath)
     }
     
     @objc func markAgreed(sender: CellButton) {
         let row = sender.tag
         let section = sender.section
         let indexPath = NSIndexPath(row: row, section: section)
-        print("pressed button at: \(indexPath as IndexPath)")
-        if let prayer = prayerAtIndexPath(indexPath: indexPath as IndexPath) {
+        agreeInPrayer(indexPath: indexPath as IndexPath)
+        CurrentUser().updateMemberPrayers()
+    }
+    
+    func agreeInPrayer(indexPath: IndexPath) {
+        if let prayer = prayerAtIndexPath(indexPath: indexPath) {
             if let agreedCountCheck = prayer.agreedCount {
                 let newCount = agreedCountCheck + 1
                 FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount), ref: ref)
             }
         }
-        CurrentUser().updateMemberPrayers()
     }
     
     func prayerAtIndexPath(indexPath: IndexPath) -> CirclePrayer? {

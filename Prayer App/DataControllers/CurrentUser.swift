@@ -30,6 +30,12 @@ class CurrentUser {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil, userInfo: nil)
         }
     }
+    static var currentUserCirclePrayers = [CirclePrayer]() {
+        didSet {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "currentUserCirclePrayersUpdated"), object: nil, userInfo: nil)
+            print("currentUserCirclePrayers changed")
+        }
+    }
     
     static var currentUser = User()
     
@@ -80,39 +86,6 @@ class CurrentUser {
             }
         }
     }
-    
-//    func loadMembershipCircleImages(prayerOwnerUserID: String, ref: DatabaseReference) {
-//        ref.child("users").child(prayerOwnerUserID).child("circleUsers").observe(.childAdded)  { (snapshot) in
-//            if let userDictionary = snapshot.value(forKey: "userID") as? NSDictionary {
-//                print("userDictionary: \(userDictionary)")
-//            }
-//        }
-//    }
-//        if let url = URL(string: urlString) {
-//            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-//                if error != nil {
-//                    print(error!.localizedDescription)
-//                    return
-//                }
-//                if let imageData = data {
-//                    if let image = UIImage(data: imageData) {
-//                        circleUser.profileImageAsImage = image
-//                        var i = 0
-//                        for user in CurrentUser.firebaseCircleMembers {
-//                            if let email = user.userEmail {
-//                                if let userEmail = circleUser.userEmail {
-//                                    if email == userEmail {
-//                                        CurrentUser.firebaseCircleMembers[i] = circleUser
-//                                    }
-//                                }
-//                            }
-//                            i += 1
-//                        }
-//                    }
-//                }
-//            }).resume()
-//        }
-//    }
     
     func setupCurrentUserFirstNameWelcomeLabel(label: UILabel) -> UILabel {
         if Auth.auth().currentUser != nil {
