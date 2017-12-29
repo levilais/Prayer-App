@@ -41,8 +41,9 @@ class FirebaseHelper {
     }
     
     func loadFirebaseData() {
+        let ref = Database.database().reference()
         if let userID = Auth.auth().currentUser?.uid {
-            Database.database().reference().child("users").child(userID).child("circleUsers").observe(.childAdded, with: { snapshot in
+            ref.child("users").child(userID).child("circleUsers").observe(.childAdded, with: { snapshot in
                 if snapshot.value != nil {
                     if let userDictionary = snapshot.value as? NSDictionary {
                         if let uid = userDictionary["userUID"] as? String {
@@ -99,7 +100,7 @@ class FirebaseHelper {
                 }
             })
             
-            Database.database().reference().child("users").child(userID).observe(.value) { (snapshot) in
+            ref.child("users").child(userID).observe(.value) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let user = User()
 
@@ -117,6 +118,46 @@ class FirebaseHelper {
                     }
                     user.userID = userID
                     CurrentUser.currentUser = user
+                }
+            }
+            
+            ref.child("users").child(userID).child("memberships").observe(.childAdded) { (snapshot) in
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    FirebaseHelper().addNewConnectionToCurrentUserMemberships(userDictionary: userDictionary)
+                }
+            }
+            ref.child("users").child(userID).child("memberships").observe(.childChanged) { (snapshot) in
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
+                    var i = 0
+                    for user in CurrentUser.firebaseMembershipUsers {
+                        if let userID = user.userID {
+                            if let snapshotUserID = snapshotMembershipUser.userID {
+                                if userID == snapshotUserID {
+                                    CurrentUser.firebaseMembershipUsers[i] = snapshotMembershipUser
+                                }
+                            }
+                        }
+                        i += 1
+                    }
+                }
+                // reload data here if not repsonding automatically to change in static var
+            }
+            ref.child("users").child(userID).child("memberships").observe(.childRemoved) { (snapshot) in
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
+                    var i = 0
+                    for user in CurrentUser.firebaseMembershipUsers {
+                        if let userID = user.userID {
+                            if let snapshotUserID = snapshotMembershipUser.userID {
+                                if userID == snapshotUserID {
+                                    CurrentUser.firebaseMembershipUsers.remove(at: i)
+                                }
+                            }
+                        }
+                        i += 1
+                    }
+                    // reload data here if not repsonding automatically to change in static var
                 }
             }
         }
@@ -317,6 +358,35 @@ class FirebaseHelper {
                                     if let userEmail = circleUser.userEmail {
                                         if email == userEmail {
                                             CurrentUser.firebaseCircleMembers[i] = circleUser
+                                        }
+                                    }
+                                }
+                                i += 1
+                            }
+                        }
+                    }
+                }).resume()
+            }
+        }
+    }
+    
+    func setMembershipUserProfileImageFromFirebase(membershipUser: MembershipUser) {
+        if let urlString = membershipUser.profileImageAsString {
+            if let url = URL(string: urlString) {
+                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                    if error != nil {
+                        print(error!.localizedDescription)
+                        return
+                    }
+                    if let imageData = data {
+                        if let image = UIImage(data: imageData) {
+                            membershipUser.profileImageAsImage = image
+                            var i = 0
+                            for user in CurrentUser.firebaseMembershipUsers {
+                                if let email = user.userEmail {
+                                    if let userEmail = membershipUser.userEmail {
+                                        if email == userEmail {
+                                            CurrentUser.firebaseMembershipUsers[i] = membershipUser
                                         }
                                     }
                                 }
@@ -530,11 +600,8 @@ class FirebaseHelper {
                                         var circleUserIndex = 0
                                         for membershipCircleUser in memberCircleUsers {
                                             if let membershipCircleUserID = membershipCircleUser.userID {
-                                                print("1")
                                                 if membershipCircleUserID == userID {
-                                                    print("2")
                                                     if let agreedCount = membershipCircleUser.agreedInPrayerCount {
-                                                        print("3")
                                                         let newCount = agreedCount + 1
                                                         ref.child("users").child(prayerOwnerID).child("circleUsers").child(userID).child("agreedInPrayerCount").setValue(newCount)
                                                         
@@ -621,6 +688,7 @@ class FirebaseHelper {
         if let circleUsers = userDictionary["circleUsers"] as? NSDictionary {
             print("circleUsers: \(circleUsers)")
         }
+        FirebaseHelper().setMembershipUserProfileImageFromFirebase(membershipUser: user)
         return user
     }
     

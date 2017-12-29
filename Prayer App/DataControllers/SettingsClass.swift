@@ -33,7 +33,8 @@ class Settings {
         "title": "Circle Settings",
         "subCategories":
             [
-            ["subTitle":"Connect To Contacts","actionType":0]
+            ["subTitle":"Connect To Contacts","actionType":0],
+            ["subTitle":"Manage Prayer Circle Memberships","actionType":2]
             ]
         ]
     ]

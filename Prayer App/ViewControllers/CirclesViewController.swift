@@ -172,10 +172,8 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             var joinedCircleDate = Double()
             
             if let agreedCountCheck = circleUser.agreedInPrayerCount {
-                print("found the count")
                 agreedCount = agreedCountCheck
             } else {
-                print("didn't find the count")
                 agreedCount = 0
             }
             if let lastAgreedDateCheck = circleUser.lastAgreedInPrayerDate {
@@ -223,21 +221,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if let image = circleUser.profileImageAsImage {
                     circleProfileImages[i].image = image
                 }
-//
-//                if let dateJoined = circleUser.dateJoinedCircle {
-//                    print("dateJoined worked")
-//                    circleJoinedLabel.text = "Member of your Circle since \(Utilities().dateFromDouble(timeStampAsDouble: dateJoined))"
-//                }
-//
-//                if let agreedCount = circleUser.agreedInPrayerCount {
-//                    print("agreedCount worked")
-//                    circleAgreedLabel.text = "Agreed in prayer \(Utilities().numberOfTimesString(count: agreedCount))"
-//                }
-//
-//                if let lastPrayed = circleUser.lastAgreedInPrayerDate {
-//                    print("lastPrayed worked")
-//                    circleAgreedLabel.text = "Last agreed in prayer on \(Utilities().dateFromDouble(timeStampAsDouble: lastPrayed))"
-//                }
                 
                 circleSpotFilled[i] = true
             case circleCount ... 4:
@@ -276,6 +259,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             self.circleSpotFilled[self.selectedCircleMember] = false
             self.selectedCircleMember = 0
+            self.loadData()
             self.setCircleData()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
@@ -323,7 +307,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "My Active Circle Posts"
+        return "My Circle Posts"
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -387,6 +371,16 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func loadData() {
+        if CurrentUser.firebaseCircleMembers.count == 0 && CurrentUser.currentUserCirclePrayers.count > 0 {
+            // remove all circlePrayers
+            if let userID = Auth.auth().currentUser?.uid {
+                ref.child("users").child(userID).child("circlePrayers").removeValue { error, _ in
+                    if let error = error {
+                        print("error \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
         UIView.performWithoutAnimation {
             self.tableView.reloadData()
             self.toggleTableIsHidden()

@@ -53,52 +53,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableViewAutomaticDimension
         
-        setupObservers()
+        loadData()
         greetingLabel.text = "Prayerline"
-    }
-    
-    func setupObservers() {
-        if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("memberships").observe(.childAdded) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    FirebaseHelper().addNewConnectionToCurrentUserMemberships(userDictionary: userDictionary)
-                }
-            }
-            ref.child("users").child(userID).child("memberships").observe(.childChanged) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
-                    var i = 0
-                    for user in CurrentUser.firebaseMembershipUsers {
-                        if let userID = user.userID {
-                            if let snapshotUserID = snapshotMembershipUser.userID {
-                                if userID == snapshotUserID {
-                                    CurrentUser.firebaseMembershipUsers[i] = snapshotMembershipUser
-                                }
-                            }
-                        }
-                        i += 1
-                    }
-                }
-                // reload data here if not repsonding automatically to change in static var
-            }
-            ref.child("users").child(userID).child("memberships").observe(.childRemoved) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
-                    var i = 0
-                    for user in CurrentUser.firebaseMembershipUsers {
-                        if let userID = user.userID {
-                            if let snapshotUserID = snapshotMembershipUser.userID {
-                                if userID == snapshotUserID {
-                                    CurrentUser.firebaseMembershipUsers.remove(at: i)
-                                }
-                            }
-                        }
-                        i += 1
-                    }
-                    // reload data here if not repsonding automatically to change in static var
-                }
-            }
-        }
     }
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -186,7 +142,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let prayer = prayerArray[indexPath.row]
                 
                 if let agreedCount = prayer.agreedCount {
-                    cell.whoAgreedInPrayerLabel.text = "Your Circle has agreed in Prayer \(Utilities().numberOfTimesString(count: agreedCount))"
+                    if let firstName = prayer.firstName {
+                        cell.whoAgreedInPrayerLabel.text = "\(firstName) Circle has agreed in Prayer \(Utilities().numberOfTimesString(count: agreedCount))"
+                    }
                 }
                 
                 if let lastPrayedDate = prayer.lastPrayed {

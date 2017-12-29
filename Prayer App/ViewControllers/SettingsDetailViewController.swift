@@ -119,6 +119,22 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                         } else {
                             performSegue(withIdentifier: "settingsToLoginSegue", sender: nil)
                         }
+                    } else if subTitle == "Manage Prayer Circle Memberships" {
+                        if Auth.auth().currentUser != nil {
+                            if CurrentUser.firebaseMembershipUsers.count != 0 {
+                                performSegue(withIdentifier: "settingsDetailToManageMembershipsSegue", sender: self)
+                            } else {
+                                let alert = UIAlertController(title: "No Memberships Detected", message: "Once you have accepted an invitation to another user's Prayer Circle, you can manage that membership here.", preferredStyle: .alert)
+                                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                                alert.addAction(action)
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        } else {
+                            let alert = UIAlertController(title: "No Memberships Detected", message: "Once you have accepted an invitation to another user's Prayer Circle, you can manage that membership here.", preferredStyle: .alert)
+                            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
                     }
                 }
             }
@@ -140,6 +156,7 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                 CurrentUser.membershipCirclePrayers.removeAll()
                 CurrentUser.currentUserCirclePrayers.removeAll()
                 FirebaseHelper.firebaseUserEmails.removeAll()
+                
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil, userInfo: nil)
                 tableView.reloadData()
             } catch let signOutError as NSError {

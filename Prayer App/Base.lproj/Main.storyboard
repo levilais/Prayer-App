@@ -1549,6 +1549,141 @@
             </objects>
             <point key="canvasLocation" x="2934.375" y="1572.8873239436621"/>
         </scene>
+        <!--Manage Member View Controller-->
+        <scene sceneID="kgw-fM-M8A">
+            <objects>
+                <viewController id="qbl-Hg-Jmg" customClass="ManageMemberViewController" customModule="Prayer_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6Jf-EH-PvY">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ECC-4z-FSF">
+                                <rect key="frame" x="0.0" y="20" width="320" height="40"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsTitleImage" translatesAutoresizingMaskIntoConstraints="NO" id="i9l-pd-VHy">
+                                        <rect key="frame" x="67" y="5" width="186" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="186" id="gJB-K1-V5z"/>
+                                            <constraint firstAttribute="height" constant="30" id="hLk-Yt-byz"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2qc-fv-RUr">
+                                        <rect key="frame" x="67" y="0.0" width="186" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="ClC-X6-ea8"/>
+                                            <constraint firstAttribute="width" constant="186" id="laR-u1-a4p"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="22"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="timerButtonDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="7wI-hn-RyS"/>
+                                            <action selector="timerButtonDidPress:" destination="ZLf-i2-f6S" eventType="touchUpInside" id="etL-Wd-BW1"/>
+                                            <action selector="timerHeaderButtonDidPress:" destination="Eke-2p-avC" eventType="touchUpInside" id="gT3-lZ-Waf"/>
+                                            <action selector="timerHeaderButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0JB-VD-8ER"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dQ8-2h-aP4">
+                                        <rect key="frame" x="10" y="6" width="42" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="28" id="oSr-D8-SrH"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Baskerville-SemiBold" family="Baskerville" pointSize="17"/>
+                                        <state key="normal" title="Done">
+                                            <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="doneButtonDidPress:" destination="qbl-Hg-Jmg" eventType="touchUpInside" id="EQA-zx-Etv"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="1Tu-Y1-8gO"/>
+                                    <constraint firstItem="i9l-pd-VHy" firstAttribute="centerX" secondItem="ECC-4z-FSF" secondAttribute="centerX" id="28h-MT-Gfv"/>
+                                    <constraint firstItem="i9l-pd-VHy" firstAttribute="centerY" secondItem="ECC-4z-FSF" secondAttribute="centerY" id="Qk5-n8-3Lv"/>
+                                    <constraint firstItem="dQ8-2h-aP4" firstAttribute="leading" secondItem="ECC-4z-FSF" secondAttribute="leading" constant="10" id="Tb3-IK-hqp"/>
+                                    <constraint firstItem="dQ8-2h-aP4" firstAttribute="centerY" secondItem="ECC-4z-FSF" secondAttribute="centerY" id="Vfz-N8-Fcp"/>
+                                    <constraint firstItem="2qc-fv-RUr" firstAttribute="centerX" secondItem="ECC-4z-FSF" secondAttribute="centerX" id="WIa-XS-idt"/>
+                                    <constraint firstItem="2qc-fv-RUr" firstAttribute="centerY" secondItem="ECC-4z-FSF" secondAttribute="centerY" id="ZoI-Bo-zE9"/>
+                                </constraints>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="lZR-Rw-LUu">
+                                <rect key="frame" x="0.0" y="60" width="320" height="508"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="manageMembersTableViewCell" rowHeight="66" id="TB1-Kl-Aq9" customClass="ManageMembersTableViewCell" customModule="Prayer_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="66"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TB1-Kl-Aq9" id="hsF-cO-8Tx">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="65.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rbe-9E-7N8">
+                                                    <rect key="frame" x="10" y="18" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="g2L-SN-elJ"/>
+                                                        <constraint firstAttribute="width" constant="30" id="hOW-Ka-v87"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bOq-dR-2ys">
+                                                    <rect key="frame" x="50" y="23.5" width="43.5" height="20"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                                    <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UfJ-X2-I36">
+                                                    <rect key="frame" x="193" y="18" width="112" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="OLT-vn-9ra"/>
+                                                        <constraint firstAttribute="width" constant="112" id="pgI-LW-R4o"/>
+                                                    </constraints>
+                                                    <state key="normal" backgroundImage="leaveCircleButton"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="rbe-9E-7N8" firstAttribute="centerY" secondItem="hsF-cO-8Tx" secondAttribute="centerY" id="0XX-WU-KdU"/>
+                                                <constraint firstItem="bOq-dR-2ys" firstAttribute="leading" secondItem="rbe-9E-7N8" secondAttribute="trailing" constant="10" id="XbO-zC-gOK"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="UfJ-X2-I36" secondAttribute="trailing" id="cZ7-pl-xf9"/>
+                                                <constraint firstItem="rbe-9E-7N8" firstAttribute="leading" secondItem="hsF-cO-8Tx" secondAttribute="leading" constant="10" id="f0k-eI-EpT"/>
+                                                <constraint firstItem="bOq-dR-2ys" firstAttribute="centerY" secondItem="hsF-cO-8Tx" secondAttribute="centerY" id="nvh-m1-ZaW"/>
+                                                <constraint firstItem="UfJ-X2-I36" firstAttribute="centerY" secondItem="hsF-cO-8Tx" secondAttribute="centerY" id="rfQ-iX-eBg"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="leaveCircleButton" destination="UfJ-X2-I36" id="4tt-6Y-JDT"/>
+                                            <outlet property="nameLabel" destination="bOq-dR-2ys" id="4vW-Hf-Iqw"/>
+                                            <outlet property="profileImage" destination="rbe-9E-7N8" id="JKU-Gr-5zl"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="qbl-Hg-Jmg" id="lBz-dJ-tRP"/>
+                                    <outlet property="delegate" destination="qbl-Hg-Jmg" id="s6i-xt-JHD"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.92920595409999995" green="0.93340748549999997" blue="0.93326789139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="lZR-Rw-LUu" firstAttribute="bottom" secondItem="RxQ-Iw-vzb" secondAttribute="bottom" id="7AE-ey-Wum"/>
+                            <constraint firstItem="ECC-4z-FSF" firstAttribute="top" secondItem="RxQ-Iw-vzb" secondAttribute="top" id="84T-tL-O3n"/>
+                            <constraint firstItem="lZR-Rw-LUu" firstAttribute="leading" secondItem="RxQ-Iw-vzb" secondAttribute="leading" id="Tso-hu-ccP"/>
+                            <constraint firstItem="ECC-4z-FSF" firstAttribute="leading" secondItem="RxQ-Iw-vzb" secondAttribute="leading" id="nnf-Om-khW"/>
+                            <constraint firstItem="lZR-Rw-LUu" firstAttribute="top" secondItem="ECC-4z-FSF" secondAttribute="bottom" id="pD7-06-3Mb"/>
+                            <constraint firstItem="RxQ-Iw-vzb" firstAttribute="trailing" secondItem="ECC-4z-FSF" secondAttribute="trailing" id="tUI-YF-eJw"/>
+                            <constraint firstItem="lZR-Rw-LUu" firstAttribute="trailing" secondItem="RxQ-Iw-vzb" secondAttribute="trailing" id="zzN-dk-8yR"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="RxQ-Iw-vzb"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="lZR-Rw-LUu" id="WTD-Qg-7EG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WMJ-6C-DbA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2152.5" y="2267.9577464788731"/>
+        </scene>
         <!--First Load View Controller-->
         <scene sceneID="wpM-8B-W4l">
             <objects>
@@ -2502,6 +2637,7 @@
                         <segue destination="e92-fH-MMI" kind="presentation" identifier="settingsToLoginSegue" id="gPu-UL-IfP"/>
                         <segue destination="n3B-qY-OVx" kind="presentation" identifier="settingsDetailToContactsAuth" modalTransitionStyle="flipHorizontal" id="5sI-7B-53b"/>
                         <segue destination="cum-ni-amF" kind="presentation" identifier="settingsDetailToUpdateProfileSegue" modalTransitionStyle="flipHorizontal" id="YWN-Vu-ZnR"/>
+                        <segue destination="qbl-Hg-Jmg" kind="presentation" identifier="settingsDetailToManageMembershipsSegue" modalTransitionStyle="flipHorizontal" id="QIJ-DK-Yk1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ml4-gE-qMD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3465,6 +3601,7 @@
         <image name="inviteButton" width="118" height="60"/>
         <image name="journalTitleImage" width="372" height="60"/>
         <image name="largeShareIcon" width="143" height="171"/>
+        <image name="leaveCircleButton" width="224" height="60"/>
         <image name="prayerTitle" width="372" height="60"/>
         <image name="profilImageDefault" width="160" height="160"/>
         <image name="saveButton" width="108" height="60"/>
@@ -3480,8 +3617,8 @@
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="JFD-5x-ZFN"/>
-        <segue reference="a87-y6-4BI"/>
-        <segue reference="gID-Hk-yCK"/>
+        <segue reference="5sI-7B-53b"/>
+        <segue reference="YWN-Vu-ZnR"/>
+        <segue reference="gPu-UL-IfP"/>
     </inferredMetricsTieBreakers>
 </document>

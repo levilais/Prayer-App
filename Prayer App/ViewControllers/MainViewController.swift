@@ -70,7 +70,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     @IBOutlet weak var postToPrayerCircleSubview: UIView!
     
     // Data Variables
-//    var prayer: Prayer?
     var managedObjectContext: NSManagedObjectContext?
     var ref: DatabaseReference!
     
@@ -576,7 +575,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                     Animations().animateShareToCirclePopup(view: postToPrayerCircleView, backgroundButton: postToPrayerCirclePopupBackgroundButton, subView: postToPrayerCircleSubview, viewController: self, textView: textField)
                     self.swipeLeft.isEnabled = false
                     self.swipeRight.isEnabled = false
-                    //            displayShareSheet(shareContent: textField.text!)
                 } else {
                     let alert = UIAlertController(title: "Nothing To Share", message: "Please enter text and try again.", preferredStyle: .alert)
                     let action = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -617,18 +615,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
         }
     }
-    
-//    func displayShareSheet(shareContent: String) {
-//        let activityViewController = UIActivityViewController(activityItems: [shareContent as NSString], applicationActivities: nil)
-//        activityViewController.completionWithItemsHandler = {(activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
-//            if !completed {
-//                return
-//            }
-//            Animations().showPopup(labelText: "Shared!", presentingVC: self)
-//            self.textField.becomeFirstResponder()
-//        }
-//        present(activityViewController, animated: true, completion: nil)
-//    }
     
     func sendText() {
         if textField.text != "" {

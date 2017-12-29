@@ -21,6 +21,8 @@
 		044A0EE51FD1AF8C004164D0 /* FirebaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */; };
 		044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */; };
 		044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */; };
+		045D217C1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D217B1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift */; };
+		045D217E1FF5DE0400A5E0F6 /* ManageMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D217D1FF5DE0400A5E0F6 /* ManageMemberViewController.swift */; };
 		046203301FA39ACE00BDF8ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */; };
 		04695D491FD9FDE50063B5B7 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04695D481FD9FDE50063B5B7 /* PopupViewController.swift */; };
 		047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */; };
@@ -37,7 +39,6 @@
 		049E04D81FC6A40800705766 /* SettingsButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E04D71FC6A40800705766 /* SettingsButtonTableViewCell.swift */; };
 		04A1F3161FE6F1CA00E56771 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A1F3151FE6F1CA00E56771 /* User.swift */; };
 		04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B636321FC0DEB700113FE8 /* CustomTabBarController.swift */; };
-		04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */; };
 		04CDE8631FC0A74600F20EFB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */; };
 		04D325201F9E8EA700EC615D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D3251F1F9E8EA700EC615D /* AppDelegate.swift */; };
 		04D325251F9E8EA700EC615D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04D325231F9E8EA700EC615D /* Main.storyboard */; };
@@ -77,6 +78,8 @@
 		044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseHelper.swift; sourceTree = "<group>"; };
 		044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		045D217B1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageMembersTableViewCell.swift; sourceTree = "<group>"; };
+		045D217D1FF5DE0400A5E0F6 /* ManageMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageMemberViewController.swift; sourceTree = "<group>"; };
 		0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		04695D481FD9FDE50063B5B7 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnsweredPrayerTableViewCell.swift; sourceTree = "<group>"; };
@@ -93,7 +96,6 @@
 		049E04D71FC6A40800705766 /* SettingsButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButtonTableViewCell.swift; sourceTree = "<group>"; };
 		04A1F3151FE6F1CA00E56771 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		04B636321FC0DEB700113FE8 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
-		04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		04D3251C1F9E8EA700EC615D /* Prayer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Prayer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D3251F1F9E8EA700EC615D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				04EFA65E1FCB3058001C291D /* AddCircleMemberTableViewCell.swift */,
 				04E83A6E1FE9FC8600CC3628 /* CircleInvitationTableViewCell.swift */,
 				0473D38A1FECBA9A0074921D /* CirclePrayerTableViewCell.swift */,
+				045D217B1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift */,
 			);
 			path = CustomTableViewCells;
 			sourceTree = "<group>";
@@ -166,6 +169,7 @@
 				04F2255C1FC50337000549D5 /* SettingsDetailViewController.swift */,
 				04E17B991FDB6C8900396136 /* UpdateProfileViewController.swift */,
 				04695D481FD9FDE50063B5B7 /* PopupViewController.swift */,
+				045D217D1FF5DE0400A5E0F6 /* ManageMemberViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -192,7 +196,6 @@
 				04F0E4DE1FA1271E006D1244 /* UserDefaultsHelper.swift */,
 				04F0E4E01FA12762006D1244 /* LoadsStruct.swift */,
 				04FA1FF21FC4A77B00234033 /* ContactsController.swift */,
-				04C0E62E1FB0D5F200281C62 /* CoreDataHelper.swift */,
 				044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */,
 				04E83A701FEA0BD800CC3628 /* MembershipUser.swift */,
 				04410F171FCA2BC5002EC8F9 /* CircleUsers.swift */,
@@ -403,7 +406,6 @@
 				049E04D81FC6A40800705766 /* SettingsButtonTableViewCell.swift in Sources */,
 				0473D3871FEC7C360074921D /* Prayer.swift in Sources */,
 				04D325321F9EA88400EC615D /* MainViewController.swift in Sources */,
-				04C0E62F1FB0D5F200281C62 /* CoreDataHelper.swift in Sources */,
 				04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */,
 				0485B3501FD37DF200BC85F0 /* CustomUIAlertController.swift in Sources */,
 				04F2255D1FC50337000549D5 /* SettingsDetailViewController.swift in Sources */,
@@ -414,8 +416,10 @@
 				04EFA65F1FCB3058001C291D /* AddCircleMemberTableViewCell.swift in Sources */,
 				04695D491FD9FDE50063B5B7 /* PopupViewController.swift in Sources */,
 				044A0EE51FD1AF8C004164D0 /* FirebaseHelper.swift in Sources */,
+				045D217C1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift in Sources */,
 				041953121FD23D4A00186084 /* CellButton.swift in Sources */,
 				0416833F1FE0541900750A31 /* CurrentUserPrayer.swift in Sources */,
+				045D217E1FF5DE0400A5E0F6 /* ManageMemberViewController.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				04A1F3161FE6F1CA00E56771 /* User.swift in Sources */,
 				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,

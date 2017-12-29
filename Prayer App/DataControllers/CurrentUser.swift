@@ -33,7 +33,6 @@ class CurrentUser {
     static var currentUserCirclePrayers = [CirclePrayer]() {
         didSet {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "currentUserCirclePrayersUpdated"), object: nil, userInfo: nil)
-            print("currentUserCirclePrayers changed")
         }
     }
     
