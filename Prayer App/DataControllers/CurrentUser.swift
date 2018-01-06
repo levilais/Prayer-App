@@ -19,22 +19,21 @@ class CurrentUser {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil, userInfo: nil)
         }
     }
+    
     static var firebaseMembershipUsers = [MembershipUser]() {
         didSet {
             CurrentUser().updateMemberPrayers()
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil, userInfo: nil)
         }
     }
+    
     static var membershipCirclePrayers = [CirclePrayer]() {
         didSet {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil, userInfo: nil)
         }
     }
-    static var currentUserCirclePrayers = [CirclePrayer]() {
-        didSet {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "currentUserCirclePrayersUpdated"), object: nil, userInfo: nil)
-        }
-    }
+    
+    static var currentUserCirclePrayers = [CirclePrayer]()
     
     static var currentUser = User()
     
@@ -44,13 +43,21 @@ class CurrentUser {
                 if relationship == MembershipUser.currentUserMembershipStatus.member.rawValue {
                     if let membershipUserID = membershipUser.userID {
                         Database.database().reference().child("users").child(membershipUserID).child("circlePrayers").observe(.childAdded) { (snapshot) in
-                            if let userDictionary = snapshot.value as? NSDictionary {
-                                var whoAgreedDict = NSDictionary()
-                                if let whoAgreedDictCheck = snapshot.childSnapshot(forPath: "whoAgreed").value as? NSDictionary {
-                                    whoAgreedDict = whoAgreedDictCheck
-                                }
+                            
+                            for prayer in snapshot.children {
+                                let circlePrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: prayer as! DataSnapshot)
+//                                CurrentUser.currentUserCirclePrayers.append(circlePrayer)
+                            
+                            
+                            
+//                            if let userDictionary = snapshot.value as? NSDictionary {
+//                                var whoAgreedDict = NSDictionary()
+//                                if let whoAgreedDictCheck = snapshot.childSnapshot(forPath: "whoAgreed").value as? NSDictionary {
+//                                    whoAgreedDict = whoAgreedDictCheck
+//                                }
                                 
-                                let circlePrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: whoAgreedDict)
+                                
+//                                let circlePrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: whoAgreedDict)
                                 
                                 if CurrentUser.membershipCirclePrayers.count > 0 {
                                     var matchDetermined = false

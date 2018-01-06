@@ -966,12 +966,25 @@
                                     <constraint firstItem="zFD-g5-mrS" firstAttribute="leading" secondItem="EGJ-57-cAE" secondAttribute="leading" id="zNW-Ef-d8v"/>
                                 </constraints>
                             </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u7k-SY-8g6">
+                                <rect key="frame" x="122.5" y="479" width="75" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="75" id="Fyk-BP-6bd"/>
+                                    <constraint firstAttribute="height" constant="30" id="IRd-6E-Vqi"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="refreshButton"/>
+                                <connections>
+                                    <action selector="refreshButtonDidPress:" destination="OMC-xO-wJs" eventType="touchUpInside" id="ptq-TX-Qgk"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.92920595407485962" green="0.9334074854850769" blue="0.93326789140701294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="nj5-qD-2tq" firstAttribute="bottom" secondItem="u7k-SY-8g6" secondAttribute="bottom" constant="10" id="AQd-9Q-SKn"/>
                             <constraint firstItem="Haa-ha-WPG" firstAttribute="top" secondItem="Ra6-Wx-3Yj" secondAttribute="bottom" id="I6L-si-iIs"/>
                             <constraint firstItem="nj5-qD-2tq" firstAttribute="trailing" secondItem="Ra6-Wx-3Yj" secondAttribute="trailing" id="JxY-4Q-rJ5"/>
                             <constraint firstItem="Haa-ha-WPG" firstAttribute="leading" secondItem="nj5-qD-2tq" secondAttribute="leading" id="PuF-Bp-80U"/>
+                            <constraint firstItem="u7k-SY-8g6" firstAttribute="centerX" secondItem="EGJ-57-cAE" secondAttribute="centerX" id="UBH-Rs-1fU"/>
                             <constraint firstItem="EGJ-57-cAE" firstAttribute="top" secondItem="Ra6-Wx-3Yj" secondAttribute="bottom" id="XJB-Ki-xaH"/>
                             <constraint firstItem="nj5-qD-2tq" firstAttribute="bottom" secondItem="EGJ-57-cAE" secondAttribute="bottom" id="XKq-KI-MlV"/>
                             <constraint firstItem="nj5-qD-2tq" firstAttribute="trailing" secondItem="EGJ-57-cAE" secondAttribute="trailing" id="ahZ-cS-BFR"/>
@@ -993,6 +1006,7 @@
                         <outlet property="deleteFromCircleButton" destination="Ipc-Ag-wzA" id="CRH-2b-3HV"/>
                         <outlet property="explanationLabel" destination="RlZ-FP-bRk" id="gaR-fy-PBe"/>
                         <outlet property="headerView" destination="Ra6-Wx-3Yj" id="ScZ-4E-sMp"/>
+                        <outlet property="refreshButton" destination="u7k-SY-8g6" id="DQO-hR-m0c"/>
                         <outlet property="tableView" destination="Yqg-6i-RTq" id="UHl-Li-qP3"/>
                         <outlet property="timerHeaderButton" destination="mMl-wt-aC5" id="hDg-iO-CJr"/>
                         <outlet property="titleImage" destination="9HK-nk-lcW" id="GQ6-3B-EBa"/>
@@ -3604,6 +3618,7 @@
         <image name="leaveCircleButton" width="224" height="60"/>
         <image name="prayerTitle" width="372" height="60"/>
         <image name="profilImageDefault" width="160" height="160"/>
+        <image name="refreshButton" width="150" height="60"/>
         <image name="saveButton" width="108" height="60"/>
         <image name="saveIcon" width="52" height="58"/>
         <image name="sendAmenButton" width="52" height="56"/>
@@ -3617,8 +3632,8 @@
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5sI-7B-53b"/>
+        <segue reference="exo-XS-mFi"/>
         <segue reference="YWN-Vu-ZnR"/>
-        <segue reference="gPu-UL-IfP"/>
+        <segue reference="s97-uR-UlF"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -264,7 +264,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if let prayer = prayerAtIndexPath(indexPath: indexPath) {
             if let agreedCountCheck = prayer.agreedCount {
                 let newCount = agreedCountCheck + 1
-                FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount), ref: ref)
+                FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount))
             }
         }
     }

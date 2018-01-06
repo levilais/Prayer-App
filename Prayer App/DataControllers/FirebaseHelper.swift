@@ -564,12 +564,10 @@ class FirebaseHelper {
         }
     }
     
-    func deleteCirclePrayerFromFirebase(prayerID: String, ref: DatabaseReference) {
-        if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("circlePrayers").child(prayerID).removeValue { error, _ in
-                if let error = error {
-                    print("error \(error.localizedDescription)")
-                }
+    func deleteCirclePrayerFromFirebase(prayerID: String, userRef: DatabaseReference) {
+        userRef.child("circlePrayers").child(prayerID).removeValue { error, _ in
+            if let error = error {
+                print("error \(error.localizedDescription)")
             }
         }
     }
@@ -581,7 +579,9 @@ class FirebaseHelper {
         }
     }
     
-    func markCirlePrayerPrayedInFirebase(prayer: CirclePrayer, newAgreedCount: Int, ref: DatabaseReference) {
+    func markCirlePrayerPrayedInFirebase(prayer: CirclePrayer, newAgreedCount: Int) {
+        let ref = Database.database().reference()
+        
         if let userID = Auth.auth().currentUser?.uid {
             if let prayerOwnerID = prayer.prayerOwnerUserID {
                 if let prayerID = prayer.prayerID {
@@ -697,40 +697,41 @@ class FirebaseHelper {
         self.downloadAdditionalMembershipUserDataFromFirebase(membershipUser: user)
     }
     
-    func circlePrayerFromUserDictionary(userDictionary: NSDictionary, whoAgreedDict: NSDictionary) -> CirclePrayer {
-        let prayer = CirclePrayer()
-        if let firstNameCheck = userDictionary["firstName"] as? String {
-            prayer.firstName = firstNameCheck
-        }
-        if let lastNameCheck = userDictionary["lastName"] as? String {
-            prayer.lastName = lastNameCheck
-        }
-        if let prayerTextCheck = userDictionary["prayerText"] as? String {
-            prayer.prayerText = prayerTextCheck
-        }
-        if let prayerIDCheck = userDictionary["prayerID"] as? String {
-            prayer.prayerID = prayerIDCheck
-        }
-        if let lastPrayedCheck = userDictionary["lastPrayedDate"] as? Double {
-            prayer.lastPrayed = lastPrayedCheck
-        }
-        if let prayerCountCheck = userDictionary["agreedCount"] as? Int {
-            prayer.agreedCount = prayerCountCheck
-        }
-        if let isAnsweredCheck = userDictionary["isAnswered"] as? Bool {
-            prayer.isAnswered = isAnsweredCheck
-        }
-        if let howAnsweredCheck = userDictionary["howAnswered"] as? String {
-            prayer.howAnswered = howAnsweredCheck
-        }
-        if let prayerOwnerUserIDCheck = userDictionary["prayerOwnerUserID"] as? String {
-            prayer.prayerOwnerUserID = prayerOwnerUserIDCheck
-        }
-        
-        prayer.whoAgreed = whoAgreedDict.allKeys as? [String]
-        
-        return prayer
-    }
+//    func circlePrayerFromUserDictionary(userDictionary: NSDictionary, whoAgreedDict: NSDictionary) -> CirclePrayer {
+//        let prayer = CirclePrayer()
+//
+//        if let firstNameCheck = userDictionary["firstName"] as? String {
+//            prayer.firstName = firstNameCheck
+//        }
+//        if let lastNameCheck = userDictionary["lastName"] as? String {
+//            prayer.lastName = lastNameCheck
+//        }
+//        if let prayerTextCheck = userDictionary["prayerText"] as? String {
+//            prayer.prayerText = prayerTextCheck
+//        }
+//        if let prayerIDCheck = userDictionary["prayerID"] as? String {
+//            prayer.prayerID = prayerIDCheck
+//        }
+//        if let lastPrayedCheck = userDictionary["lastPrayedDate"] as? Double {
+//            prayer.lastPrayed = lastPrayedCheck
+//        }
+//        if let prayerCountCheck = userDictionary["agreedCount"] as? Int {
+//            prayer.agreedCount = prayerCountCheck
+//        }
+//        if let isAnsweredCheck = userDictionary["isAnswered"] as? Bool {
+//            prayer.isAnswered = isAnsweredCheck
+//        }
+//        if let howAnsweredCheck = userDictionary["howAnswered"] as? String {
+//            prayer.howAnswered = howAnsweredCheck
+//        }
+//        if let prayerOwnerUserIDCheck = userDictionary["prayerOwnerUserID"] as? String {
+//            prayer.prayerOwnerUserID = prayerOwnerUserIDCheck
+//        }
+//
+//        prayer.whoAgreed = whoAgreedDict.allKeys as? [String]
+//
+//        return prayer
+//    }
     
     func createPrayerCategories(prayers: [CurrentUserPrayer]) {
         var categories = [String]()

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0416833F1FE0541900750A31 /* CurrentUserPrayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */; };
 		041953121FD23D4A00186084 /* CellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041953111FD23D4A00186084 /* CellButton.swift */; };
 		041953141FD3387900186084 /* FirstLoadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041953131FD3387900186084 /* FirstLoadViewController.swift */; };
 		042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA7D1FAE26FB00545786 /* Prayer.xcdatamodeld */; };
@@ -28,7 +27,6 @@
 		047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */; };
 		0473D3851FEC79F60074921D /* To Do List in Resources */ = {isa = PBXBuildFile; fileRef = 0473D3841FEC79F60074921D /* To Do List */; };
 		0473D3871FEC7C360074921D /* Prayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0473D3861FEC7C360074921D /* Prayer.swift */; };
-		0473D3891FEC7C800074921D /* CirclePrayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0473D3881FEC7C800074921D /* CirclePrayer.swift */; };
 		0473D38B1FECBA9A0074921D /* CirclePrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0473D38A1FECBA9A0074921D /* CirclePrayerTableViewCell.swift */; };
 		0474DD6C1F9FE7B4008D79E3 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474DD6B1F9FE7B4008D79E3 /* Animations.swift */; };
 		0485B3501FD37DF200BC85F0 /* CustomUIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0485B34F1FD37DF200BC85F0 /* CustomUIAlertController.swift */; };
@@ -64,7 +62,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserPrayer.swift; sourceTree = "<group>"; };
 		041953111FD23D4A00186084 /* CellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellButton.swift; sourceTree = "<group>"; };
 		041953131FD3387900186084 /* FirstLoadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLoadViewController.swift; sourceTree = "<group>"; };
 		042FCA7E1FAE26FB00545786 /* Prayer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Prayer.xcdatamodel; sourceTree = "<group>"; };
@@ -85,7 +82,6 @@
 		047002461FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnsweredPrayerTableViewCell.swift; sourceTree = "<group>"; };
 		0473D3841FEC79F60074921D /* To Do List */ = {isa = PBXFileReference; lastKnownFileType = text; path = "To Do List"; sourceTree = "<group>"; };
 		0473D3861FEC7C360074921D /* Prayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prayer.swift; sourceTree = "<group>"; };
-		0473D3881FEC7C800074921D /* CirclePrayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclePrayer.swift; sourceTree = "<group>"; };
 		0473D38A1FECBA9A0074921D /* CirclePrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclePrayerTableViewCell.swift; sourceTree = "<group>"; };
 		0474DD6B1F9FE7B4008D79E3 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		0485B34F1FD37DF200BC85F0 /* CustomUIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIAlertController.swift; sourceTree = "<group>"; };
@@ -96,6 +92,7 @@
 		049E04D71FC6A40800705766 /* SettingsButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButtonTableViewCell.swift; sourceTree = "<group>"; };
 		04A1F3151FE6F1CA00E56771 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		04B636321FC0DEB700113FE8 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
+		04BF08831FFDB56900A25A27 /* Prayer App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Prayer App.entitlements"; sourceTree = "<group>"; };
 		04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		04D3251C1F9E8EA700EC615D /* Prayer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Prayer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D3251F1F9E8EA700EC615D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -201,8 +198,6 @@
 				04410F171FCA2BC5002EC8F9 /* CircleUsers.swift */,
 				04410F191FCA398F002EC8F9 /* CurrentUser.swift */,
 				04A1F3151FE6F1CA00E56771 /* User.swift */,
-				0473D3881FEC7C800074921D /* CirclePrayer.swift */,
-				0416833E1FE0541900750A31 /* CurrentUserPrayer.swift */,
 				0473D3861FEC7C360074921D /* Prayer.swift */,
 			);
 			path = DataControllers;
@@ -241,6 +236,7 @@
 		04D3251E1F9E8EA700EC615D /* Prayer App */ = {
 			isa = PBXGroup;
 			children = (
+				04BF08831FFDB56900A25A27 /* Prayer App.entitlements */,
 				049E04D41FC6A06200705766 /* Utilities */,
 				049E04D31FC69F4F00705766 /* DataControllers */,
 				049E04D21FC69F3600705766 /* CustomObjects */,
@@ -308,6 +304,11 @@
 					04D3251B1F9E8EA700EC615D = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -418,12 +419,10 @@
 				044A0EE51FD1AF8C004164D0 /* FirebaseHelper.swift in Sources */,
 				045D217C1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift in Sources */,
 				041953121FD23D4A00186084 /* CellButton.swift in Sources */,
-				0416833F1FE0541900750A31 /* CurrentUserPrayer.swift in Sources */,
 				045D217E1FF5DE0400A5E0F6 /* ManageMemberViewController.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				04A1F3161FE6F1CA00E56771 /* User.swift in Sources */,
 				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,
-				0473D3891FEC7C800074921D /* CirclePrayer.swift in Sources */,
 				04B636331FC0DEB700113FE8 /* CustomTabBarController.swift in Sources */,
 				04E83A6F1FE9FC8600CC3628 /* CircleInvitationTableViewCell.swift in Sources */,
 				043520B81FA943C900CFD0C1 /* TopicIdeasClass.swift in Sources */,
@@ -582,6 +581,7 @@
 			baseConfigurationReference = 497C3C3D4813551A753D0055 /* Pods-Prayer App.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Prayer App/Prayer App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZA86U458DA;
 				INFOPLIST_FILE = "Prayer App/Info.plist";
@@ -599,6 +599,7 @@
 			baseConfigurationReference = CC6DAC97C1A9ACDEB535AC01 /* Pods-Prayer App.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Prayer App/Prayer App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZA86U458DA;
 				INFOPLIST_FILE = "Prayer App/Info.plist";

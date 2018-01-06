@@ -34,14 +34,21 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var deleteFromCircleButton: UIButton!
     @IBOutlet weak var userLoggedInView: UIView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var refreshButton: UIButton!
     
     var circleSpotFilled = [false,false,false,false,false]
     var selectedCircleMember = 0
     var ref: DatabaseReference!
+    var userRef: DatabaseReference!
+    var indexPathForEdit: IndexPath?
+    var circlePrayers = [CirclePrayer]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ref = Database.database().reference()
+        if let userID = Auth.auth().currentUser?.uid {
+            userRef = Database.database().reference().child("users").child(userID)
+        }
+        setupObservers()
         for circleButton in circleProfileImageButtons {
             circleButton.addTarget(self, action: #selector(circleProfileButtonDidPress(sender:)), for: .touchUpInside)
         }
@@ -54,7 +61,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
          NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "currentUserCirclePrayersUpdated"), object: nil)
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         
@@ -62,8 +68,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             userNotLoggedInView.isHidden = true
             userLoggedInView.isHidden = false
             selectedCircleMember = 0
-            CurrentUser.currentUserCirclePrayers = []
-            setupObservers()
             setCircleData()
             toggleTableIsHidden()
         } else {
@@ -92,50 +96,256 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    func firstLoad(completed: @escaping (Bool) -> Void) {
+        userRef.child("circlePrayers").observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+            for prayerSnap in snapshot.children {
+                let newPrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: prayerSnap as! DataSnapshot)
+                CurrentUser.currentUserCirclePrayers.append(newPrayer)
+            }
+            self.reloadData()
+            completed(true)
+        })
+    }
+    
     func setupObservers() {
-        if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("circlePrayers").observe(.childAdded) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let prayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: NSDictionary())
-                    CurrentUser.currentUserCirclePrayers.append(prayer)
+        firstLoad { (success) in
+            self.userRef.child("circlePrayers").observe(.childAdded, with: { (snapshot) -> Void in
+                print("childAdded fired")
+                let newPrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: snapshot)
+                var matchExists = false
+                for prayer in CurrentUser.currentUserCirclePrayers {
+                    if let prayerKey = prayer.key {
+                        if let newPrayerKey = newPrayer.key {
+                            if prayerKey == newPrayerKey {
+                                matchExists = true
+                            }
+                        }
+                    }
                 }
-            }
+                
+                if matchExists == false {
+                    CurrentUser.currentUserCirclePrayers.append(newPrayer)
+                    self.showRefreshButton()
+                }
+            })
             
-            ref.child("users").child(userID).child("circlePrayers").observe(.childRemoved) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let snapshotPrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: NSDictionary())
+            self.userRef.child("circlePrayers").observe(.childRemoved, with: { (snapshot) -> Void in
+                print("childRemoved fired")
+                let removedPrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: snapshot)
+                if let removedPrayerKey = removedPrayer.key {
                     var i = 0
-                    for prayer in CurrentUser.currentUserCirclePrayers {
-                        if let prayerID = prayer.prayerID {
-                            if let snapshotPrayerID = snapshotPrayer.prayerID {
-                                if prayerID == snapshotPrayerID {
-                                    CurrentUser.currentUserCirclePrayers.remove(at: i)
+                    for circlePrayer in CurrentUser.currentUserCirclePrayers {
+                        if let key = circlePrayer.key {
+                            if removedPrayerKey == key {
+                                CurrentUser.currentUserCirclePrayers.remove(at: i)
+                            }
+                        }
+                        i += 1
+                    }
+                }
+                self.reloadData()
+            })
+            
+            self.userRef.child("circlePrayers").observe(.childChanged, with: { (snapshot) -> Void in
+                print("childChanged fired")
+                let changedPrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: snapshot)
+                if let changedPrayerKey = changedPrayer.key {
+                    var i = 0
+                    for circlePrayer in CurrentUser.currentUserCirclePrayers {
+                        if let key = circlePrayer.key {
+                            if changedPrayerKey == key {
+                                CurrentUser.currentUserCirclePrayers[i] = changedPrayer
+                            }
+                        }
+                        i += 1
+                    }
+                    
+                    i = 0
+                    for prayer in self.circlePrayers {
+                        if let prayerKey = prayer.key {
+                            if prayerKey == changedPrayerKey {
+                                self.circlePrayers[i] = changedPrayer
+                                let indexPath = IndexPath(row: i, section: 0)
+                                DispatchQueue.main.async {
+                                    UIView.performWithoutAnimation {
+                                        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                                    }
                                 }
                             }
                         }
                         i += 1
                     }
                 }
-            }
-            
-            ref.child("users").child(userID).child("circlePrayers").observe(.childChanged) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let snapshotPrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: NSDictionary())
-                    var i = 0
-                    for prayer in CurrentUser.currentUserCirclePrayers {
-                        if let prayerID = prayer.prayerID {
-                            if let snapshotPrayerID = snapshotPrayer.prayerID {
-                                if prayerID == snapshotPrayerID {
-                                    CurrentUser.currentUserCirclePrayers[i] = snapshotPrayer
-                                }
-                            }
-                        }
-                        i += 1
-                    }
-                }
+            })
+        }
+    }
+    
+    @IBAction func refreshButtonDidPress(_ sender: Any) {
+        self.reloadData()
+        tableView.scrollToRow(at: IndexPath(row: 0 ,section: 0), at: .top, animated: true)
+        hideRefreshButton()
+    }
+    
+    func showRefreshButton() {
+        refreshButton.isHidden = false
+    }
+    
+    func hideRefreshButton() {
+        refreshButton.isHidden = true
+    }
+    
+    
+    private var cellHeights: [IndexPath: CGFloat?] = [:]
+    var expandedIndexPaths: [IndexPath] = []
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cellHeights[indexPath] = cell.frame.height
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let height = cellHeights[indexPath] {
+            return height ?? UITableViewAutomaticDimension
+        }
+        return UITableViewAutomaticDimension
+    }
+
+    func expandCell(cell: UITableViewCell) {
+        if let indexPath = tableView.indexPath(for: cell) {
+            if !expandedIndexPaths.contains(indexPath) {
+                expandedIndexPaths.append(indexPath)
+                cellHeights[indexPath] = nil
+                tableView.reloadRows(at: [indexPath], with: .none)
             }
         }
     }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if (view is UITableViewHeaderFooterView) {
+            if let tableViewHeaderFooterView = view as? UITableViewHeaderFooterView {
+                tableViewHeaderFooterView.contentView.backgroundColor = UIColor.StyleFile.LightGrayColor
+                tableViewHeaderFooterView.textLabel?.font = UIFont.StyleFile.SectionHeaderFont
+                tableViewHeaderFooterView.textLabel?.textColor = UIColor.StyleFile.DarkGrayColor
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "My Circle Posts"
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return circlePrayers.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as! PrayerTableViewCell
+        
+        let prayer = circlePrayers[indexPath.row]
+        
+        if let prayerText = prayer.prayerText {
+            cell.prayerTextView.text = prayerText
+        }
+        
+        if let lastPrayedCheck = prayer.lastPrayed {
+            cell.prayedLastLabel.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedCheck))"
+        }
+        
+        if let agreedCountCheck = prayer.agreedCount {
+            cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: agreedCountCheck))"
+        }
+        print("returning cell #: \(indexPath.row)")
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .default, title: "Delete") { (action:UITableViewRowAction, indexPath:IndexPath) in
+            let prayer = self.circlePrayers[indexPath.row]
+            prayer.itemRef?.removeValue()
+        }
+        
+        delete.backgroundColor = UIColor.StyleFile.WineColor
+        return [delete]
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        var amenAction = UIContextualAction()
+        amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            self.markPrayed(indexPath: indexPath)
+            success(true)
+        })
+        amenAction.backgroundColor = UIColor.StyleFile.TealColor
+        return UISwipeActionsConfiguration(actions: [amenAction])
+    }
+    
+    func markPrayed(indexPath: IndexPath) {
+        let prayer = circlePrayers[indexPath.row]
+        if let agreedCountCheck = prayer.agreedCount {
+            let newCount = agreedCountCheck + 1
+            FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount))
+        }
+        indexPathForEdit = indexPath
+    }
+    
+    func loadData() {
+        // If all circle users are removed, remove CirlePrayers node from Firebase
+        if CurrentUser.firebaseCircleMembers.count == 0 && circlePrayers.count > 0 {
+            userRef.child("circlePrayers").removeValue { error, _ in
+                if let error = error {
+                    print("error \(error.localizedDescription)")
+                }
+            }
+        }
+        self.reloadData()
+    }
+    
+    func reloadData() {
+        circlePrayers = CurrentUser.currentUserCirclePrayers.reversed()
+        DispatchQueue.main.async {
+            UIView.performWithoutAnimation {
+                self.tableView.reloadData()
+                self.toggleTableIsHidden()
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // CIRCLE DATA AND LOGIN/SIGNUP DATA
     
     @objc func circleProfileButtonDidPress(sender: UIButton) {
         let tag = sender.tag
@@ -232,7 +442,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         toggleCircleMemberDetailContent(buttonTag: selectedCircleMember)
     }
-
+    
     
     @IBAction func deleteCircleMemberDidPress(_ sender: Any) {
         let alert = UIAlertController(title: "Are you sure", message: "Are you sure you want to remove this Circle Member", preferredStyle: .alert)
@@ -292,101 +502,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if (view is UITableViewHeaderFooterView) {
-            if let tableViewHeaderFooterView = view as? UITableViewHeaderFooterView {
-                tableViewHeaderFooterView.contentView.backgroundColor = UIColor.StyleFile.LightGrayColor
-                tableViewHeaderFooterView.textLabel?.font = UIFont.StyleFile.SectionHeaderFont
-                tableViewHeaderFooterView.textLabel?.textColor = UIColor.StyleFile.DarkGrayColor
-            }
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "My Circle Posts"
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return CurrentUser.currentUserCirclePrayers.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as! PrayerTableViewCell
-        let prayer = CurrentUser.currentUserCirclePrayers[indexPath.row]
-        
-        if let prayerText = prayer.prayerText {
-            cell.prayerTextView.text = prayerText
-        }
-        
-        if let lastPrayedCheck = prayer.lastPrayed {
-            cell.prayedLastLabel.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedCheck))"
-        }
-        
-        if let agreedCountCheck = prayer.agreedCount {
-            cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: agreedCountCheck))"
-        }
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .default, title: "Delete") { (action:UITableViewRowAction, indexPath:IndexPath) in
-            let prayer = CurrentUser.currentUserCirclePrayers[indexPath.row]
-            if let prayerID = prayer.prayerID {
-                FirebaseHelper().deleteCirclePrayerFromFirebase(prayerID: prayerID, ref: self.ref)
-            }
-        }
-        delete.backgroundColor = UIColor.StyleFile.WineColor
-        return [delete]
-    }
-    
-    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        var amenAction = UIContextualAction()
-        amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-            self.markPrayed(indexPath: indexPath)
-            success(true)
-        })
-        amenAction.backgroundColor = UIColor.StyleFile.TealColor
-        return UISwipeActionsConfiguration(actions: [amenAction])
-    }
-
-    
-    func markPrayed(indexPath: IndexPath) {
-        let prayer = CurrentUser.currentUserCirclePrayers[indexPath.row]
-        if let agreedCountCheck = prayer.agreedCount {
-            let newCount = agreedCountCheck + 1
-            FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount), ref: ref)
-        }
-    }
-    
-    func loadData() {
-        if CurrentUser.firebaseCircleMembers.count == 0 && CurrentUser.currentUserCirclePrayers.count > 0 {
-            // remove all circlePrayers
-            if let userID = Auth.auth().currentUser?.uid {
-                ref.child("users").child(userID).child("circlePrayers").removeValue { error, _ in
-                    if let error = error {
-                        print("error \(error.localizedDescription)")
-                    }
-                }
-            }
-        }
-        UIView.performWithoutAnimation {
-            self.tableView.reloadData()
-            self.toggleTableIsHidden()
-        }
-    }
-    
     @objc func handleNotification(_ notification: NSNotification) {
         TimerStruct().updateTimerButtonLabel(timerButton: timerHeaderButton)
     }
@@ -401,16 +516,9 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
 
-    @objc func handleNotification4(_ notification: NSNotification) {
-        loadData()
-    }
-
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "currentUserCirclePrayersUpdated"), object: nil)
-        CurrentUser.currentUserCirclePrayers = []
-        loadData()
     }
 }

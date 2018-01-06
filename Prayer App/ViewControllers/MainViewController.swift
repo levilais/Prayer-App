@@ -557,7 +557,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             }
             
             if actualMembers.count > 0 {
-                print("firebase circle member count: \(CurrentUser.firebaseCircleMembers.count)")
                 if textField.text != "" {
                     for imageView in postToPrayerCircleMembers {
                         imageView.layer.cornerRadius = imageView.frame.height / 2
