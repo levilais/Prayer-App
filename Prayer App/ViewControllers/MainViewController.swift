@@ -71,7 +71,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     // Data Variables
     var managedObjectContext: NSManagedObjectContext?
-    var ref: DatabaseReference!
+//    var ref: DatabaseReference!
+    var userRef: DatabaseReference!
     
     // Gestures
     var tapGesture = UITapGestureRecognizer()
@@ -85,7 +86,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ref = Database.database().reference()
+        if let userID = Auth.auth().currentUser?.uid {
+            userRef = Database.database().reference().child("users").child(userID)
+        }
 
         textField.delegate = self
         touchToPrayButton.setTitleColor(UIColor.lightGray, for: .normal)
@@ -274,11 +277,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @IBAction func shareToPrayerCircleButtonDidPress(_ sender: Any) {
-        let prayer = CirclePrayer()
-        if let text = textField.text {
-            prayer.prayerText = text.trimmingCharacters(in: .whitespaces)
+        if let prayerText = textField.text {
+            CirclePrayer().saveNewCirclePrayer(prayerText: prayerText.trimmingCharacters(in: .whitespaces), userRef: userRef)
         }
-        FirebaseHelper().saveNewCirclePrayerToFirebase(prayer: prayer, ref: ref)
         dismissShareToPrayerCirclePopup()
         Animations().showPopup(labelText: "Shared!", presentingVC: self)
     }
@@ -295,18 +296,16 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     func getSectionHeaders() {
-        if let userID = Auth.auth().currentUser?.uid {
-            Database.database().reference().child("users").child(userID).child("prayers").observe(.childAdded) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let snapshotPrayer = FirebaseHelper().prayerFromDictionary(userDictionary: userDictionary)
-                    if let category = snapshotPrayer.prayerCategory {
-                        if !self.categoryTitles.contains(category) {
-                            self.categoryTitles.append(category)
-                        }
+        userRef.child("prayers").observeSingleEvent(of: .value, with: { (snapshot) in
+            for prayerSnap in snapshot.children {
+                let newPrayer = CurrentUserPrayer().currentUserPrayerFromSnapshot(snapshot: prayerSnap as! DataSnapshot)
+                if let newPrayerCategory = newPrayer.prayerCategory {
+                    if !self.categoryTitles.contains(newPrayerCategory) {
+                        self.categoryTitles.append(newPrayerCategory)
                     }
                 }
             }
-        }
+        })
     }
     
     func createCategoryButtons() {
@@ -529,8 +528,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     func savePrayer(prayerText: UITextView, prayerHeader: UITextField) {
         setCategoryIfFromText(prayerHeader: prayerHeader)
-        let prayerID = NSUUID().uuidString
-        FirebaseHelper().saveNewPrayerToFirebase(prayerText: prayerText.text, prayerCategory: chosenCategory, prayerID: prayerID, ref: ref)
+        CurrentUserPrayer().saveNewPrayer(prayerText: prayerText.text, prayerCategory: chosenCategory, userRef: userRef)
         getSectionHeaders()
     }
     

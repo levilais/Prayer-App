@@ -22,6 +22,7 @@ class PrayerTableViewCell: UITableViewCell {
         let textColor = UIColor.StyleFile.DarkGrayColor
         self.prayerTextView.textColor = textColor
         self.backgroundColor = .clear
+        self.selectionStyle = .none
     }
     
     override func prepareForReuse() {

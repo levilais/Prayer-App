@@ -3377,6 +3377,17 @@
                                     <outlet property="delegate" destination="cQs-b5-hFa" id="7UR-Og-dpz"/>
                                 </connections>
                             </tableView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OKC-fn-qaA">
+                                <rect key="frame" x="122" y="479" width="75" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="6pj-13-OCp"/>
+                                    <constraint firstAttribute="width" constant="75" id="dAJ-EI-lw8"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="refreshButton"/>
+                                <connections>
+                                    <action selector="refreshButtonDidPress:" destination="cQs-b5-hFa" eventType="touchUpInside" id="Ity-xe-X5D"/>
+                                </connections>
+                            </button>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vgB-m7-QmO">
                                 <rect key="frame" x="0.0" y="-50" width="320" height="619"/>
                                 <subviews>
@@ -3555,6 +3566,7 @@
                             <constraint firstItem="IDy-NI-5UP" firstAttribute="bottom" secondItem="Oeg-2O-sPk" secondAttribute="bottom" id="A8V-Yv-aZX"/>
                             <constraint firstItem="pQ6-x9-G1q" firstAttribute="bottom" secondItem="IDy-NI-5UP" secondAttribute="bottom" id="EhF-wS-c9u"/>
                             <constraint firstItem="jie-h7-wBL" firstAttribute="top" secondItem="nws-Sc-CqS" secondAttribute="bottom" id="F52-kn-0Go"/>
+                            <constraint firstItem="OKC-fn-qaA" firstAttribute="centerX" secondItem="IDy-NI-5UP" secondAttribute="centerX" id="G4g-tn-J8r"/>
                             <constraint firstItem="vgB-m7-QmO" firstAttribute="bottom" secondItem="IDy-NI-5UP" secondAttribute="bottom" constant="50" id="GGj-7D-4sT"/>
                             <constraint firstItem="IDy-NI-5UP" firstAttribute="trailing" secondItem="jie-h7-wBL" secondAttribute="trailing" id="JpC-KP-knb"/>
                             <constraint firstItem="9lv-ZQ-rF1" firstAttribute="centerX" secondItem="mRG-1O-TRJ" secondAttribute="centerX" id="Jpy-UE-wn5"/>
@@ -3563,6 +3575,7 @@
                             <constraint firstItem="IDy-NI-5UP" firstAttribute="trailing" secondItem="vgB-m7-QmO" secondAttribute="trailing" id="SAH-Zn-gFG"/>
                             <constraint firstItem="pQ6-x9-G1q" firstAttribute="leading" secondItem="IDy-NI-5UP" secondAttribute="leading" id="SiU-1Y-yz2"/>
                             <constraint firstItem="pQ6-x9-G1q" firstAttribute="trailing" secondItem="IDy-NI-5UP" secondAttribute="trailing" id="Z6A-E8-AwY"/>
+                            <constraint firstItem="IDy-NI-5UP" firstAttribute="bottom" secondItem="OKC-fn-qaA" secondAttribute="bottom" constant="10" id="gBp-94-8lh"/>
                             <constraint firstItem="Oeg-2O-sPk" firstAttribute="top" secondItem="nws-Sc-CqS" secondAttribute="bottom" id="jeP-X4-Hdr"/>
                             <constraint firstItem="vgB-m7-QmO" firstAttribute="leading" secondItem="IDy-NI-5UP" secondAttribute="leading" id="k9P-0m-qgW"/>
                             <constraint firstItem="IDy-NI-5UP" firstAttribute="trailing" secondItem="Oeg-2O-sPk" secondAttribute="trailing" id="o8M-NT-pwa"/>
@@ -3584,6 +3597,7 @@
                         <outlet property="markAnsweredTextView" destination="gDc-bh-zeK" id="iMi-dc-VyG"/>
                         <outlet property="messageLabel" destination="9lv-ZQ-rF1" id="p4g-JH-sm9"/>
                         <outlet property="notLoggedInView" destination="Oeg-2O-sPk" id="JAm-ZI-VSE"/>
+                        <outlet property="refreshButton" destination="OKC-fn-qaA" id="Ynk-mF-1g3"/>
                         <outlet property="tableView" destination="pQ6-x9-G1q" id="wN1-Ga-H9E"/>
                         <outlet property="tableViewBottomConstraint" destination="EhF-wS-c9u" id="gdn-VC-vqu"/>
                         <outlet property="timerHeaderButton" destination="I1X-Wi-TpH" id="i5Y-Da-cmV"/>
@@ -3634,6 +3648,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="exo-XS-mFi"/>
         <segue reference="YWN-Vu-ZnR"/>
-        <segue reference="s97-uR-UlF"/>
+        <segue reference="7If-Zn-bA6"/>
     </inferredMetricsTieBreakers>
 </document>

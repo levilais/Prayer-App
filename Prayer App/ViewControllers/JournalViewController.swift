@@ -14,12 +14,8 @@ import FirebaseDatabase
 class JournalViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     
     var preSortedPrayers = [CurrentUserPrayer]()
-    var answeredPrayers = [CurrentUserPrayer]()
-    var activePrayers = [CurrentUserPrayer]()
-    var prayers = [CurrentUserPrayer]()
-    var sectionHeaders = [String]()
-    
-    var prayersSortedByCategory = [String:[CurrentUserPrayer]]()
+    var sortedPrayers = [String:[CurrentUserPrayer]]()
+    var viewIsVisible = false
     var viewAlreadyAppeared = false
     
     // HEADER VIEW
@@ -51,11 +47,16 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     var indexPathToMarkAnswered: IndexPath = IndexPath()
     
     // DATA HANDLING
-    var ref: DatabaseReference!
+    var userRef: DatabaseReference!
+    @IBOutlet weak var refreshButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ref = Database.database().reference()
+        
+        if let userID = Auth.auth().currentUser?.uid {
+            userRef = Database.database().reference().child("users").child(userID)
+        }
+        setupObservers()
 
         markAnsweredTextView.layer.borderColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0).cgColor
         markAnsweredTextView.layer.borderWidth = 1.0
@@ -69,14 +70,9 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.estimatedRowHeight = 40
         tableView.rowHeight = UITableViewAutomaticDimension
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
-        
+        viewIsVisible = true
         if Auth.auth().currentUser != nil {
             notLoggedInView.isHidden = true
-            preSortedPrayers = []
-            setupObservers()
-            
-            showActive()
-            updateView()
             viewAlreadyAppeared = true
         } else {
             notLoggedInView.isHidden = false
@@ -87,120 +83,109 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.setContentOffset(.zero, animated: true)
     }
     
+    func firstLoad(completed: @escaping (Bool) -> Void) {
+        userRef.child("prayers").observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+            for prayerSnap in snapshot.children {
+                let newPrayer = CurrentUserPrayer().currentUserPrayerFromSnapshot(snapshot: prayerSnap as! DataSnapshot)
+                
+                CurrentUser.currentUserPrayers.append(newPrayer)
+            }
+            self.reloadPrayers()
+            completed(true)
+        })
+    }
+    
     func setupObservers() {
-        if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("prayers").observe(.childAdded) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let prayer = FirebaseHelper().prayerFromDictionary(userDictionary: userDictionary)
-                    self.preSortedPrayers.append(prayer)
+        firstLoad { (success) in
+            self.userRef.child("prayers").observe(.childAdded, with: { (snapshot) -> Void in
+                let newPrayer = CurrentUserPrayer().currentUserPrayerFromSnapshot(snapshot: snapshot)
+                var matchExists = false
+                for prayer in CurrentUser.currentUserPrayers {
+                    if let prayerKey = prayer.key {
+                        if let newPrayerKey = newPrayer.key {
+                            if prayerKey == newPrayerKey {
+                                matchExists = true
+                            }
+                        }
+                    }
                 }
-                self.reloadPrayerData()
-            }
-            
-            ref.child("users").child(userID).child("prayers").observe(.childRemoved) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let snapshotPrayer = FirebaseHelper().prayerFromDictionary(userDictionary: userDictionary)
+
+                if matchExists == false {
+                    CurrentUser.currentUserPrayers.append(newPrayer)
+                    if self.viewIsVisible {
+                        self.showRefreshButton()
+                    } else {
+                        self.reloadPrayers()
+                        self.tableView.scrollsToTop = true
+                    }
+                }
+            })
+
+            self.userRef.child("prayers").observe(.childRemoved, with: { (snapshot) -> Void in
+                let removedPrayer = CurrentUserPrayer().currentUserPrayerFromSnapshot(snapshot: snapshot)
+                if let removedPrayerKey = removedPrayer.key {
                     var i = 0
-                    for prayer in self.preSortedPrayers {
-                        if let prayerID = prayer.prayerID {
-                            if let snapshotPrayerID = snapshotPrayer.prayerID {
-                                if prayerID == snapshotPrayerID {
-                                    self.preSortedPrayers.remove(at: i)
+                    for prayer in CurrentUser.currentUserPrayers {
+                        if let key = prayer.key {
+                            if removedPrayerKey == key {
+                                CurrentUser.currentUserPrayers.remove(at: i)
+                            }
+                        }
+                        i += 1
+                    }
+                }
+                self.reloadPrayers()
+            })
+            
+            self.userRef.child("prayers").observe(.childChanged, with: { (snapshot) -> Void in
+                let changedPrayer = CurrentUserPrayer().currentUserPrayerFromSnapshot(snapshot: snapshot)
+                if let changedPrayerKey = changedPrayer.key {
+                    var i = 0
+                    for prayer in CurrentUser.currentUserPrayers {
+                        if let key = prayer.key {
+                            if changedPrayerKey == key {
+                                CurrentUser.currentUserPrayers[i] = changedPrayer
+                                if let changedPrayerIsAnswered = changedPrayer.isAnswered {
+                                    if let prayerIsAnswered = prayer.isAnswered {
+                                        if prayerIsAnswered == false && changedPrayerIsAnswered == true {
+                                            print("is new answer, reload called")
+                                            self.reloadPrayers()
+                                        } else {
+                                            print("not new answer, refresh called")
+                                            i = 0
+                                            for preSortedPrayer in self.preSortedPrayers {
+                                                if let prayerKey = preSortedPrayer.key {
+                                                    if prayerKey == changedPrayerKey {
+                                                        self.preSortedPrayers[i] = changedPrayer
+                                                        self.refreshPrayers()
+                                                    }
+                                                }
+                                                i += 1
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                         i += 1
                     }
-                    self.reloadPrayerData()
                 }
-            }
-            
-            ref.child("users").child(userID).child("prayers").observe(.childChanged) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let snapshotPrayer = FirebaseHelper().prayerFromDictionary(userDictionary: userDictionary)
-                    var i = 0
-                    for prayer in self.preSortedPrayers {
-                        if let prayerID = prayer.prayerID {
-                            if let snapshotPrayerID = snapshotPrayer.prayerID {
-                                if prayerID == snapshotPrayerID {
-                                    self.preSortedPrayers[i] = snapshotPrayer
-                                }
-                            }
-                        }
-                        i += 1
-                    }
-                }
-                self.reloadPrayerData()
-            }
-            
+            })
         }
     }
     
-    func reloadPrayerData() {
-        answeredPrayers = []
-        activePrayers = []
-        prayers = []
-        sectionHeaders = []
-        prayersSortedByCategory = [:]
-        
-        for prayer in preSortedPrayers {
-            if let prayerIsAnswered = prayer.isAnswered {
-                if !prayerIsAnswered {
-                    activePrayers.append(prayer)
-                } else {
-                    answeredPrayers.append(prayer)
-                }
-            }
-        }
-        
-        if answeredShowing == true {
-            prayers = answeredPrayers
-        } else {
-            prayers = activePrayers
-        }
-        
-        var prayerArray = [CurrentUserPrayer]()
-        for prayer in prayers {
-            if let category = prayer.prayerCategory {
-                if !sectionHeaders.contains(category) {
-                    prayerArray = []
-                    sectionHeaders.append(category)
-                    prayerArray.append(prayer)
-                    prayersSortedByCategory[category] = prayerArray
-                } else {
-                    prayerArray.append(prayer)
-                    prayersSortedByCategory[category] = prayerArray
-                }
-            }
-        }
-        updateView()
+    @IBAction func refreshButtonDidPress(_ sender: Any) {
+        reloadPrayers()
+        tableView.scrollsToTop = true
+        hideRefreshButton()
+    }
+
+    func showRefreshButton() {
+        refreshButton.isHidden = false
     }
     
-    func updateView() {
-        if !answeredShowing {
-            if activePrayers.count > 0 {
-                tableView.isHidden = false
-                messageLabel.isHidden = true
-            } else {
-                messageLabel.text = "There are no saved active prayers"
-                tableView.isHidden = true
-                messageLabel.isHidden = false
-            }
-        } else {
-            if answeredPrayers.count > 0 {
-                tableView.isHidden = false
-                messageLabel.isHidden = true
-            } else {
-                messageLabel.text = "There are no saved answered prayers"
-                tableView.isHidden = true
-                messageLabel.isHidden = false
-            }
-        }
-        if viewAlreadyAppeared == true {
-            UIView.performWithoutAnimation {
-                self.tableView.reloadData()
-            }
-        }
+    func hideRefreshButton() {
+        refreshButton.isHidden = true
     }
     
     @IBAction func activeButtonDidPress(_ sender: Any) {
@@ -224,7 +209,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         activeButton.titleLabel?.font = UIFont.StyleFile.ToggleInactiveFont
         toggleButton.setBackgroundImage(UIImage(named: "tableToggleRightSelected.pdf"), for: .normal)
         answeredShowing = true
-        reloadPrayerData()
+        reloadPrayers()
     }
     
     func showActive() {
@@ -232,8 +217,64 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         activeButton.titleLabel?.font = UIFont.StyleFile.ToggleActiveFont
         toggleButton.setBackgroundImage(UIImage(named: "tableToggleLeftSelected.pdf"), for: .normal)
         answeredShowing = false
-        if viewAlreadyAppeared == true {
-            reloadPrayerData()
+        reloadPrayers()
+    }
+    
+    func reloadPrayers() {
+        preSortedPrayers = []
+        for prayer in CurrentUser.currentUserPrayers {
+            if let isAnswered = prayer.isAnswered {
+                if answeredShowing {
+                    if isAnswered {
+                        self.preSortedPrayers.append(prayer)
+                    }
+                } else {
+                    if !isAnswered {
+                        self.preSortedPrayers.append(prayer)
+                    }
+                }
+            }
+        }
+        refreshPrayers()
+    }
+    
+    func refreshPrayers() {
+        sortedPrayers = [:]
+        if self.preSortedPrayers.count > 0 {
+            for prayer in self.preSortedPrayers.reversed() {
+                if let prayerCategory = prayer.prayerCategory {
+                    if self.sortedPrayers.keys.contains(prayerCategory) {
+                        if var prayerArray = sortedPrayers[prayerCategory] {
+                            prayerArray.append(prayer)
+                            sortedPrayers[prayerCategory] = prayerArray
+                        }
+                    } else {
+                        let newArray = [prayer]
+                        sortedPrayers[prayerCategory] = newArray
+                    }
+                }
+            }
+        }
+        DispatchQueue.main.async {
+            UIView.performWithoutAnimation {
+                self.tableView.reloadData()
+                self.toggleTableIsHidden()
+            }
+        }
+    }
+    
+    func toggleTableIsHidden() {
+        if preSortedPrayers.count > 0 {
+            tableView.isHidden = false
+            messageLabel.isHidden = true
+        } else {
+            tableView.isHidden = true
+            messageLabel.isHidden = false
+            if !answeredShowing {
+                messageLabel.text = "There are no saved active prayers"
+            } else {
+                messageLabel.text = "There are no saved answered prayers"
+            }
         }
     }
     
@@ -282,14 +323,14 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    
     // TABLE VIEW DATA SOURCE
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionHeaders[section]
+        let sectionKey = Array(sortedPrayers.keys)[section] as String
+        return sectionKey
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -307,22 +348,16 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionHeaders.count
+        return sortedPrayers.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var rows = Int()
-        
-        let sections = sectionHeaders.count
-        for sectionIndexed in 0...sections {
-            if sectionIndexed == section {
-                let category = sectionHeaders[section]
-                if let prayerArray = prayersSortedByCategory[category] {
-                    rows = prayerArray.count
-                }
-            }
+        let prayerCategory = Array(sortedPrayers.keys)[section] as String
+        if let sectionArray = sortedPrayers[prayerCategory] {
+            return sectionArray.count
+        } else {
+            return 0
         }
-        return rows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -330,6 +365,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as? PrayerTableViewCell else {
                 fatalError("Unexpected Index Path")
             }
+            
             configureUnanswered(cell, at: indexPath)
             return cell
         } else {
@@ -344,19 +380,19 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     func configureUnanswered(_ cell: PrayerTableViewCell, at indexPath: IndexPath) {
         let prayer = prayerAtIndexPath(indexPath: indexPath)
         
-        cell.prayerTextView.text = prayer.prayerText
+        if let prayerText = prayer.prayerText {
+            cell.prayerTextView.text = prayerText
+        }
         
         if !answeredShowing {
             cell.prayedLastLabel = FirebaseHelper().daysSinceTimeStampLabel(cellLabel: cell.prayedLastLabel, prayer: prayer, cell: cell)
         }
-        
+    
         var prayerCount = Int()
         if let prayerCountCheck = prayer.prayerCount {
             prayerCount = prayerCountCheck
         }
-        
         cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: prayerCount))"
-        cell.selectionStyle = .none
     }
     
     func configureAnswered(_ cell: AnsweredPrayerTableViewCell, at indexPath: IndexPath) {
@@ -373,24 +409,13 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         if let prayerCountCheck = prayer.prayerCount {
             prayerCount = prayerCountCheck
         }
-        var timeVsTimesString = ""
-        if prayerCount == 1 {
-            timeVsTimesString = "time"
-        } else {
-            timeVsTimesString = "times"
-        }
-        cell.prayerCountLabel.text = "Prayed \(prayerCount) \(timeVsTimesString)"
-        
-        cell.selectionStyle = .none
+        cell.prayerCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: prayerCount))"
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .default, title: "Delete") { (action:UITableViewRowAction, indexPath:IndexPath) in
             let prayer = self.prayerAtIndexPath(indexPath: indexPath)
-            
-            if let prayerID = prayer.prayerID {
-                FirebaseHelper().deletePrayerFromFirebase(prayerID: prayerID, ref: self.ref)
-            }
+            prayer.itemRef?.removeValue()
         }
         delete.backgroundColor = UIColor.StyleFile.WineColor
         
@@ -421,33 +446,26 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func markPrayed(indexPath: IndexPath) {
         let prayer = prayerAtIndexPath(indexPath: indexPath)
-        let newCount = prayer.prayerCount! + 1
-        if let prayerID = prayer.prayerID {
-            FirebaseHelper().markPrayedInFirebase(prayerID: prayerID, newPrayerCount: Int(newCount), ref: ref)
-        }
+        CurrentUserPrayer().markPrayerPrayed(prayer: prayer)
     }
     
     func markAnswered() {
         let prayer = prayerAtIndexPath(indexPath: indexPathToMarkAnswered)
-        var howAnswered = String()
         if let answeredPrayer = markAnsweredTextView.text {
             var trimmedText = answeredPrayer.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmedText == "" {
                 trimmedText = "Undisclosed"
             }
-            howAnswered = trimmedText
+            let howAnswered = trimmedText
+            CurrentUserPrayer().markPrayerAnswered(prayer: prayer, howAnswered: howAnswered)
         }
-        if let prayerID = prayer.prayerID {
-            FirebaseHelper().markAnsweredInFirebase(prayerID: prayerID, howAnswered: howAnswered, isAnswered: true, ref: ref)
-        }
-        tableView.reloadData()
     }
     
     func prayerAtIndexPath(indexPath: IndexPath) -> CurrentUserPrayer {
         var prayer = CurrentUserPrayer()
-        let category = sectionHeaders[indexPath.section]
-        if let categoryPrayerArray = prayersSortedByCategory[category] {
-            prayer = categoryPrayerArray[indexPath.row]
+        let prayerCategory = Array(sortedPrayers.keys)[indexPath.section] as String
+        if let arrayOfPrayersInSection = sortedPrayers[prayerCategory] {
+            prayer = arrayOfPrayersInSection[indexPath.row]
         }
         return prayer
     }
@@ -463,5 +481,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
+        viewIsVisible = false
     }
 }

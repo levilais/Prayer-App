@@ -36,6 +36,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var refreshButton: UIButton!
     
+    var viewIsVisible = false
     var circleSpotFilled = [false,false,false,false,false]
     var selectedCircleMember = 0
     var ref: DatabaseReference!
@@ -57,6 +58,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        viewIsVisible = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
@@ -123,9 +125,14 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 }
                 
-                if matchExists == false {
+                if !matchExists {
                     CurrentUser.currentUserCirclePrayers.append(newPrayer)
-                    self.showRefreshButton()
+                    if self.viewIsVisible {
+                        self.showRefreshButton()
+                    } else {
+                        self.reloadData()
+                        self.tableView.scrollsToTop = true
+                    }
                 }
             })
             
@@ -182,7 +189,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBAction func refreshButtonDidPress(_ sender: Any) {
         self.reloadData()
-        tableView.scrollToRow(at: IndexPath(row: 0 ,section: 0), at: .top, animated: true)
+        tableView.scrollsToTop = true
         hideRefreshButton()
     }
     
@@ -320,33 +327,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     // CIRCLE DATA AND LOGIN/SIGNUP DATA
-    
     @objc func circleProfileButtonDidPress(sender: UIButton) {
         let tag = sender.tag
         if circleSpotFilled[tag] {
@@ -520,5 +501,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil)
+        viewIsVisible = false
     }
 }

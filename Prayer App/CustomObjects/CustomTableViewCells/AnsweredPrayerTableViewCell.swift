@@ -21,7 +21,7 @@ class AnsweredPrayerTableViewCell: UITableViewCell {
         let textColor = UIColor.StyleFile.DarkGrayColor
         self.prayerLabel.textColor = textColor
         self.howAnsweredLabel.textColor = textColor
-        
+        self.selectionStyle = .none
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

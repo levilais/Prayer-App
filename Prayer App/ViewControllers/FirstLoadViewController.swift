@@ -34,8 +34,6 @@ class FirstLoadViewController: UIViewController {
     
     @IBAction func maybeLaterDidPress(_ sender: Any) {
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-
-//        self.dismiss(animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

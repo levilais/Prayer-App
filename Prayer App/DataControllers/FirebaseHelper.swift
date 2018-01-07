@@ -41,9 +41,9 @@ class FirebaseHelper {
     }
     
     func loadFirebaseData() {
-        let ref = Database.database().reference()
         if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("circleUsers").observe(.childAdded, with: { snapshot in
+            let userRef = Database.database().reference().child("users").child(userID)
+            userRef.child("circleUsers").observe(.childAdded, with: { snapshot in
                 if snapshot.value != nil {
                     if let userDictionary = snapshot.value as? NSDictionary {
                         if let uid = userDictionary["userUID"] as? String {
@@ -100,7 +100,7 @@ class FirebaseHelper {
                 }
             })
             
-            ref.child("users").child(userID).observe(.value) { (snapshot) in
+            userRef.observe(.value) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let user = User()
 
@@ -121,12 +121,12 @@ class FirebaseHelper {
                 }
             }
             
-            ref.child("users").child(userID).child("memberships").observe(.childAdded) { (snapshot) in
+            userRef.child("memberships").observe(.childAdded) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     FirebaseHelper().addNewConnectionToCurrentUserMemberships(userDictionary: userDictionary)
                 }
             }
-            ref.child("users").child(userID).child("memberships").observe(.childChanged) { (snapshot) in
+            userRef.child("memberships").observe(.childChanged) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
                     var i = 0
@@ -143,7 +143,7 @@ class FirebaseHelper {
                 }
                 // reload data here if not repsonding automatically to change in static var
             }
-            ref.child("users").child(userID).child("memberships").observe(.childRemoved) { (snapshot) in
+            userRef.child("memberships").observe(.childRemoved) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
                     var i = 0
@@ -481,18 +481,13 @@ class FirebaseHelper {
     }
     
     func daysSinceTimeStampLabel(cellLabel: UILabel, prayer: CurrentUserPrayer, cell: PrayerTableViewCell) -> UILabel {
-        if let prayerID = prayer.prayerID {
-            if Auth.auth().currentUser != nil {
-                if let userID = Auth.auth().currentUser?.uid {
-                    Database.database().reference().child("users").child(userID).child("prayers").child(prayerID).observe(.value) { (snapshot) in
-                        if let userDictionary = snapshot.value as? NSDictionary {
-                            if let timeStampAsDouble = userDictionary["lastPrayedDate"] as? Double {
-                                let lastPrayedString = Utilities().dayDifference(timeStampAsDouble: timeStampAsDouble)
-                                cellLabel.text = "Last prayed \(lastPrayedString)"
-                                PrayerTableViewCell().updateCellToShowIfRecentlyPrayed(cell: cell, lastPrayedString: lastPrayedString)
-                            }
-                        }
-                    }
+        if let prayerItemRef = prayer.itemRef {
+            prayerItemRef.observe(.value) { (snapshot) in
+                let prayer = CurrentUserPrayer().currentUserPrayerFromSnapshot(snapshot: snapshot)
+                if let timeStampAsDouble = prayer.lastPrayed {
+                    let lastPrayedString = Utilities().dayDifference(timeStampAsDouble: timeStampAsDouble)
+                    cellLabel.text = "Last prayed \(lastPrayedString)"
+                    PrayerTableViewCell().updateCellToShowIfRecentlyPrayed(cell: cell, lastPrayedString: lastPrayedString)
                 }
             }
         }
@@ -500,97 +495,30 @@ class FirebaseHelper {
     }
     
     func dateAnsweredLabel(cellLabel: UILabel, prayer: CurrentUserPrayer) -> UILabel {
-        if let prayerID = prayer.prayerID {
-            if Auth.auth().currentUser != nil {
-                if let userID = Auth.auth().currentUser?.uid {
-                    Database.database().reference().child("users").child(userID).child("prayers").child(prayerID).observe(.value) { (snapshot) in
-                        if let userDictionary = snapshot.value as? NSDictionary {
-                            if let timeStampAsDouble = userDictionary["lastPrayedDate"] as? Double {
-                                let dayAnsweredString = Utilities().dateFromDouble(timeStampAsDouble: timeStampAsDouble)
-                                cellLabel.text = "Answered on \(dayAnsweredString)"
-                            }
-                        }
-                    }
+        if let itemRef = prayer.itemRef {
+            itemRef.observe(.value) { (snapshot) in
+                let prayer = CurrentUserPrayer().currentUserPrayerFromSnapshot(snapshot: snapshot)
+                if let timeStampAsDouble = prayer.lastPrayed {
+                    let dayAnsweredString = Utilities().dateFromDouble(timeStampAsDouble: timeStampAsDouble)
+                    cellLabel.text = "Answered on \(dayAnsweredString)"
                 }
             }
         }
         return cellLabel
     }
     
-    func saveNewCirclePrayerToFirebase(prayer: CirclePrayer, ref: DatabaseReference) {
-        if let userID = Auth.auth().currentUser?.uid {
-            let prayerID = NSUUID().uuidString
-                postCirclePrayer(userID: userID, prayerID: prayerID, prayer: prayer, ref: ref)
-        }
-    }
-    
-    func postCirclePrayer(userID: String, prayerID: String, prayer: CirclePrayer, ref: DatabaseReference) {
-        if let prayerText = prayer.prayerText {
-            ref.child("users").child(userID).child("circlePrayers").child(prayerID).child("prayerText").setValue(prayerText)
-        }
-        if let firstName = CurrentUser.currentUser.firstName {
-            ref.child("users").child(userID).child("circlePrayers").child(prayerID).child("firstName").setValue(firstName)
-        }
-        if let lastName = CurrentUser.currentUser.lastName {
-            ref.child("users").child(userID).child("circlePrayers").child(prayerID).child("lastName").setValue(lastName)
-        }
-        ref.child("users").child(userID).child("circlePrayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
-        ref.child("users").child(userID).child("circlePrayers").child(prayerID).child("howAnswered").setValue("")
-        ref.child("users").child(userID).child("circlePrayers").child(prayerID).child("isAnswered").setValue(false)
-        ref.child("users").child(userID).child("circlePrayers").child(prayerID).child("agreedCount").setValue(0)
-        ref.child("users").child(userID).child("circlePrayers").child(prayerID).child("prayerID").setValue(prayerID)
-        ref.child("users").child(userID).child("circlePrayers").child(prayerID).child("prayerOwnerUserID").setValue(userID)
-    }
-    
-    func saveNewPrayerToFirebase(prayerText: String, prayerCategory: String, prayerID: String, ref: DatabaseReference) {
-        if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("prayerText").setValue(prayerText)
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("prayerCategory").setValue(prayerCategory)
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("howAnswered").setValue("")
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("isAnswered").setValue(false)
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("prayerCount").setValue(1)
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("prayerID").setValue(prayerID)
-        }
-    }
-    
-    func deletePrayerFromFirebase(prayerID: String, ref: DatabaseReference) {
-        if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("prayers").child(prayerID).removeValue { error, _ in
-                if let error = error {
-                    print("error \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-    
-    func deleteCirclePrayerFromFirebase(prayerID: String, userRef: DatabaseReference) {
-        userRef.child("circlePrayers").child(prayerID).removeValue { error, _ in
-            if let error = error {
-                print("error \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    func markPrayedInFirebase(prayerID: String, newPrayerCount: Int, ref: DatabaseReference) {
-        if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("prayerCount").setValue(newPrayerCount)
-        }
-    }
-    
     func markCirlePrayerPrayedInFirebase(prayer: CirclePrayer, newAgreedCount: Int) {
         let ref = Database.database().reference()
-        
         if let userID = Auth.auth().currentUser?.uid {
             if let prayerOwnerID = prayer.prayerOwnerUserID {
-                if let prayerID = prayer.prayerID {
-                    ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
-                    ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("agreedCount").setValue(newAgreedCount)
+                let ownerRef = ref.child("users").child(prayerOwnerID)
+                if let prayerID = prayer.key {
+                    ownerRef.child("circlePrayers").child(prayerID).child("lastPrayedDate").setValue(ServerValue.timestamp())
+                    ownerRef.child("circlePrayers").child(prayerID).child("agreedCount").setValue(newAgreedCount)
                     
                     if prayerOwnerID != userID {
-                        ref.child("users").child(prayerOwnerID).child("circlePrayers").child(prayerID).child("whoAgreed").child(userID).setValue(userID)
-                        ref.child("users").child(prayerOwnerID).child("circleUsers").child(userID).child("lastAgreedInPrayerDate").setValue(ServerValue.timestamp())
+                        ownerRef.child("circlePrayers").child(prayerID).child("whoAgreed").child(userID).setValue(userID)
+                        ownerRef.child("circleUsers").child(userID).child("lastAgreedInPrayerDate").setValue(ServerValue.timestamp())
                         var parentIndex = 0
                         for user in CurrentUser.firebaseMembershipUsers {
                             if let membershipUserID = user.userID {
@@ -603,7 +531,7 @@ class FirebaseHelper {
                                                 if membershipCircleUserID == userID {
                                                     if let agreedCount = membershipCircleUser.agreedInPrayerCount {
                                                         let newCount = agreedCount + 1
-                                                        ref.child("users").child(prayerOwnerID).child("circleUsers").child(userID).child("agreedInPrayerCount").setValue(newCount)
+                                                        ownerRef.child("circleUsers").child(userID).child("agreedInPrayerCount").setValue(newCount)
                                                         
                                                         var updatedCircleUserArray = memberCircleUsers
                                                         let updatedUser = membershipCircleUser
@@ -627,39 +555,6 @@ class FirebaseHelper {
                 }
             }
         }
-    }
-    
-    func markAnsweredInFirebase(prayerID: String, howAnswered: String, isAnswered: Bool, ref: DatabaseReference) {
-        if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("howAnswered").setValue(howAnswered)
-            ref.child("users").child(userID).child("prayers").child(prayerID).child("isAnswered").setValue(true)
-        }
-    }
-    
-    func prayerFromDictionary(userDictionary: NSDictionary) -> CurrentUserPrayer {
-        let prayer = CurrentUserPrayer()
-        if let prayerTextCheck = userDictionary["prayerText"] as? String {
-            prayer.prayerText = prayerTextCheck
-        }
-        if let prayerCountCheck = userDictionary["prayerCount"] as? Int {
-            prayer.prayerCount = prayerCountCheck
-        }
-        if let prayerCategoryCheck = userDictionary["prayerCategory"] as? String {
-            prayer.prayerCategory = prayerCategoryCheck
-        }
-        if let isAnsweredCheck = userDictionary["isAnswered"] as? Bool {
-            prayer.isAnswered = isAnsweredCheck
-        }
-        if let prayerIDCheck = userDictionary["prayerID"] as? String {
-            prayer.prayerID = prayerIDCheck
-        }
-        if let lastPrayedCheck = userDictionary["lastPrayed"] as? Double {
-            prayer.lastPrayed = lastPrayedCheck
-        }
-        if let howAnsweredCheck = userDictionary["howAnswered"] as? String {
-            prayer.howAnswered = howAnsweredCheck
-        }
-        return prayer
     }
     
     func membershipUserFromDictionary(userDictionary: NSDictionary) -> MembershipUser {
@@ -696,42 +591,6 @@ class FirebaseHelper {
         let user = self.membershipUserFromDictionary(userDictionary: userDictionary)
         self.downloadAdditionalMembershipUserDataFromFirebase(membershipUser: user)
     }
-    
-//    func circlePrayerFromUserDictionary(userDictionary: NSDictionary, whoAgreedDict: NSDictionary) -> CirclePrayer {
-//        let prayer = CirclePrayer()
-//
-//        if let firstNameCheck = userDictionary["firstName"] as? String {
-//            prayer.firstName = firstNameCheck
-//        }
-//        if let lastNameCheck = userDictionary["lastName"] as? String {
-//            prayer.lastName = lastNameCheck
-//        }
-//        if let prayerTextCheck = userDictionary["prayerText"] as? String {
-//            prayer.prayerText = prayerTextCheck
-//        }
-//        if let prayerIDCheck = userDictionary["prayerID"] as? String {
-//            prayer.prayerID = prayerIDCheck
-//        }
-//        if let lastPrayedCheck = userDictionary["lastPrayedDate"] as? Double {
-//            prayer.lastPrayed = lastPrayedCheck
-//        }
-//        if let prayerCountCheck = userDictionary["agreedCount"] as? Int {
-//            prayer.agreedCount = prayerCountCheck
-//        }
-//        if let isAnsweredCheck = userDictionary["isAnswered"] as? Bool {
-//            prayer.isAnswered = isAnsweredCheck
-//        }
-//        if let howAnsweredCheck = userDictionary["howAnswered"] as? String {
-//            prayer.howAnswered = howAnsweredCheck
-//        }
-//        if let prayerOwnerUserIDCheck = userDictionary["prayerOwnerUserID"] as? String {
-//            prayer.prayerOwnerUserID = prayerOwnerUserIDCheck
-//        }
-//
-//        prayer.whoAgreed = whoAgreedDict.allKeys as? [String]
-//
-//        return prayer
-//    }
     
     func createPrayerCategories(prayers: [CurrentUserPrayer]) {
         var categories = [String]()

@@ -34,6 +34,7 @@ class CurrentUser {
     }
     
     static var currentUserCirclePrayers = [CirclePrayer]()
+    static var currentUserPrayers = [CurrentUserPrayer]()
     
     static var currentUser = User()
     
