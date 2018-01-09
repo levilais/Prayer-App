@@ -43,89 +43,65 @@ class FirebaseHelper {
     func loadFirebaseData() {
         if let userID = Auth.auth().currentUser?.uid {
             let userRef = Database.database().reference().child("users").child(userID)
-            userRef.child("circleUsers").observe(.childAdded, with: { snapshot in
-                if snapshot.value != nil {
-                    if let userDictionary = snapshot.value as? NSDictionary {
-                        if let uid = userDictionary["userUID"] as? String {
-                            if let profileImageUrlString = userDictionary["profileImageURL"] as? String {
-                                if let firstName = userDictionary["firstName"] as? String {
-                                    if let lastName = userDictionary["lastName"] as? String {
-                                        if let userEmail = userDictionary["userEmail"] as? String {
-                                            if let relationship = userDictionary["relationship"] as? String {
-                                                    let circleUser = CircleUser()
-                                                    circleUser.firstName = firstName
-                                                    circleUser.lastName = lastName
-                                                    circleUser.userID = uid
-                                                    circleUser.userEmail = userEmail
-                                                    circleUser.profileImageAsString = profileImageUrlString
-                                                    circleUser.relationshipToCurrentUser = relationship
-                                                if let dateJoinedCircleCheck = userDictionary["dateJoinedCircle"] as? Double {
-                                                    circleUser.dateJoinedCircle = dateJoinedCircleCheck
-                                                }
-                                                if let agreedCountCheck = userDictionary["agreedInPrayerCount"] as? Int {
-                                                    circleUser.agreedInPrayerCount = agreedCountCheck
-                                                }
-                                                if let lastAgreedDateCheck = userDictionary["lastAgreedInPrayerDate"] as? Double {
-                                                    circleUser.lastAgreedInPrayerDate = lastAgreedDateCheck
-                                                }
-                                                    
-                                                    var userExists = false
-                                                    if CurrentUser.firebaseCircleMembers.count > 0 {
-                                                        var matchDetermined = false
-                                                        while matchDetermined == false {
-                                                            for userToCheck in CurrentUser.firebaseCircleMembers {
-                                                                if let userToCheckEmail = userToCheck.userEmail {
-                                                                    if userToCheckEmail == userEmail {
-                                                                        userExists = true
-                                                                        matchDetermined = true
-                                                                    }
-                                                                }
-                                                            }
-                                                            matchDetermined = true
-                                                        }
-                                                    }
-                                                    if userExists != true {
-                                                        CurrentUser.firebaseCircleMembers.append(circleUser)
-                                                    }
-                                                    self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
-                                                }
+            userRef.observe(.value) { (snapshot) in
+                CurrentUser.currentUser = User().currentUserFromSnapshot(snapshot: snapshot)
+            }
+            
+            userRef.child("circleUsers").observe(.value, with: { snapshot in
+                for snapChild in snapshot.children {
+                    let circleUser = CircleUser().circleUserFromSnapshot(snapshot: snapChild as! DataSnapshot)
+                    if let circleUserEmail = circleUser.userEmail {
+                        var userExists = false
+                        if CurrentUser.firebaseCircleMembers.count > 0 {
+                            var matchDetermined = false
+                            while matchDetermined == false {
+                                for userToCheck in CurrentUser.firebaseCircleMembers {
+                                    if let userToCheckEmail = userToCheck.userEmail {
+                                        if userToCheckEmail == circleUserEmail {
+                                            userExists = true
+                                            matchDetermined = true
                                         }
                                     }
                                 }
+                                matchDetermined = true
                             }
                         }
+                        if userExists != true {
+                            CurrentUser.firebaseCircleMembers.append(circleUser)
+                        }
                     }
-                } else {
-                    print ("no circle users found")
+                    self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
                 }
             })
-            
-            userRef.observe(.value) { (snapshot) in
-                if let userDictionary = snapshot.value as? NSDictionary {
-                    let user = User()
 
-                    if let firstName = userDictionary["firstName"] as? String {
-                        user.firstName = firstName
-                    }
-                    if let lastName = userDictionary["lastName"] as? String {
-                        user.lastName = lastName
-                    }
-                    if let userEmail = userDictionary["userEmail"] as? String {
-                        user.userEmail = userEmail
-                    }
-                    if let profileImageAsUrlString = userDictionary["profileImageURL"] as? String {
-                        user.profileImageAsString = profileImageAsUrlString
-                    }
-                    user.userID = userID
-                    CurrentUser.currentUser = user
-                }
-            }
+//                userRef.observe(.value) { (snapshot) in
+//                if let userDictionary = snapshot.value as? NSDictionary {
+//                    let user = User()
+//
+//                    if let firstName = userDictionary["firstName"] as? String {
+//                        user.firstName = firstName
+//                    }
+//                    if let lastName = userDictionary["lastName"] as? String {
+//                        user.lastName = lastName
+//                    }
+//                    if let userEmail = userDictionary["userEmail"] as? String {
+//                        user.userEmail = userEmail
+//                    }
+//                    if let profileImageAsUrlString = userDictionary["profileImageURL"] as? String {
+//                        user.profileImageAsString = profileImageAsUrlString
+//                    }
+//                    user.userID = userID
+                
+//                    CurrentUser.currentUser = user
+//                }
+//            }
             
             userRef.child("memberships").observe(.childAdded) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     FirebaseHelper().addNewConnectionToCurrentUserMemberships(userDictionary: userDictionary)
                 }
             }
+
             userRef.child("memberships").observe(.childChanged) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
@@ -143,6 +119,7 @@ class FirebaseHelper {
                 }
                 // reload data here if not repsonding automatically to change in static var
             }
+
             userRef.child("memberships").observe(.childRemoved) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
                     let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
@@ -163,19 +140,151 @@ class FirebaseHelper {
         }
     }
     
+//    func loadFirebaseData() {
+//        if let userID = Auth.auth().currentUser?.uid {
+//            let userRef = Database.database().reference().child("users").child(userID)
+//            userRef.child("circleUsers").observe(.childAdded, with: { snapshot in
+//                if snapshot.value != nil {
+//                    if let userDictionary = snapshot.value as? NSDictionary {
+//                        if let uid = userDictionary["userUID"] as? String {
+//                            if let profileImageUrlString = userDictionary["profileImageURL"] as? String {
+//                                if let firstName = userDictionary["firstName"] as? String {
+//                                    if let lastName = userDictionary["lastName"] as? String {
+//                                        if let userEmail = userDictionary["userEmail"] as? String {
+//                                            if let relationship = userDictionary["relationship"] as? String {
+//                                                    let circleUser = CircleUser()
+//                                                    circleUser.firstName = firstName
+//                                                    circleUser.lastName = lastName
+//                                                    circleUser.userID = uid
+//                                                    circleUser.userEmail = userEmail
+//                                                    circleUser.profileImageAsString = profileImageUrlString
+//                                                    circleUser.relationshipToCurrentUser = relationship
+//                                                if let dateJoinedCircleCheck = userDictionary["dateJoinedCircle"] as? Double {
+//                                                    circleUser.dateJoinedCircle = dateJoinedCircleCheck
+//                                                }
+//                                                if let agreedCountCheck = userDictionary["agreedInPrayerCount"] as? Int {
+//                                                    circleUser.agreedInPrayerCount = agreedCountCheck
+//                                                }
+//                                                if let lastAgreedDateCheck = userDictionary["lastAgreedInPrayerDate"] as? Double {
+//                                                    circleUser.lastAgreedInPrayerDate = lastAgreedDateCheck
+//                                                }
+//
+//                                                    var userExists = false
+//                                                    if CurrentUser.firebaseCircleMembers.count > 0 {
+//                                                        var matchDetermined = false
+//                                                        while matchDetermined == false {
+//                                                            for userToCheck in CurrentUser.firebaseCircleMembers {
+//                                                                if let userToCheckEmail = userToCheck.userEmail {
+//                                                                    if userToCheckEmail == userEmail {
+//                                                                        userExists = true
+//                                                                        matchDetermined = true
+//                                                                    }
+//                                                                }
+//                                                            }
+//                                                            matchDetermined = true
+//                                                        }
+//                                                    }
+//                                                    if userExists != true {
+//                                                        CurrentUser.firebaseCircleMembers.append(circleUser)
+//                                                    }
+//                                                    self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
+//                                                }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    print ("no circle users found")
+//                }
+//            })
+//
+//            userRef.observe(.value) { (snapshot) in
+//                if let userDictionary = snapshot.value as? NSDictionary {
+//                    let user = User()
+//
+//                    if let firstName = userDictionary["firstName"] as? String {
+//                        user.firstName = firstName
+//                    }
+//                    if let lastName = userDictionary["lastName"] as? String {
+//                        user.lastName = lastName
+//                    }
+//                    if let userEmail = userDictionary["userEmail"] as? String {
+//                        user.userEmail = userEmail
+//                    }
+//                    if let profileImageAsUrlString = userDictionary["profileImageURL"] as? String {
+//                        user.profileImageAsString = profileImageAsUrlString
+//                    }
+//                    user.userID = userID
+//                    CurrentUser.currentUser = user
+//                }
+//            }
+//
+//            userRef.child("memberships").observe(.childAdded) { (snapshot) in
+//                if let userDictionary = snapshot.value as? NSDictionary {
+//                    FirebaseHelper().addNewConnectionToCurrentUserMemberships(userDictionary: userDictionary)
+//                }
+//            }
+//            userRef.child("memberships").observe(.childChanged) { (snapshot) in
+//                if let userDictionary = snapshot.value as? NSDictionary {
+//                    let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
+//                    var i = 0
+//                    for user in CurrentUser.firebaseMembershipUsers {
+//                        if let userID = user.userID {
+//                            if let snapshotUserID = snapshotMembershipUser.userID {
+//                                if userID == snapshotUserID {
+//                                    CurrentUser.firebaseMembershipUsers[i] = snapshotMembershipUser
+//                                }
+//                            }
+//                        }
+//                        i += 1
+//                    }
+//                }
+//                // reload data here if not repsonding automatically to change in static var
+//            }
+//            userRef.child("memberships").observe(.childRemoved) { (snapshot) in
+//                if let userDictionary = snapshot.value as? NSDictionary {
+//                    let snapshotMembershipUser = FirebaseHelper().membershipUserFromDictionary(userDictionary: userDictionary)
+//                    var i = 0
+//                    for user in CurrentUser.firebaseMembershipUsers {
+//                        if let userID = user.userID {
+//                            if let snapshotUserID = snapshotMembershipUser.userID {
+//                                if userID == snapshotUserID {
+//                                    CurrentUser.firebaseMembershipUsers.remove(at: i)
+//                                }
+//                            }
+//                        }
+//                        i += 1
+//                    }
+//                    // reload data here if not repsonding automatically to change in static var
+//                }
+//            }
+//        }
+//    }
+    
     func inviteUserToCircle(userEmail: String, ref: DatabaseReference) {
         if let userID = Auth.auth().currentUser?.uid {
+            print("1")
             ref.child("users").queryOrdered(byChild: "userEmail").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
+                print("2")
                 if snapshot.value != nil {
+                    print("3")
                     if let userDictionary = snapshot.value as? NSDictionary {
+                        print("4")
+                        print(userDictionary)
                         if let uid = userDictionary["userID"] as? String {
+                            print("5")
                             if let profileImageUrlString = userDictionary["profileImageURL"] as? String {
+                                print("6")
                                 if let firstName = userDictionary["firstName"] as? String {
+                                    print("7")
                                     if let lastName = userDictionary["lastName"] as? String {
+                                        print("8")
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("firstName").setValue(firstName)
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("lastName").setValue(lastName)
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("userEmail").setValue(userEmail)
-                                        ref.child("users").child(userID).child("circleUsers").child(uid).child("userUID").setValue(uid)
+                                        ref.child("users").child(userID).child("circleUsers").child(uid).child("userID").setValue(uid)
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("profileImageURL").setValue(profileImageUrlString)
                                     ref.child("users").child(userID).child("circleUsers").child(uid).child("relationship").setValue(CircleUser.userRelationshipToCurrentUser.invited.rawValue)
                                         ref.child("users").child(userID).child("circleUsers").child(uid).child("dateInvited").setValue(ServerValue.timestamp())
@@ -299,7 +408,7 @@ class FirebaseHelper {
                                                         var newUsersArray = [CircleUser]()
                                                         var circleUserID = String()
                                                         var circleUserAgreedCount = Int()
-                                                        if let circleUserIDCheck = userDictionary["userUID"] as? String {
+                                                        if let circleUserIDCheck = userDictionary["userID"] as? String {
                                                             circleUserID = circleUserIDCheck
                                                         }
                                                         
@@ -438,47 +547,47 @@ class FirebaseHelper {
         }
     }
     
-    func deleteCircleUserFromCurrentUserFirebase(userEmail: String, ref: DatabaseReference) {
-        for circleUser in CurrentUser.firebaseCircleMembers {
-            if let savedEmail = circleUser.userEmail {
-                if savedEmail == userEmail {
-                    if let circleUserID = circleUser.userID {
-                        if let userID = Auth.auth().currentUser?.uid {
-                            ref.child("users").child(userID).child("circleUsers").child(circleUserID).removeValue { error, _ in
-                                if let error = error {
-                                    print("error \(error.localizedDescription)")
-                                }
-                                self.deleteCircleUser(userEmail: userEmail, ref: ref)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    func deleteCircleUser(userEmail: String, ref: DatabaseReference) {
-        if let userID = Auth.auth().currentUser?.uid {
-            ref.child("users").queryOrdered(byChild: "userEmail").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
-                if snapshot.value != nil {
-                    if let userDictionary = snapshot.value as? NSDictionary {
-                        if let uid = userDictionary["userID"] as? String {
-                            ref.child("users").child(userID).child("circleMembers").child(uid).removeValue { error, _ in
-                                if let error = error {
-                                    print("error \(error.localizedDescription)")
-                                }
-                            }
-                            ref.child("users").child(uid).child("memberships").child(userID).removeValue { error, _ in
-                                if let error = error {
-                                    print("error \(error.localizedDescription)")
-                                }
-                            }
-                        }
-                    }
-                }
-            })
-        }
-    }
+//    func deleteCircleUserFromCurrentUserFirebase(userEmail: String, ref: DatabaseReference) {
+//        for circleUser in CurrentUser.firebaseCircleMembers {
+//            if let savedEmail = circleUser.userEmail {
+//                if savedEmail == userEmail {
+//                    if let circleUserID = circleUser.userID {
+//                        if let userID = Auth.auth().currentUser?.uid {
+//                            ref.child("users").child(userID).child("circleUsers").child(circleUserID).removeValue { error, _ in
+//                                if let error = error {
+//                                    print("error \(error.localizedDescription)")
+//                                }
+//                                self.deleteCircleUser(userEmail: userEmail, ref: ref)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    
+//    func deleteCircleUser(userEmail: String, ref: DatabaseReference) {
+//        if let userID = Auth.auth().currentUser?.uid {
+//            ref.child("users").queryOrdered(byChild: "userEmail").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
+//                if snapshot.value != nil {
+//                    if let userDictionary = snapshot.value as? NSDictionary {
+//                        if let uid = userDictionary["userID"] as? String {
+//                            ref.child("users").child(userID).child("circleUsers").child(uid).removeValue { error, _ in
+//                                if let error = error {
+//                                    print("error \(error.localizedDescription)")
+//                                }
+//                            }
+//                            ref.child("users").child(uid).child("memberships").child(userID).removeValue { error, _ in
+//                                if let error = error {
+//                                    print("error \(error.localizedDescription)")
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            })
+//        }
+//    }
     
     func daysSinceTimeStampLabel(cellLabel: UILabel, prayer: CurrentUserPrayer, cell: PrayerTableViewCell) -> UILabel {
         if let prayerItemRef = prayer.itemRef {

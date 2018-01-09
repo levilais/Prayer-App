@@ -376,6 +376,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     @objc func inviteMemberToCircle(sender: CellButton){
         if CurrentUser.firebaseCircleMembers.count < 5 {
             let buttonTag = sender.tag
+            print("buttonTag: \(buttonTag)")
             let buttonSection = sender.section
             let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
             let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
@@ -512,21 +513,30 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             cell.deleteButton.isHidden = true
             cell.relationshipStatusLabel.isHidden = true
             
-            if let userEmail = user.userEmail {
-                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
-            }
+            CircleUser().removeUserFromCircle(circleUser: user)
             
-            var i = 0
-            for circleUser in CurrentUser.firebaseCircleMembers {
-                if let circleUserEmail = circleUser.userEmail {
-                    if let emailToCheck = user.userEmail {
-                        if circleUserEmail == emailToCheck {
-                            CurrentUser.firebaseCircleMembers.remove(at: i)
-                        }
-                    }
-                }
-                i += 1
-            }
+//            if let userEmail = user.userEmail {
+//                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
+//            }
+            
+//            if let circleRef = user.currentUserCircleRef {
+//                if let memberRef = user.circleUserMembershipRef {
+//                    circleRef.removeValue()
+//                    memberRef.removeValue()
+//                }
+//            }
+            
+//            var i = 0
+//            for circleUser in CurrentUser.firebaseCircleMembers {
+//                if let circleUserEmail = circleUser.userEmail {
+//                    if let emailToCheck = user.userEmail {
+//                        if circleUserEmail == emailToCheck {
+//                            CurrentUser.firebaseCircleMembers.remove(at: i)
+//                        }
+//                    }
+//                }
+//                i += 1
+//            }
             
             self.updateSpotsLeftLabel()
             self.getContactsData()

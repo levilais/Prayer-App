@@ -47,11 +47,11 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let userID = Auth.auth().currentUser?.uid {
-            userRef = Database.database().reference().child("users").child(userID)
-            setupObservers()
-            self.observersLoaded = true
-        }
+//        if let userID = Auth.auth().currentUser?.uid {
+//            userRef = Database.database().reference().child("users").child(userID)
+//            setupObservers()
+////            self.observersLoaded = true
+//        }
         for circleButton in circleProfileImageButtons {
             circleButton.addTarget(self, action: #selector(circleProfileButtonDidPress(sender:)), for: .touchUpInside)
         }
@@ -72,10 +72,15 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             userNotLoggedInView.isHidden = true
             userLoggedInView.isHidden = false
             selectedCircleMember = 0
-            if observersLoaded == false {
+            if let userID = Auth.auth().currentUser?.uid {
+                userRef = Database.database().reference().child("users").child(userID)
                 setupObservers()
-                observersLoaded = true
+                //            self.observersLoaded = true
             }
+//            if observersLoaded == false {
+//                setupObservers()
+//                observersLoaded = true
+//            }
             setCircleData()
             toggleTableIsHidden()
         } else {
@@ -106,6 +111,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func firstLoad(completed: @escaping (Bool) -> Void) {
         userRef.child("circlePrayers").observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+            CurrentUser.currentUserCirclePrayers.removeAll()
             for prayerSnap in snapshot.children {
                 let newPrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: prayerSnap as! DataSnapshot)
                 CurrentUser.currentUserCirclePrayers.append(newPrayer)
@@ -156,7 +162,11 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                         i += 1
                     }
                 }
-                self.reloadData()
+                if CurrentUser.currentUserCirclePrayers.count > 0 {
+                    self.reloadData()
+                } else {
+                    self.toggleTableIsHidden()
+                }
             })
             
             self.userRef.child("circlePrayers").observe(.childChanged, with: { (snapshot) -> Void in
@@ -314,22 +324,21 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     func loadData() {
         // If all circle users are removed, remove CirlePrayers node from Firebase
         if CurrentUser.firebaseCircleMembers.count == 0 && circlePrayers.count > 0 {
-            userRef.child("circlePrayers").removeValue { error, _ in
-                if let error = error {
-                    print("error \(error.localizedDescription)")
-                }
-            }
+            userRef.child("circlePrayers").removeValue()
         }
         self.reloadData()
     }
     
     func reloadData() {
         circlePrayers = CurrentUser.currentUserCirclePrayers.reversed()
-        DispatchQueue.main.async {
-            UIView.performWithoutAnimation {
-                self.tableView.reloadData()
-                self.toggleTableIsHidden()
+        if circlePrayers.count > 0 {
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadData()
+                }
             }
+        } else {
+            self.toggleTableIsHidden()
         }
     }
     
@@ -436,23 +445,24 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
             let circleUser = CurrentUser.firebaseCircleMembers[self.selectedCircleMember]
             
-            if let userEmail = circleUser.userEmail {
-                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
-                
-                var i = 0
-                for circleUserToRemove in CurrentUser.firebaseCircleMembers {
-                    if let circleUserEmail = circleUserToRemove.userEmail {
-                        if circleUserEmail == userEmail {
-                            CurrentUser.firebaseCircleMembers.remove(at: i)
-                        }
-                    }
-                    i += 1
-                }
-            }
-            
-            if let email = circleUser.userEmail {
-                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: email, ref: Database.database().reference())
-            }
+//            if let userEmail = circleUser.userEmail {
+//                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
+//
+//                var i = 0
+//                for circleUserToRemove in CurrentUser.firebaseCircleMembers {
+//                    if let circleUserEmail = circleUserToRemove.userEmail {
+//                        if circleUserEmail == userEmail {
+//                            CurrentUser.firebaseCircleMembers.remove(at: i)
+//                        }
+//                    }
+//                    i += 1
+//                }
+//            }
+//
+//            if let email = circleUser.userEmail {
+//                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: email, ref: Database.database().reference())
+//            }
+            CircleUser().removeUserFromCircle(circleUser: circleUser)
             
             self.circleSpotFilled[self.selectedCircleMember] = false
             self.selectedCircleMember = 0

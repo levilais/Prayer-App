@@ -13,7 +13,9 @@ import ContactsUI
 import Firebase
 
 class CircleUser: User {
-
+    var currentUserCircleRef: DatabaseReference?
+    var circleUserMembershipRef: DatabaseReference?
+    
     var dateJoinedCircle: Double?
     var dateInvited: Double?
     var lastAgreedInPrayerDate: Double?
@@ -29,20 +31,76 @@ class CircleUser: User {
         case invited = "invited"
         case myCircleMember = "myCircleMember"
     }
-
-    func getFullName(user: CircleUser) -> String {
-        var fullName = ""
-        if let first = user.firstName {
-            if let last = user.lastName {
-                fullName += first
-                if fullName != "" {
-                    fullName += " " + last
-                } else {
-                    fullName += last
+    
+    func circleUserFromSnapshot(snapshot: DataSnapshot) -> CircleUser {
+        let circleUser = CircleUser()
+        
+        circleUser.key = snapshot.key
+        circleUser.userRef = snapshot.ref
+        
+        if let userDictionary = snapshot.value as? NSDictionary {
+            if let uid = userDictionary["userID"] as? String {
+                circleUser.userID = uid
+            }
+            if let profileImageUrlString = userDictionary["profileImageURL"] as? String {
+                circleUser.profileImageAsString = profileImageUrlString
+            }
+            
+            if let firstName = userDictionary["firstName"] as? String {
+                circleUser.firstName = firstName
+            }
+            
+            if let lastName = userDictionary["lastName"] as? String {
+                circleUser.lastName = lastName
+            }
+            
+            if let userEmail = userDictionary["userEmail"] as? String {
+                circleUser.userEmail = userEmail
+            }
+            
+            if let relationship = userDictionary["relationship"] as? String {
+                circleUser.relationshipToCurrentUser = relationship
+            }
+            if let dateJoinedCircleCheck = userDictionary["dateJoinedCircle"] as? Double {
+                circleUser.dateJoinedCircle = dateJoinedCircleCheck
+            }
+            if let agreedCountCheck = userDictionary["agreedInPrayerCount"] as? Int {
+                circleUser.agreedInPrayerCount = agreedCountCheck
+            }
+            if let lastAgreedDateCheck = userDictionary["lastAgreedInPrayerDate"] as? Double {
+                circleUser.lastAgreedInPrayerDate = lastAgreedDateCheck
+            }
+        }
+        
+        if let circleUserID = circleUser.userID {
+            if let currentUserID = CurrentUser.currentUser.userID {
+                circleUser.circleUserMembershipRef = Database.database().reference().child("users").child(circleUserID).child("memberships").child(currentUserID)
+                circleUser.currentUserCircleRef = Database.database().reference().child("users").child(currentUserID).child("circleUsers").child(circleUserID)
+            }
+        }
+        
+        return circleUser
+    }
+    
+    func removeUserFromCircle(circleUser: CircleUser) {
+        if let circleRef = circleUser.currentUserCircleRef {
+            if let memberRef = circleUser.circleUserMembershipRef {
+                circleRef.removeValue()
+                memberRef.removeValue()
+                
+                var i = 0
+                for firebaseCircleUser in CurrentUser.firebaseCircleMembers {
+                    if let circleUserEmail = circleUser.userEmail {
+                        if let emailToCheck = firebaseCircleUser.userEmail {
+                            if circleUserEmail == emailToCheck {
+                                CurrentUser.firebaseCircleMembers.remove(at: i)
+                            }
+                        }
+                    }
+                    i += 1
                 }
             }
         }
-        return fullName
     }
     
     func getRelationshipStatus(userToCheck: CircleUser) -> CircleUser {
