@@ -43,13 +43,15 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     var userRef: DatabaseReference!
     var indexPathForEdit: IndexPath?
     var circlePrayers = [CirclePrayer]()
+    var observersLoaded = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if let userID = Auth.auth().currentUser?.uid {
             userRef = Database.database().reference().child("users").child(userID)
+            setupObservers()
+            self.observersLoaded = true
         }
-        setupObservers()
         for circleButton in circleProfileImageButtons {
             circleButton.addTarget(self, action: #selector(circleProfileButtonDidPress(sender:)), for: .touchUpInside)
         }
@@ -70,6 +72,10 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             userNotLoggedInView.isHidden = true
             userLoggedInView.isHidden = false
             selectedCircleMember = 0
+            if observersLoaded == false {
+                setupObservers()
+                observersLoaded = true
+            }
             setCircleData()
             toggleTableIsHidden()
         } else {

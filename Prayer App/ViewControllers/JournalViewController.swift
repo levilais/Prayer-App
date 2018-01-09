@@ -17,6 +17,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     var sortedPrayers = [String:[CurrentUserPrayer]]()
     var viewIsVisible = false
     var viewAlreadyAppeared = false
+    var observersLoaded = false
     
     // HEADER VIEW
     @IBOutlet weak var messageLabel: UILabel!
@@ -55,8 +56,9 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if let userID = Auth.auth().currentUser?.uid {
             userRef = Database.database().reference().child("users").child(userID)
+            setupObservers()
+            observersLoaded = true
         }
-        setupObservers()
 
         markAnsweredTextView.layer.borderColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0).cgColor
         markAnsweredTextView.layer.borderWidth = 1.0
@@ -74,6 +76,10 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         if Auth.auth().currentUser != nil {
             notLoggedInView.isHidden = true
             viewAlreadyAppeared = true
+            if observersLoaded == false {
+                setupObservers()
+                observersLoaded = true
+            }
         } else {
             notLoggedInView.isHidden = false
         }

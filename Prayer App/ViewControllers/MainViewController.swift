@@ -71,7 +71,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     // Data Variables
     var managedObjectContext: NSManagedObjectContext?
-//    var ref: DatabaseReference!
     var userRef: DatabaseReference!
     
     // Gestures
@@ -138,7 +137,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     override func viewWillAppear(_ animated: Bool) {
         categoryTitles = []
-        getSectionHeaders()
+        if Auth.auth().currentUser != nil {
+            getSectionHeaders()
+        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -259,16 +260,28 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     func launchAddButtonPressed() {
-        if textField.text != "" {
-            Animations().animateCustomAlertPopup(view: saveToJournalView, backgroundButton: saveToJournalBackgroundButton, subView: saveToJournalSubview, viewController: self, textField: categoryCreationTextField, textView: textField)
-            createCategoryButtons()
+        if Auth.auth().currentUser != nil {
+            if textField.text != "" {
+                Animations().animateCustomAlertPopup(view: saveToJournalView, backgroundButton: saveToJournalBackgroundButton, subView: saveToJournalSubview, viewController: self, textField: categoryCreationTextField, textView: textField)
+                createCategoryButtons()
+                } else {
+                let alert = UIAlertController(title: "Nothing To Save", message: "Please enter text and try again.", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alert.addAction(action)
+                self.present(alert, animated: true, completion: nil)
+                alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                textField.becomeFirstResponder()
+            }
         } else {
-            let alert = UIAlertController(title: "Nothing To Save", message: "Please enter text and try again.", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+            let alert = UIAlertController(title: "No Account Found", message: "You will need to create a free account to access the Prayer Journal feature.", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Create Account", style: .default, handler: { (action) in
+                self.performSegue(withIdentifier: "mainViewToSignupViewSegue", sender: self)
+            })
             alert.addAction(action)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+            alert.addAction(cancelAction)
             self.present(alert, animated: true, completion: nil)
             alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
-            textField.becomeFirstResponder()
         }
     }
     
