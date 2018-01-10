@@ -33,6 +33,9 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     var contactsToDisplay = [CircleUser]()
     var filteredContacts = [CircleUser]()
     
+    // new
+    var sortedContacts = [String:[CircleUser]]()
+    
     var segueFromSettings = false
     var members = [CircleUser]()
     var nonMembers = [CircleUser]()
@@ -125,9 +128,9 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         cnContacts = []
         cleanContactsAsCircleUsers = []
         contactsToDisplay = []
-        sectionHeaders = []
-        members = []
-        nonMembers = []
+//        sectionHeaders = []
+//        members = []
+//        nonMembers = []
 
         let store = CNContactStore()
         store.requestAccess(for: .contacts, completionHandler: {
@@ -194,30 +197,33 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func setUpContactSections() {
-        members = []
-        nonMembers = []
-        sectionHeaders = []
-        
-        for user in contactsToDisplay {
-            if let relationshipCheck = user.relationshipToCurrentUser {
-                var sectionHeader = String()
-                if relationshipCheck != CircleUser.userRelationshipToCurrentUser.nonMember.rawValue {
-                    if let email = user.userEmail {
-                        if let currentUserEmail = CurrentUser.currentUser.userEmail {
-                            if email != currentUserEmail {
-                                sectionHeader = "Invite member to your Circle"
-                                members.append(user)
+        sortedContacts = [:]
+        if self.contactsToDisplay.count > 0 {
+            for circleUser in self.contactsToDisplay {
+                if let relationship = circleUser.relationshipToCurrentUser {
+                    if relationship != CircleUser.userRelationshipToCurrentUser.nonMember.rawValue {
+                        if let email = circleUser.userEmail {
+                            if let currentUserEmail = CurrentUser.currentUser.userEmail {
+                                if email != currentUserEmail {
+                                    setNewArrayForKey(sectionKey: "Invite member to your Circle", circleUser: circleUser)
+                                }
                             }
                         }
+                    } else {
+                        setNewArrayForKey(sectionKey: "Invite to join Prayer", circleUser: circleUser)
                     }
-                } else {
-                    sectionHeader = "Invite to join Prayer"
-                    nonMembers.append(user)
-                }
-                if !sectionHeaders.contains(sectionHeader) {
-                    sectionHeaders.append(sectionHeader)
                 }
             }
+        }
+    }
+    
+    func setNewArrayForKey(sectionKey: String, circleUser: CircleUser) {
+        if var oldArray = sortedContacts[sectionKey] {
+            oldArray.append(circleUser)
+            sortedContacts[sectionKey] = oldArray
+        } else {
+            let newArray = [circleUser]
+            sortedContacts[sectionKey] = newArray
         }
     }
 
@@ -253,7 +259,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             self.view.window!.rootViewController?.dismiss(animated: true, completion: nil)
         }
     }
-    
+
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if (view is UITableViewHeaderFooterView) {
             if let tableViewHeaderFooterView = view as? UITableViewHeaderFooterView {
@@ -269,60 +275,27 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        var title = String()
-        title = "Invite to join Prayer"
-        if section == 0 {
-            if sectionHeaders.count > 1 {
-                title = "Invite member to your Circle"
-            } else if sectionHeaders.count == 1 {
-                if members.count > 0 {
-                    title = "Invite member to your Circle"
-                }
-            }
-        }
-        return title
+        let sectionKey = Array(sortedContacts.keys)[section] as String
+        return sectionKey
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionHeaders.count
+        return sortedContacts.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var rowCount = nonMembers.count
-        
-        if section == 0 {
-            if sectionHeaders.count > 1 {
-                rowCount = members.count
-            } else if sectionHeaders.count == 1 {
-                if members.count > 0 {
-                    rowCount = members.count
-                }
-            }
+        let sectionKey = Array(sortedContacts.keys)[section] as String
+        if let sectionArray = sortedContacts[sectionKey] {
+            return sectionArray.count
+        } else {
+            return 0
         }
-        return rowCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "addCircleMemberCell", for: indexPath) as! AddCircleMemberTableViewCell
- 
-        var user = CircleUser()
         
-        if indexPath.section == 0 {
-            if sectionHeaders.count > 1 {
-                user = members[indexPath.row]
-            } else if sectionHeaders.count == 1 {
-                if members.count > 0 {
-                    user = members[indexPath.row]
-                } else {
-                    user = nonMembers[indexPath.row]
-                }
-            } else {
-                user = nonMembers[indexPath.row]
-            }
-        } else {
-            user = nonMembers[indexPath.row]
-        }
-        
+        let user = contactAtIndexPath(indexPath: indexPath)
         updateRelationshipActions(cell: cell, user: user)
         
         if let image = user.profileImageAsImage {
@@ -347,8 +320,18 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         return cell
     }
     
+    func contactAtIndexPath(indexPath: IndexPath) -> CircleUser {
+        var contact = CircleUser()
+        let sectionKey = Array(sortedContacts.keys)[indexPath.section] as String
+        if let sectionArray = sortedContacts[sectionKey] {
+            contact = sectionArray[indexPath.row]
+        }
+        return contact
+    }
+    
     func updateRelationshipActions(cell: AddCircleMemberTableViewCell, user: CircleUser) {
         if let userRelationship = user.relationshipToCurrentUser {
+            print("userRelationship is \(userRelationship) for \(user.lastName!)")
             switch userRelationship {
             case "invited":
                 cell.inviteButton.isHidden = true
@@ -373,44 +356,27 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         updateSpotsLeftLabel()
     }
     
-    @objc func inviteMemberToCircle(sender: CellButton){
+    @objc func inviteMemberToCircle(sender: CellButton) {
         if CurrentUser.firebaseCircleMembers.count < 5 {
             let buttonTag = sender.tag
-            print("buttonTag: \(buttonTag)")
             let buttonSection = sender.section
-            let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
+            let indexPath = IndexPath(row: buttonTag, section: buttonSection)
             let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
-
-            var user = CircleUser()
-            if indexPath.section == 0 {
-                if sectionHeaders.count > 1 {
-                    user = members[indexPath.row]
-                } else if sectionHeaders.count == 1 {
-                    if members.count > 0 {
-                        user = members[indexPath.row]
-                    } else {
-                        user = nonMembers[indexPath.row]
-                    }
-                } else {
-                    user = nonMembers[indexPath.row]
-                }
-            } else {
-                user = nonMembers[indexPath.row]
-            }
-
+            let user = contactAtIndexPath(indexPath: indexPath as IndexPath)
+            
             if user.relationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue {
                 // SAVE TO FIREBASE
                 if let email = user.userEmail {
                     FirebaseHelper().inviteUserToCircle(userEmail: email, ref: self.ref)
                 }
-
+                
                 updateSpotsLeftLabel()
                 cell.inviteButton.isHidden = true
                 cell.deleteButton.isHidden = false
                 cell.relationshipStatusLabel.isHidden = false
                 self.getContactsData()
             } else {
-                inviteMemberToPrayer(sender: sender)
+                inviteContactToPrayer(sender: sender)
             }
         }
     }
@@ -424,9 +390,12 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         }
     }
     
-    func inviteMemberToPrayer(sender: UIButton) {
-        let user = nonMembers[sender.tag]
-
+    func inviteContactToPrayer(sender: CellButton) {
+        let buttonTag = sender.tag
+        let buttonSection = sender.section
+        let indexPath = IndexPath(row: buttonTag, section: buttonSection)
+        let user = contactAtIndexPath(indexPath: indexPath as IndexPath)
+        
         var emails = [CNLabeledValue<NSString>]()
         var phoneNumbers = [CNLabeledValue<CNPhoneNumber>]()
         var alert = UIAlertController()
@@ -507,7 +476,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
             let cell = self.tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
             
-            let user = self.members[indexPath.row]
+            let user = self.contactAtIndexPath(indexPath: indexPath as IndexPath)
             
             cell.inviteButton.isHidden = false
             cell.deleteButton.isHidden = true

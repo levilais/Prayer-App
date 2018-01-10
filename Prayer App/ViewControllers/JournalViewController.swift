@@ -107,7 +107,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                         }
                     }
                 }
-
                 if matchExists == false {
                     CurrentUser.currentUserPrayers.append(newPrayer)
                     if self.viewIsVisible {
