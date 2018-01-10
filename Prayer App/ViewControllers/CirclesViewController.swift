@@ -68,11 +68,12 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             userLoggedInView.isHidden = false
             selectedCircleMember = 0
             if let userID = Auth.auth().currentUser?.uid {
+                print("set up observers called")
                 userRef = Database.database().reference().child("users").child(userID)
                 setupObservers()
             }
             setCircleData()
-            toggleTableIsHidden()
+//            toggleTableIsHidden()
         } else {
             userNotLoggedInView.isHidden = false
             userLoggedInView.isHidden = true
@@ -92,6 +93,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func toggleTableIsHidden() {
+        print("prayerCount: \(CurrentUser.currentUserCirclePrayers.count)")
         if CurrentUser.currentUserCirclePrayers.count > 0 {
             tableView.isHidden = false
         } else {
@@ -107,6 +109,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 CurrentUser.currentUserCirclePrayers.append(newPrayer)
             }
             self.reloadData()
+            self.toggleTableIsHidden()
             completed(true)
         })
     }
@@ -312,7 +315,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func loadData() {
-        // If all circle users are removed, remove CirlePrayers node from Firebase
         if CurrentUser.firebaseCircleMembers.count == 0 && circlePrayers.count > 0 {
             userRef.child("circlePrayers").removeValue()
         }

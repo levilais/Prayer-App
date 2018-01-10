@@ -73,28 +73,6 @@ class FirebaseHelper {
                     self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
                 }
             })
-
-//                userRef.observe(.value) { (snapshot) in
-//                if let userDictionary = snapshot.value as? NSDictionary {
-//                    let user = User()
-//
-//                    if let firstName = userDictionary["firstName"] as? String {
-//                        user.firstName = firstName
-//                    }
-//                    if let lastName = userDictionary["lastName"] as? String {
-//                        user.lastName = lastName
-//                    }
-//                    if let userEmail = userDictionary["userEmail"] as? String {
-//                        user.userEmail = userEmail
-//                    }
-//                    if let profileImageAsUrlString = userDictionary["profileImageURL"] as? String {
-//                        user.profileImageAsString = profileImageAsUrlString
-//                    }
-//                    user.userID = userID
-                
-//                    CurrentUser.currentUser = user
-//                }
-//            }
             
             userRef.child("memberships").observe(.childAdded) { (snapshot) in
                 if let userDictionary = snapshot.value as? NSDictionary {
@@ -366,48 +344,6 @@ class FirebaseHelper {
         }
     }
     
-//    func deleteCircleUserFromCurrentUserFirebase(userEmail: String, ref: DatabaseReference) {
-//        for circleUser in CurrentUser.firebaseCircleMembers {
-//            if let savedEmail = circleUser.userEmail {
-//                if savedEmail == userEmail {
-//                    if let circleUserID = circleUser.userID {
-//                        if let userID = Auth.auth().currentUser?.uid {
-//                            ref.child("users").child(userID).child("circleUsers").child(circleUserID).removeValue { error, _ in
-//                                if let error = error {
-//                                    print("error \(error.localizedDescription)")
-//                                }
-//                                self.deleteCircleUser(userEmail: userEmail, ref: ref)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    
-//    func deleteCircleUser(userEmail: String, ref: DatabaseReference) {
-//        if let userID = Auth.auth().currentUser?.uid {
-//            ref.child("users").queryOrdered(byChild: "userEmail").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
-//                if snapshot.value != nil {
-//                    if let userDictionary = snapshot.value as? NSDictionary {
-//                        if let uid = userDictionary["userID"] as? String {
-//                            ref.child("users").child(userID).child("circleUsers").child(uid).removeValue { error, _ in
-//                                if let error = error {
-//                                    print("error \(error.localizedDescription)")
-//                                }
-//                            }
-//                            ref.child("users").child(uid).child("memberships").child(userID).removeValue { error, _ in
-//                                if let error = error {
-//                                    print("error \(error.localizedDescription)")
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            })
-//        }
-//    }
-    
     func daysSinceTimeStampLabel(cellLabel: UILabel, prayer: CurrentUserPrayer, cell: PrayerTableViewCell) -> UILabel {
         if let prayerItemRef = prayer.itemRef {
             prayerItemRef.observe(.value) { (snapshot) in
@@ -452,7 +388,6 @@ class FirebaseHelper {
                             if let membershipUserID = user.userID {
                                 if membershipUserID == prayerOwnerID {
                                     if let memberCircleUsers = user.membershipUserCircleUsers {
-                                        print("memberCircleUsers.count: \(memberCircleUsers.count)")
                                         var circleUserIndex = 0
                                         for membershipCircleUser in memberCircleUsers {
                                             if let membershipCircleUserID = membershipCircleUser.userID {
