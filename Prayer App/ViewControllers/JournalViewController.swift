@@ -17,7 +17,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     var sortedPrayers = [String:[CurrentUserPrayer]]()
     var viewIsVisible = false
     var viewAlreadyAppeared = false
-    var observersLoaded = false
     
     // HEADER VIEW
     @IBOutlet weak var messageLabel: UILabel!
@@ -53,12 +52,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if let userID = Auth.auth().currentUser?.uid {
-            userRef = Database.database().reference().child("users").child(userID)
-            setupObservers()
-            observersLoaded = true
-        }
 
         markAnsweredTextView.layer.borderColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0).cgColor
         markAnsweredTextView.layer.borderWidth = 1.0
@@ -73,13 +66,11 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.rowHeight = UITableViewAutomaticDimension
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         viewIsVisible = true
-        if Auth.auth().currentUser != nil {
+        if let userID = Auth.auth().currentUser?.uid {
             notLoggedInView.isHidden = true
             viewAlreadyAppeared = true
-            if observersLoaded == false {
-                setupObservers()
-                observersLoaded = true
-            }
+            userRef = Database.database().reference().child("users").child(userID)
+            setupObservers()
         } else {
             notLoggedInView.isHidden = false
         }
@@ -91,6 +82,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func firstLoad(completed: @escaping (Bool) -> Void) {
         userRef.child("prayers").observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+            CurrentUser.currentUserPrayers.removeAll()
             for prayerSnap in snapshot.children {
                 let newPrayer = CurrentUserPrayer().currentUserPrayerFromSnapshot(snapshot: prayerSnap as! DataSnapshot)
                 

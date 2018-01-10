@@ -85,10 +85,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let userID = Auth.auth().currentUser?.uid {
-            userRef = Database.database().reference().child("users").child(userID)
-        }
-
+        
         textField.delegate = self
         touchToPrayButton.setTitleColor(UIColor.lightGray, for: .normal)
         
@@ -137,7 +134,8 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     
     override func viewWillAppear(_ animated: Bool) {
         categoryTitles = []
-        if Auth.auth().currentUser != nil {
+        if let userID = Auth.auth().currentUser?.uid {
+            userRef = Database.database().reference().child("users").child(userID)
             getSectionHeaders()
         }
         
@@ -596,7 +594,7 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
                     alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
                 }
             } else {
-                let alert = UIAlertController(title: "No Circle Members Found", message: "You will need to add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
+                let alert = UIAlertController(title: "No Circle Members Found", message: "1) You must invite a user to your Circle and 2) an invite must be accepted in order to share Prayers to your Circle.", preferredStyle: .alert)
                 let action = UIAlertAction(title: "Add Members", style: .default, handler: { (action) in
                     self.performSegue(withIdentifier: "mainViewToAddContactsViewSegue", sender: self)
                 })
