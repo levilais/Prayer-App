@@ -515,29 +515,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             
             CircleUser().removeUserFromCircle(circleUser: user)
             
-//            if let userEmail = user.userEmail {
-//                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
-//            }
-            
-//            if let circleRef = user.currentUserCircleRef {
-//                if let memberRef = user.circleUserMembershipRef {
-//                    circleRef.removeValue()
-//                    memberRef.removeValue()
-//                }
-//            }
-            
-//            var i = 0
-//            for circleUser in CurrentUser.firebaseCircleMembers {
-//                if let circleUserEmail = circleUser.userEmail {
-//                    if let emailToCheck = user.userEmail {
-//                        if circleUserEmail == emailToCheck {
-//                            CurrentUser.firebaseCircleMembers.remove(at: i)
-//                        }
-//                    }
-//                }
-//                i += 1
-//            }
-            
             self.updateSpotsLeftLabel()
             self.getContactsData()
         }
