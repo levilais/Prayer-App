@@ -32,14 +32,13 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     var cleanContactsAsCircleUsers = [CircleUser]()
     var contactsToDisplay = [CircleUser]()
     var filteredContacts = [CircleUser]()
-    
-    // new
     var sortedContacts = [String:[CircleUser]]()
     
     var segueFromSettings = false
     var members = [CircleUser]()
     var nonMembers = [CircleUser]()
     var sectionHeaders = [String]()
+    var sortedKeys = [String]()
     
     // FIREBASE
     var ref: DatabaseReference!
@@ -128,9 +127,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         cnContacts = []
         cleanContactsAsCircleUsers = []
         contactsToDisplay = []
-//        sectionHeaders = []
-//        members = []
-//        nonMembers = []
 
         let store = CNContactStore()
         store.requestAccess(for: .contacts, completionHandler: {
@@ -198,6 +194,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     func setUpContactSections() {
         sortedContacts = [:]
+        sortedKeys = []
         if self.contactsToDisplay.count > 0 {
             for circleUser in self.contactsToDisplay {
                 if let relationship = circleUser.relationshipToCurrentUser {
@@ -215,6 +212,8 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 }
             }
         }
+        let keys = Array(sortedContacts.keys)
+        sortedKeys = keys.sorted()
     }
     
     func setNewArrayForKey(sectionKey: String, circleUser: CircleUser) {
@@ -275,17 +274,15 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionKey = Array(sortedContacts.keys)[section] as String
-        return sectionKey
+        return sortedKeys[section]
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sortedContacts.count
+        return sortedKeys.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionKey = Array(sortedContacts.keys)[section] as String
-        if let sectionArray = sortedContacts[sectionKey] {
+        if let sectionArray = sortedContacts[sortedKeys[section]] {
             return sectionArray.count
         } else {
             return 0
@@ -322,8 +319,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     func contactAtIndexPath(indexPath: IndexPath) -> CircleUser {
         var contact = CircleUser()
-        let sectionKey = Array(sortedContacts.keys)[indexPath.section] as String
-        if let sectionArray = sortedContacts[sectionKey] {
+        if let sectionArray = sortedContacts[sortedKeys[indexPath.section]] {
             contact = sectionArray[indexPath.row]
         }
         return contact
@@ -365,7 +361,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             let user = contactAtIndexPath(indexPath: indexPath as IndexPath)
             
             if user.relationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue {
-                // SAVE TO FIREBASE
                 if let email = user.userEmail {
                     FirebaseHelper().inviteUserToCircle(userEmail: email, ref: self.ref)
                 }

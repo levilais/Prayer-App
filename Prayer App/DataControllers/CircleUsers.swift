@@ -87,7 +87,6 @@ class CircleUser: User {
     func removeUserFromCircle(circleUser: CircleUser) {
         if let circleRef = circleUser.currentUserCircleRef {
             if let memberRef = circleUser.circleUserMembershipRef {
-                print("circleRef: \(circleRef)")
                 circleRef.removeValue()
                 memberRef.removeValue()
                 
@@ -97,6 +96,11 @@ class CircleUser: User {
                         if let emailToCheck = firebaseCircleUser.userEmail {
                             if circleUserEmail == emailToCheck {
                                 CurrentUser.firebaseCircleMembers.remove(at: i)
+                                if CurrentUser.firebaseCircleMembers.count == 0 {
+                                    if let userRef = CurrentUser.currentUser.userRef {
+                                        userRef.child("circlePrayers").removeValue()
+                                    }
+                                }
                             }
                         }
                     }
