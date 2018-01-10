@@ -15,31 +15,6 @@ import CoreData
 class FirebaseHelper {
     static var firebaseUserEmails = [String]()
     
-    func getUsers() {
-        Database.database().reference().child("users").observe(.childAdded) { (snapshot) in
-            if let userDictionary = snapshot.value as? NSDictionary {
-                if let email = userDictionary["userEmail"] as? String {
-                    if !FirebaseHelper.firebaseUserEmails.contains(email) {
-                        FirebaseHelper.firebaseUserEmails.append(email)
-                    }
-                }
-            }
-        }
-    }
-    
-    func getUserEmails(completion: @escaping (Bool) -> Void) {
-        Database.database().reference().child("users").queryOrderedByKey().observeSingleEvent(of: .value) { (snapshot) in
-            if let userDictionary = snapshot.value as? NSDictionary {
-                if let email = userDictionary["userEmail"] as? String {
-                    if !FirebaseHelper.firebaseUserEmails.contains(email) {
-                        FirebaseHelper.firebaseUserEmails.append(email)
-                    }
-                }
-            }
-            completion(true)
-        }
-    }
-    
     func loadFirebaseData() {
         if let userID = Auth.auth().currentUser?.uid {
             let userRef = Database.database().reference().child("users").child(userID)

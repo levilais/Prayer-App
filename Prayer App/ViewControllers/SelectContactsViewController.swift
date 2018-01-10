@@ -50,7 +50,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         ref = Database.database().reference()
-        FirebaseHelper().getUsers()
+        self.getUsers()
         setupSearchResultsController()
 
         let backView = UIView(frame: self.tableView.bounds)
@@ -65,6 +65,32 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
         loadCorrectView()
     }
+    
+    func getUsers() {
+        ref.child("users").observe(.childAdded) { (snapshot) in
+            if let userDictionary = snapshot.value as? NSDictionary {
+                if let email = userDictionary["userEmail"] as? String {
+                    if !FirebaseHelper.firebaseUserEmails.contains(email) {
+                        FirebaseHelper.firebaseUserEmails.append(email)
+                    }
+                }
+            }
+        }
+    }
+    
+    func getUserEmails(completion: @escaping (Bool) -> Void) {
+        ref.child("users").queryOrderedByKey().observeSingleEvent(of: .value) { (snapshot) in
+            if let userDictionary = snapshot.value as? NSDictionary {
+                if let email = userDictionary["userEmail"] as? String {
+                    if !FirebaseHelper.firebaseUserEmails.contains(email) {
+                        FirebaseHelper.firebaseUserEmails.append(email)
+                    }
+                }
+            }
+            completion(true)
+        }
+    }
+    
     
     func setupSearchResultsController() {
         self.resultSearchController = ({
@@ -103,7 +129,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 contactsNotAllowedView.isHidden = true
                 doneButton.isHidden = false
                 selectContactsView.isHidden = false
-                FirebaseHelper().getUserEmails(completion: { (success) in
+                self.getUserEmails(completion: { (success) in
                     self.getContactsData()
                 })
             }
