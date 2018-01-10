@@ -72,10 +72,12 @@ class CircleUser: User {
             }
         }
         
-        if let circleUserID = circleUser.userID {
-            if let currentUserID = CurrentUser.currentUser.userID {
-                circleUser.circleUserMembershipRef = Database.database().reference().child("users").child(circleUserID).child("memberships").child(currentUserID)
-                circleUser.currentUserCircleRef = Database.database().reference().child("users").child(currentUserID).child("circleUsers").child(circleUserID)
+        if let circleKey = circleUser.key {
+            if let currentUserKey = CurrentUser.currentUser.key {
+                print("circleUserID: \(circleKey))")
+                print("currentUserID: \(currentUserKey))")
+                circleUser.circleUserMembershipRef = Database.database().reference().child("users").child(circleKey).child("memberships").child(currentUserKey)
+                circleUser.currentUserCircleRef = Database.database().reference().child("users").child(currentUserKey).child("circleUsers").child(circleKey)
             }
         }
         
@@ -85,6 +87,7 @@ class CircleUser: User {
     func removeUserFromCircle(circleUser: CircleUser) {
         if let circleRef = circleUser.currentUserCircleRef {
             if let memberRef = circleUser.circleUserMembershipRef {
+                print("circleRef: \(circleRef)")
                 circleRef.removeValue()
                 memberRef.removeValue()
                 
