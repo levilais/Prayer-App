@@ -19,9 +19,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var greetingLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var refreshButton: UIButton!
     
     var showSignUp = true
+    var viewIsVisible = false
     var ref: DatabaseReference!
+    var userRef: DatabaseReference!
+    
     var invitationUsers = [MembershipUser]()
     var membershipPrayers = [CirclePrayer]()
     var cleanData = [String:[Any]]()
@@ -33,18 +37,21 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        viewIsVisible = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification5(_:)), name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
         
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
-        if Auth.auth().currentUser != nil {
+        if let userID = Auth.auth().currentUser?.uid {
             userNotLoggedInView.isHidden = true
             userLoggedInView.isHidden = false
+            userRef = Database.database().reference().child("users").child(userID)
+            self.setupObservers()
         } else {
             userNotLoggedInView.isHidden = false
             userLoggedInView.isHidden = true
@@ -56,6 +63,102 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         loadData()
         greetingLabel.text = "Prayerline"
     }
+    
+    func firstLoad(completed: @escaping (Bool) -> Void) {
+        userRef.child("memberships").observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+            CurrentUser.firebaseMembershipUsers.removeAll()
+            for membershipSnap in snapshot.children {
+                let newMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: membershipSnap as! DataSnapshot)
+                CurrentUser.firebaseMembershipUsers.append(newMembershipUser)
+            }
+            self.loadData()
+            completed(true)
+        })
+    }
+    
+    func setupObservers() {
+        firstLoad { (success) in
+            self.userRef.child("memberships").observe(.childAdded, with: { (snapshot) -> Void in
+                let newMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
+                var matchExists = false
+                for membershipUser in CurrentUser.firebaseMembershipUsers {
+                    if let membershipUserKey = membershipUser.key {
+                        if let newMembershipUserKey = newMembershipUser.key {
+                            if membershipUserKey == newMembershipUserKey {
+                                matchExists = true
+                            }
+                        }
+                    }
+                }
+                if matchExists == false {
+                    CurrentUser.firebaseMembershipUsers.append(newMembershipUser)
+                    
+                    if self.viewIsVisible {
+                        self.showRefreshButton()
+                    } else {
+                        self.loadData()
+                        self.tableView.scrollsToTop = true
+                    }
+                }
+            })
+            
+            self.userRef.child("memberships").observe(.childRemoved, with: { (snapshot) -> Void in
+                let removedMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
+                if let removedMembershipUserKey = removedMembershipUser.key {
+                    var i = 0
+                    for membershipUser in CurrentUser.firebaseMembershipUsers {
+                        if let key = membershipUser.key {
+                            if removedMembershipUserKey == key {
+                                CurrentUser.firebaseMembershipUsers.remove(at: i)
+                            }
+                        }
+                        i += 1
+                    }
+                }
+                self.loadData()
+            })
+            
+            // NOTE - changed membership users aren't really providing anything.  Need to determine what changed.
+            self.userRef.child("memberships").observe(.childChanged, with: { (snapshot) -> Void in
+                let changedMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
+                if let changedMembershipUserKey = changedMembershipUser.key {
+                    var i = 0
+                    for membershipUser in CurrentUser.firebaseMembershipUsers {
+                        if let key = membershipUser.key {
+                            if changedMembershipUserKey == key {
+                                CurrentUser.firebaseMembershipUsers[i] = changedMembershipUser
+                                self.loadData()
+                            }
+                        }
+                        i += 1
+                    }
+                }
+            })
+        }
+    }
+    
+    @IBAction func refreshButtonDidPress(_ sender: Any) {
+        loadData()
+        tableView.scrollsToTop = true
+        hideRefreshButton()
+    }
+    
+    func showRefreshButton() {
+        refreshButton.isHidden = false
+    }
+    
+    func hideRefreshButton() {
+        refreshButton.isHidden = true
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if (view is UITableViewHeaderFooterView) {
@@ -296,9 +399,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let buttonSection = sender.section
         let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
         let memberUser = invitationUsers[indexPath.row]
-        if let memberEmail = memberUser.userEmail {
-            FirebaseHelper().declineInvite(userEmail: memberEmail, ref: ref)
-        }
+        MembershipUser().declineInvite(membershipUser: memberUser)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -395,10 +496,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        viewIsVisible = false
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
     }
 
 }

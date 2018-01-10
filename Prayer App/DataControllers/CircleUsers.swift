@@ -74,8 +74,6 @@ class CircleUser: User {
         
         if let circleKey = circleUser.key {
             if let currentUserKey = CurrentUser.currentUser.key {
-                print("circleUserID: \(circleKey))")
-                print("currentUserID: \(currentUserKey))")
                 circleUser.circleUserMembershipRef = Database.database().reference().child("users").child(circleKey).child("memberships").child(currentUserKey)
                 circleUser.currentUserCircleRef = Database.database().reference().child("users").child(currentUserKey).child("circleUsers").child(circleKey)
             }
