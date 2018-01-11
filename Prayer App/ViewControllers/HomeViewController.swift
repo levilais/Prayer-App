@@ -389,9 +389,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let buttonSection = sender.section
         let indexPath = NSIndexPath(row: buttonTag, section: buttonSection)
         let memberUser = invitationUsers[indexPath.row]
-        if let memberEmail = memberUser.userEmail {
-            FirebaseHelper().acceptInvite(userEmail: memberEmail, ref: ref)
-        }
+        MembershipUser().acceptInvite(membershipUser: memberUser)
     }
     
     @objc func declineInvite(sender: CellButton) {

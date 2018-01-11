@@ -220,5 +220,16 @@ class MembershipUser: CircleUser {
             i += 1
         }
     }
+    
+    func acceptInvite(membershipUser: MembershipUser) {
+        if let membershipRef = membershipUser.currentUserMembershipRef {
+            if let circleRef = membershipUser.membershipUserCircleRef {
+                let circleDict = ["relationship":CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue,"dateJoinedCircle":ServerValue.timestamp(),"agreedInPrayerCount":0] as AnyObject
+                let memberDict = ["membershipStatus":MembershipUser.currentUserMembershipStatus.member.rawValue,"dateJoinedCircle":ServerValue.timestamp()] as AnyObject
+                circleRef.updateChildValues(memberDict as! [AnyHashable : Any])
+                membershipRef.updateChildValues(circleDict as! [AnyHashable : Any])
+            }
+        }
+    }
 }
 
