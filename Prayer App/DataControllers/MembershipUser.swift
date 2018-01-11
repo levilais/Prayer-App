@@ -65,8 +65,9 @@ class MembershipUser: CircleUser {
                 membershipUser.membershipUserCircleRef = Database.database().reference().child("users").child(currentUserKey).child("memberships").child(membershipKey)
             }
         }
-        
+        print("before")
         getMembershipUserProfileImage(membershipUser: membershipUser)
+        print("after")
         
         return membershipUser
     }
@@ -88,6 +89,7 @@ class MembershipUser: CircleUser {
                                     if let userEmail = membershipUser.userEmail {
                                         if email == userEmail {
                                             CurrentUser.firebaseMembershipUsers[i] = membershipUser
+                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil, userInfo: nil)
                                         }
                                     }
                                 }

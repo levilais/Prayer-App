@@ -15,6 +15,7 @@ import CoreData
 class FirebaseHelper {
     static var firebaseUserEmails = [String]()
     
+    // POSSIBLY MOVE TO MAIN SCREEN
     func loadFirebaseData() {
         if let userID = Auth.auth().currentUser?.uid {
             let userRef = Database.database().reference().child("users").child(userID)
@@ -49,41 +50,41 @@ class FirebaseHelper {
                 }
             })
             
-            userRef.child("memberships").observe(.childAdded) { (snapshot) in
-                let membershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
-                // do the other chain of actions here
-            }
-
-            userRef.child("memberships").observe(.childChanged) { (snapshot) in
-                let membershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
-                var i = 0
-                for user in CurrentUser.firebaseMembershipUsers {
-                    if let userID = user.userID {
-                        if let membershipUserID = membershipUser.userID {
-                            if userID == membershipUserID {
-                                CurrentUser.firebaseMembershipUsers[i] = membershipUser
-                            }
-                        }
-                    }
-                    i += 1
-                }
-            }
-
-            userRef.child("memberships").observe(.childRemoved) { (snapshot) in
-                let membershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
-                var i = 0
-                for user in CurrentUser.firebaseMembershipUsers {
-                    if let userID = user.userID {
-                        if let membershipUserID = membershipUser.userID {
-                            if userID == membershipUserID {
-                                CurrentUser.firebaseMembershipUsers.remove(at: i)
-                            }
-                        }
-                    }
-                    i += 1
-                }
-                // reload data here if not repsonding automatically to change in static var
-            }
+//            userRef.child("memberships").observe(.childAdded) { (snapshot) in
+//                let membershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
+//                // do the other chain of actions here
+//            }
+//
+//            userRef.child("memberships").observe(.childChanged) { (snapshot) in
+//                let membershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
+//                var i = 0
+//                for user in CurrentUser.firebaseMembershipUsers {
+//                    if let userID = user.userID {
+//                        if let membershipUserID = membershipUser.userID {
+//                            if userID == membershipUserID {
+//                                CurrentUser.firebaseMembershipUsers[i] = membershipUser
+//                            }
+//                        }
+//                    }
+//                    i += 1
+//                }
+//            }
+//
+//            userRef.child("memberships").observe(.childRemoved) { (snapshot) in
+//                let membershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
+//                var i = 0
+//                for user in CurrentUser.firebaseMembershipUsers {
+//                    if let userID = user.userID {
+//                        if let membershipUserID = membershipUser.userID {
+//                            if userID == membershipUserID {
+//                                CurrentUser.firebaseMembershipUsers.remove(at: i)
+//                            }
+//                        }
+//                    }
+//                    i += 1
+//                }
+//                // reload data here if not repsonding automatically to change in static var
+//            }
         }
     }
     

@@ -23,7 +23,7 @@ class CurrentUser {
     static var firebaseMembershipUsers = [MembershipUser]() {
         didSet {
             CurrentUser().updateMemberPrayers()
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil, userInfo: nil)
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil, userInfo: nil)
         }
     }
     

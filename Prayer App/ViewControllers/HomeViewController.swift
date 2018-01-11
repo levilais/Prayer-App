@@ -25,6 +25,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var viewIsVisible = false
     var ref: DatabaseReference!
     var userRef: DatabaseReference!
+    var dataFirstLoaded = false
     
     var invitationUsers = [MembershipUser]()
     var membershipPrayers = [CirclePrayer]()
@@ -40,7 +41,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         viewIsVisible = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification5(_:)), name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
@@ -59,8 +60,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableViewAutomaticDimension
-        
-        loadData()
+        if dataFirstLoaded {
+            self.loadData()
+        }
         greetingLabel.text = "Prayerline"
     }
     
@@ -71,7 +73,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let newMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: membershipSnap as! DataSnapshot)
                 CurrentUser.firebaseMembershipUsers.append(newMembershipUser)
             }
-            self.loadData()
+            if self.dataFirstLoaded {
+                self.loadData()
+            }
             completed(true)
         })
     }
@@ -92,12 +96,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 if matchExists == false {
                     CurrentUser.firebaseMembershipUsers.append(newMembershipUser)
-                    
-                    if self.viewIsVisible {
-                        self.showRefreshButton()
-                    } else {
-                        self.loadData()
-                        self.tableView.scrollsToTop = true
+                    if self.dataFirstLoaded {
+                        if self.viewIsVisible {
+                            self.showRefreshButton()
+                        } else {
+                            self.loadData()
+                            self.tableView.scrollsToTop = true
+                        }
                     }
                 }
             })
@@ -127,7 +132,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         if let key = membershipUser.key {
                             if changedMembershipUserKey == key {
                                 CurrentUser.firebaseMembershipUsers[i] = changedMembershipUser
-                                self.loadData()
+                                if self.dataFirstLoaded {
+                                    self.loadData()
+                                }
                             }
                         }
                         i += 1
@@ -150,15 +157,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func hideRefreshButton() {
         refreshButton.isHidden = true
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if (view is UITableViewHeaderFooterView) {
@@ -216,7 +214,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             if let membershipStatus = membershipUser.membershipStatus {
                 if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
+                    print("got membershipStatus")
                     if let image = membershipUser.profileImageAsImage {
+                        print("got profile image as image and set")
                         cell.profileImage.image = image
                     }
                     
@@ -436,13 +436,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @objc func handleNotification3(_ notification: NSNotification) {
+        dataFirstLoaded = true
         loadData()
     }
     
-    @objc func handleNotification4(_ notification: NSNotification) {
-       loadData()
-    }
-    
+//    @objc func handleNotification4(_ notification: NSNotification) {
+//       loadData()
+//    }
+//    
     @objc func handleNotification5(_ notification: NSNotification) {
         loadData()
     }
@@ -499,7 +500,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         viewIsVisible = false
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
 //        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
     }
 
