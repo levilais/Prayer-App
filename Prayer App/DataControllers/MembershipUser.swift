@@ -205,19 +205,19 @@ class MembershipUser: CircleUser {
             if let circleRef = membershipUser.membershipUserCircleRef {
                 membershipRef.removeValue()
                 circleRef.removeValue()
-            }
-        }
-        
-        var i = 0
-        for firebaseMembershipUser in CurrentUser.firebaseMembershipUsers {
-            if let membershipUserEmail = membershipUser.userEmail {
-                if let emailToCheck = firebaseMembershipUser.userEmail {
-                    if membershipUserEmail == emailToCheck {
-                        CurrentUser.firebaseMembershipUsers.remove(at: i)
+    
+                var i = 0
+                for firebaseMembershipUser in CurrentUser.firebaseMembershipUsers {
+                    if let membershipUserEmail = membershipUser.userEmail {
+                        if let emailToCheck = firebaseMembershipUser.userEmail {
+                            if membershipUserEmail == emailToCheck {
+                                CurrentUser.firebaseMembershipUsers.remove(at: i)
+                            }
+                        }
                     }
+                    i += 1
                 }
             }
-            i += 1
         }
     }
     
