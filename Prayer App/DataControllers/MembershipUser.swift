@@ -12,12 +12,13 @@ import Firebase
 
 class MembershipUser: CircleUser {
     var membershipUserCircleRef: DatabaseReference?
+    var membershipUserCirclePrayersRef: DatabaseReference?
     var currentUserMembershipRef: DatabaseReference?
     
     var membershipStatus: String?
     var membershipUserCircleIds: [String]?
     var membershipUserCircleUsers: [CircleUser]?
-    var membershipCirclePrayers: [CirclePrayer]?
+    var membershipUserPrayers: [MembershipPrayer]?
     
     enum currentUserMembershipStatus: String {
         case invited = "invited"
@@ -62,17 +63,17 @@ class MembershipUser: CircleUser {
         if let membershipKey = membershipUser.key {
             if let currentUserKey = CurrentUser.currentUser.key {
                 membershipUser.currentUserMembershipRef = Database.database().reference().child("users").child(membershipKey).child("circleUsers").child(currentUserKey)
+                membershipUser.membershipUserCirclePrayersRef = Database.database().reference().child("users").child(membershipKey).child("circlePrayers")
                 membershipUser.membershipUserCircleRef = Database.database().reference().child("users").child(currentUserKey).child("memberships").child(membershipKey)
             }
         }
-        print("before")
-        getMembershipUserProfileImage(membershipUser: membershipUser)
-        print("after")
+        
+        setMembershipUserProfileImage(membershipUser: membershipUser)
         
         return membershipUser
     }
     
-    func getMembershipUserProfileImage(membershipUser: MembershipUser) {
+    func setMembershipUserProfileImage(membershipUser: MembershipUser) {
         if let urlString = membershipUser.profileImageAsString {
             if let url = URL(string: urlString) {
                 URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
@@ -102,103 +103,105 @@ class MembershipUser: CircleUser {
         }
     }
     
-    func getMembershipUserCircleUsers(membershipUser: MembershipUser) {
-        if let urlString = membershipUser.profileImageAsString {
-            if let url = URL(string: urlString) {
-                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-                    if error != nil {
-                        print(error!.localizedDescription)
-                        return
-                    }
-                    if let imageData = data {
-                        if let image = UIImage(data: imageData) {
-                            membershipUser.profileImageAsImage = image
-                            var userExists = false
-                            var i = 0
-                            var userExistsDetermined = false
-                            while userExistsDetermined == false {
-                                for user in CurrentUser.firebaseMembershipUsers {
-                                    if let email = user.userEmail {
-                                        if let userEmail = membershipUser.userEmail {
-                                            if email == userEmail {
-                                                userExists = true
-                                                userExistsDetermined = true
-                                            }
-                                        }
-                                    }
-                                    i += 1
-                                }
-                                userExistsDetermined = true
-                            }
-                            if userExists == false {
-                                CurrentUser.firebaseMembershipUsers.append(membershipUser)
-                                
-                                if let membershipUserID = membershipUser.userID {
-                                    Database.database().reference().child("users").child(membershipUserID).child("circleUsers").observe(.childAdded, with: { (snapshot) in
-                                        if let userDictionary = snapshot.value as? NSDictionary {
-                                            if let profileImageString = userDictionary["profileImageURL"] as? String {
-                                                if let url = URL(string: profileImageString) {
-                                                    URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-                                                        if error != nil {
-                                                            print(error!.localizedDescription)
-                                                            return
-                                                        }
-                                                        if let imageData = data {
-                                                            if let image = UIImage(data: imageData) {
-                                                                var i = 0
-                                                                for user in CurrentUser.firebaseMembershipUsers {
-                                                                    if let userID = user.userID {
-                                                                        if let membershipUserID = membershipUser.userID {
-                                                                            if userID == membershipUserID {
-                                                                                let newUser = CircleUser()
-                                                                                var newUsersArray = [CircleUser]()
-                                                                                var circleUserID = String()
-                                                                                var circleUserAgreedCount = Int()
-                                                                                if let circleUserIDCheck = userDictionary["userID"] as? String {
-                                                                                    circleUserID = circleUserIDCheck
-                                                                                }
-                                                                                
-                                                                                if let circleUserAgreedCheck = userDictionary["agreedInPrayerCount"] as? Int {
-                                                                                    circleUserAgreedCount = circleUserAgreedCheck
-                                                                                }
-                                                                                
-                                                                                if let existingUserArray = user.membershipUserCircleUsers {
-                                                                                    newUsersArray = existingUserArray
-                                                                                    newUser.profileImageAsImage = image
-                                                                                    newUser.userID = circleUserID
-                                                                                    newUser.agreedInPrayerCount = circleUserAgreedCount
-                                                                                    newUsersArray.append(newUser)
-                                                                                    user.membershipUserCircleUsers = newUsersArray
-                                                                                    CurrentUser.firebaseMembershipUsers[i] = user
-                                                                                } else {
-                                                                                    newUser.profileImageAsImage = image
-                                                                                    newUser.userID = circleUserID
-                                                                                    newUser.agreedInPrayerCount = circleUserAgreedCount
-                                                                                    newUsersArray.append(newUser)
-                                                                                    user.membershipUserCircleUsers = newUsersArray
-                                                                                    CurrentUser.firebaseMembershipUsers[i] = user
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    i += 1
-                                                                }
-                                                            }
-                                                        }
-                                                    }).resume()
-                                                }
-                                            }
-                                            
-                                        }
-                                    })
-                                }
-                            }
-                        }
-                    }
-                }).resume()
-            }
-        }
-    }
+    
+    // NEED TO FIX
+//    func getMembershipUserCircleUsers(membershipUser: MembershipUser) {
+//        if let urlString = membershipUser.profileImageAsString {
+//            if let url = URL(string: urlString) {
+//                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+//                    if error != nil {
+//                        print(error!.localizedDescription)
+//                        return
+//                    }
+//                    if let imageData = data {
+//                        if let image = UIImage(data: imageData) {
+//                            membershipUser.profileImageAsImage = image
+//                            var userExists = false
+//                            var i = 0
+//                            var userExistsDetermined = false
+//                            while userExistsDetermined == false {
+//                                for user in CurrentUser.firebaseMembershipUsers {
+//                                    if let email = user.userEmail {
+//                                        if let userEmail = membershipUser.userEmail {
+//                                            if email == userEmail {
+//                                                userExists = true
+//                                                userExistsDetermined = true
+//                                            }
+//                                        }
+//                                    }
+//                                    i += 1
+//                                }
+//                                userExistsDetermined = true
+//                            }
+//                            if userExists == false {
+//                                CurrentUser.firebaseMembershipUsers.append(membershipUser)
+//
+//                                if let membershipUserID = membershipUser.userID {
+//                                    Database.database().reference().child("users").child(membershipUserID).child("circleUsers").observe(.childAdded, with: { (snapshot) in
+//                                        if let userDictionary = snapshot.value as? NSDictionary {
+//                                            if let profileImageString = userDictionary["profileImageURL"] as? String {
+//                                                if let url = URL(string: profileImageString) {
+//                                                    URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+//                                                        if error != nil {
+//                                                            print(error!.localizedDescription)
+//                                                            return
+//                                                        }
+//                                                        if let imageData = data {
+//                                                            if let image = UIImage(data: imageData) {
+//                                                                var i = 0
+//                                                                for user in CurrentUser.firebaseMembershipUsers {
+//                                                                    if let userID = user.userID {
+//                                                                        if let membershipUserID = membershipUser.userID {
+//                                                                            if userID == membershipUserID {
+//                                                                                let newUser = CircleUser()
+//                                                                                var newUsersArray = [CircleUser]()
+//                                                                                var circleUserID = String()
+//                                                                                var circleUserAgreedCount = Int()
+//                                                                                if let circleUserIDCheck = userDictionary["userID"] as? String {
+//                                                                                    circleUserID = circleUserIDCheck
+//                                                                                }
+//
+//                                                                                if let circleUserAgreedCheck = userDictionary["agreedInPrayerCount"] as? Int {
+//                                                                                    circleUserAgreedCount = circleUserAgreedCheck
+//                                                                                }
+//
+//                                                                                if let existingUserArray = user.membershipUserCircleUsers {
+//                                                                                    newUsersArray = existingUserArray
+//                                                                                    newUser.profileImageAsImage = image
+//                                                                                    newUser.userID = circleUserID
+//                                                                                    newUser.agreedInPrayerCount = circleUserAgreedCount
+//                                                                                    newUsersArray.append(newUser)
+//                                                                                    user.membershipUserCircleUsers = newUsersArray
+//                                                                                    CurrentUser.firebaseMembershipUsers[i] = user
+//                                                                                } else {
+//                                                                                    newUser.profileImageAsImage = image
+//                                                                                    newUser.userID = circleUserID
+//                                                                                    newUser.agreedInPrayerCount = circleUserAgreedCount
+//                                                                                    newUsersArray.append(newUser)
+//                                                                                    user.membershipUserCircleUsers = newUsersArray
+//                                                                                    CurrentUser.firebaseMembershipUsers[i] = user
+//                                                                                }
+//                                                                            }
+//                                                                        }
+//                                                                    }
+//                                                                    i += 1
+//                                                                }
+//                                                            }
+//                                                        }
+//                                                    }).resume()
+//                                                }
+//                                            }
+//
+//                                        }
+//                                    })
+//                                }
+//                            }
+//                        }
+//                    }
+//                }).resume()
+//            }
+//        }
+//    }
     
     func declineInvite(membershipUser: MembershipUser) {
         if let membershipRef = membershipUser.currentUserMembershipRef {

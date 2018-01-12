@@ -64,7 +64,7 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
                         print("error \(error.localizedDescription)")
                     }
                 }
-                CurrentUser.membershipCirclePrayers.removeAll()
+//                CurrentUser.membershipUserPrayers.removeAll()
             }
         }
     }

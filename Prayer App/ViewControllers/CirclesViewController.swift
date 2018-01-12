@@ -437,23 +437,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
             let circleUser = CurrentUser.firebaseCircleMembers[self.selectedCircleMember]
             
-//            if let userEmail = circleUser.userEmail {
-//                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: userEmail, ref: self.ref)
-//
-//                var i = 0
-//                for circleUserToRemove in CurrentUser.firebaseCircleMembers {
-//                    if let circleUserEmail = circleUserToRemove.userEmail {
-//                        if circleUserEmail == userEmail {
-//                            CurrentUser.firebaseCircleMembers.remove(at: i)
-//                        }
-//                    }
-//                    i += 1
-//                }
-//            }
-//
-//            if let email = circleUser.userEmail {
-//                FirebaseHelper().deleteCircleUserFromCurrentUserFirebase(userEmail: email, ref: Database.database().reference())
-//            }
             CircleUser().removeUserFromCircle(circleUser: circleUser)
             
             self.circleSpotFilled[self.selectedCircleMember] = false

@@ -20,79 +20,75 @@ class CurrentUser {
         }
     }
     
-    static var firebaseMembershipUsers = [MembershipUser]() {
-        didSet {
-            CurrentUser().updateMemberPrayers()
-//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil, userInfo: nil)
-        }
-    }
     
-    static var membershipCirclePrayers = [CirclePrayer]() {
-        didSet {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil, userInfo: nil)
-        }
-    }
     
+//    static var membershipCirclePrayers = [CirclePrayer]() {
+//        didSet {
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil, userInfo: nil)
+//        }
+//    }
+    
+    static var firebaseMembershipPrayers = [MembershipPrayer]()
+    static var firebaseMembershipUsers = [MembershipUser]()
     static var currentUserCirclePrayers = [CirclePrayer]()
     static var currentUserPrayers = [CurrentUserPrayer]()
-    
     static var currentUser = User()
     
-    func updateMemberPrayers() {
-        for membershipUser in CurrentUser.firebaseMembershipUsers {
-            if let relationship = membershipUser.membershipStatus {
-                if relationship == MembershipUser.currentUserMembershipStatus.member.rawValue {
-                    if let membershipUserID = membershipUser.userID {
-                        Database.database().reference().child("users").child(membershipUserID).child("circlePrayers").observe(.childAdded) { (snapshot) in
-                            
-                            for prayer in snapshot.children {
-                                let circlePrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: prayer as! DataSnapshot)
-//                                CurrentUser.currentUserCirclePrayers.append(circlePrayer)
-                            
-                            
-                            
-//                            if let userDictionary = snapshot.value as? NSDictionary {
-//                                var whoAgreedDict = NSDictionary()
-//                                if let whoAgreedDictCheck = snapshot.childSnapshot(forPath: "whoAgreed").value as? NSDictionary {
-//                                    whoAgreedDict = whoAgreedDictCheck
+//    func updateMemberPrayers() {
+//        for membershipUser in CurrentUser.firebaseMembershipUsers {
+//            if let relationship = membershipUser.membershipStatus {
+//                if relationship == MembershipUser.currentUserMembershipStatus.member.rawValue {
+//                    if let membershipUserID = membershipUser.userID {
+//                        Database.database().reference().child("users").child(membershipUserID).child("circlePrayers").observe(.childAdded) { (snapshot) in
+//
+//                            for prayer in snapshot.children {
+//                                let circlePrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: prayer as! DataSnapshot)
+////                                CurrentUser.currentUserCirclePrayers.append(circlePrayer)
+//
+//
+//
+////                            if let userDictionary = snapshot.value as? NSDictionary {
+////                                var whoAgreedDict = NSDictionary()
+////                                if let whoAgreedDictCheck = snapshot.childSnapshot(forPath: "whoAgreed").value as? NSDictionary {
+////                                    whoAgreedDict = whoAgreedDictCheck
+////                                }
+//
+//
+////                                let circlePrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: whoAgreedDict)
+//
+//                                if CurrentUser.membershipCirclePrayers.count > 0 {
+//                                    var matchDetermined = false
+//                                    var matchExists = false
+//                                    var i = 0
+//                                    while matchDetermined == false {
+//                                        for membershipCirclePrayer in CurrentUser.membershipCirclePrayers {
+//                                            if let membershipCirclePrayerID = membershipCirclePrayer.prayerID {
+//                                                if let circlePrayerID = circlePrayer.prayerID {
+//                                                    if membershipCirclePrayerID == circlePrayerID {
+//                                                        CurrentUser.membershipCirclePrayers[i] = circlePrayer
+//                                                        matchExists = true
+//                                                        matchDetermined = true
+//                                                    }
+//                                                }
+//                                            }
+//                                            i += 1
+//                                        }
+//                                        matchDetermined = true
+//                                    }
+//                                    if matchExists == false {
+//                                        CurrentUser.membershipCirclePrayers.append(circlePrayer)
+//                                    }
+//                                } else {
+//                                    CurrentUser.membershipCirclePrayers.append(circlePrayer)
 //                                }
-                                
-                                
-//                                let circlePrayer = FirebaseHelper().circlePrayerFromUserDictionary(userDictionary: userDictionary, whoAgreedDict: whoAgreedDict)
-                                
-                                if CurrentUser.membershipCirclePrayers.count > 0 {
-                                    var matchDetermined = false
-                                    var matchExists = false
-                                    var i = 0
-                                    while matchDetermined == false {
-                                        for membershipCirclePrayer in CurrentUser.membershipCirclePrayers {
-                                            if let membershipCirclePrayerID = membershipCirclePrayer.prayerID {
-                                                if let circlePrayerID = circlePrayer.prayerID {
-                                                    if membershipCirclePrayerID == circlePrayerID {
-                                                        CurrentUser.membershipCirclePrayers[i] = circlePrayer
-                                                        matchExists = true
-                                                        matchDetermined = true
-                                                    }
-                                                }
-                                            }
-                                            i += 1
-                                        }
-                                        matchDetermined = true
-                                    }
-                                    if matchExists == false {
-                                        CurrentUser.membershipCirclePrayers.append(circlePrayer)
-                                    }
-                                } else {
-                                    CurrentUser.membershipCirclePrayers.append(circlePrayer)
-                                }
-                            }
-                            // reload data here if necessary
-                        }
-                    }
-                }
-            }
-        }
-    }
+//                            }
+//                            // reload data here if necessary
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     func setupCurrentUserFirstNameWelcomeLabel(label: UILabel) -> UILabel {
         if Auth.auth().currentUser != nil {

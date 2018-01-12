@@ -139,25 +139,6 @@ class FirebaseHelper {
             }
         }
     }
-    
-//    func acceptInvite(userEmail: String, ref: DatabaseReference) {
-//        if let userID = Auth.auth().currentUser?.uid {
-//            ref.child("users").queryOrdered(byChild: "userEmail").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
-//                if snapshot.value != nil {
-//                    if let userDictionary = snapshot.value as? NSDictionary {
-//                        if let uid = userDictionary["userID"] as? String {
-//                        ref.child("users").child(uid).child("circleUsers").child(userID).child("relationship").setValue(CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue)
-//                            ref.child("users").child(uid).child("circleUsers").child(userID).child("dateJoinedCircle").setValue(ServerValue.timestamp())
-//                            
-//                            ref.child("users").child(uid).child("circleUsers").child(userID).child("agreedInPrayerCount").setValue(0)
-//                            ref.child("users").child(userID).child("memberships").child(uid).child("membershipStatus").setValue(MembershipUser.currentUserMembershipStatus.member.rawValue)
-//                            ref.child("users").child(userID).child("memberships").child(uid).child("dateJoinedCircle").setValue(ServerValue.timestamp())
-//                        }
-//                    }
-//                }
-//            })
-//        }
-//    }
   
     func daysSinceTimeStampLabel(cellLabel: UILabel, prayer: CurrentUserPrayer, cell: PrayerTableViewCell) -> UILabel {
         if let prayerItemRef = prayer.itemRef {
@@ -234,41 +215,6 @@ class FirebaseHelper {
             }
         }
     }
-    
-//    func membershipUserFromDictionary(userDictionary: NSDictionary) -> MembershipUser {
-//        let user = MembershipUser()
-//        if let membershipStatus = userDictionary["membershipStatus"] as? String {
-//            user.membershipStatus = membershipStatus
-//        }
-//        if let firstName = userDictionary["firstName"] as? String {
-//            user.firstName = firstName
-//        }
-//        if let lastName = userDictionary["lastName"] as? String {
-//            user.lastName = lastName
-//        }
-//        if let userID = userDictionary["userID"] as? String {
-//            user.userID = userID
-//        }
-//        if let userEmail = userDictionary["userEmail"] as? String {
-//            user.userEmail = userEmail
-//        }
-//        if let profileImageUrlString = userDictionary["profileImageURL"] as? String {
-//            user.profileImageAsString = profileImageUrlString
-//        }
-//        if let dateInvitedDouble = userDictionary["dateInvited"] as? Double {
-//            user.dateInvited = dateInvitedDouble
-//        }
-//        if let circleUsers = userDictionary["circleUsers"] as? NSDictionary {
-//            print("circleUsers: \(circleUsers)")
-//        }
-//        FirebaseHelper().setMembershipUserProfileImageFromFirebase(membershipUser: user)
-//        return user
-//    }
-    
-//    func addNewConnectionToCurrentUserMemberships(userDictionary: NSDictionary) {
-////        let user = self.membershipUserFromDictionary(userDictionary: userDictionary)
-//        self.downloadAdditionalMembershipUserDataFromFirebase(membershipUser: user)
-//    }
     
     func createPrayerCategories(prayers: [CurrentUserPrayer]) {
         var categories = [String]()

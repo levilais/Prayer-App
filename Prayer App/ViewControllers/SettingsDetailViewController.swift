@@ -153,7 +153,7 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                 try firebaseAuth.signOut()
                 CurrentUser.firebaseCircleMembers.removeAll()
                 CurrentUser.firebaseMembershipUsers.removeAll()
-                CurrentUser.membershipCirclePrayers.removeAll()
+//                CurrentUser.membershipUserPrayers.removeAll()
                 CurrentUser.currentUserCirclePrayers.removeAll()
                 FirebaseHelper.firebaseUserEmails.removeAll()
                 

@@ -27,8 +27,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var userRef: DatabaseReference!
     var dataFirstLoaded = false
     
+    var preSortedData = [AnyObject]()
+    
     var invitationUsers = [MembershipUser]()
-    var membershipPrayers = [CirclePrayer]()
+    var membershipPrayers = [MembershipPrayer]()
     var cleanData = [String:[Any]]()
     
     override func viewDidLoad() {
@@ -42,7 +44,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification5(_:)), name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
         
@@ -53,6 +55,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             userLoggedInView.isHidden = false
             userRef = Database.database().reference().child("users").child(userID)
             self.setupObservers()
+            self.setupMembershipPrayerObservers()
         } else {
             userNotLoggedInView.isHidden = false
             userLoggedInView.isHidden = true
@@ -123,7 +126,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.loadData()
             })
             
-            // NOTE - changed membership users aren't really providing anything.  Need to determine what changed.
             self.userRef.child("memberships").observe(.childChanged, with: { (snapshot) -> Void in
                 let changedMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
                 if let changedMembershipUserKey = changedMembershipUser.key {
@@ -141,6 +143,192 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
             })
+        }
+    }
+    
+    func membershipPrayersFirstLoad(completed: @escaping (Bool) -> Void) {
+        CurrentUser.firebaseMembershipPrayers.removeAll()
+        for membershipUser in CurrentUser.firebaseMembershipUsers {
+            if let membershipStatus = membershipUser.membershipStatus {
+                if membershipStatus == MembershipUser.currentUserMembershipStatus.member.rawValue {
+                    if let membershipUserCirclePrayersRef = membershipUser.membershipUserCirclePrayersRef {
+                        membershipUserCirclePrayersRef.observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+                            for membershipPrayerSnap in snapshot.children {
+                                let newMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: membershipPrayerSnap as! DataSnapshot)
+                                CurrentUser.firebaseMembershipPrayers.append(newMembershipPrayer)
+                            }
+                            self.loadData()
+                            completed(true)
+                        })
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    // THESE ARE SUPER MESSED UP - FIGURE IT OUT!!!!!!
+    
+    func setupMembershipPrayerObservers() {
+        self.membershipPrayersFirstLoad(completed: { (success) in
+            for membershipUser in CurrentUser.firebaseMembershipUsers {
+                if let membershipStatus = membershipUser.membershipStatus {
+                    if membershipStatus == MembershipUser.currentUserMembershipStatus.member.rawValue {
+                        if let membershipUserCirclePrayersRef = membershipUser.membershipUserCirclePrayersRef {
+                            membershipUserCirclePrayersRef.observe(.childAdded, with: { (snapshot) -> Void in
+                                let newMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
+                                var matchExists = false
+                                for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
+                                    if let prayerKey = membershipPrayer.key {
+                                        if let newPrayerKey = newMembershipPrayer.key {
+                                            if prayerKey == newPrayerKey {
+                                                matchExists = true
+                                            }
+                                        }
+                                    }
+                                }
+                                if matchExists == false {
+                                    CurrentUser.firebaseMembershipPrayers.append(newMembershipPrayer)
+                                    if self.viewIsVisible {
+                                        self.showRefreshButton()
+                                    } else {
+                                        self.loadData()
+                                        self.tableView.scrollsToTop = true
+                                    }
+                                }
+                            })
+                            membershipUserCirclePrayersRef.observe(.childRemoved, with: { (snapshot) -> Void in
+                                let removedMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
+                                if let removedMembershipPrayerKey = removedMembershipPrayer.key {
+                                    var i = 0
+                                    for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
+                                        if let key = membershipPrayer.key {
+                                            if removedMembershipPrayerKey == key {
+                                                CurrentUser.firebaseMembershipPrayers.remove(at: i)
+                                            }
+                                        }
+                                        i += 1
+                                    }
+                                }
+                                self.loadData()
+                            })
+                            membershipUserCirclePrayersRef.observe(.childChanged, with: { (snapshot) -> Void in
+                                let changedMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
+                                if let changedMembershipPrayerKey = changedMembershipPrayer.key {
+                                    var i = 0
+                                    for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
+                                        if let key = membershipPrayer.key {
+                                            if changedMembershipPrayerKey == key {
+                                                CurrentUser.firebaseMembershipPrayers[i] = changedMembershipPrayer
+                                                self.loadData()
+                                            }
+                                        }
+                                        i += 1
+                                    }
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+        })
+    }
+    
+    
+//    func reloadData() {
+//        preSortedPrayers = []
+//        for prayer in CurrentUser.currentUserPrayers {
+//            if let isAnswered = prayer.isAnswered {
+//                if answeredShowing {
+//                    if isAnswered {
+//                        self.preSortedPrayers.append(prayer)
+//                    }
+//                } else {
+//                    if !isAnswered {
+//                        self.preSortedPrayers.append(prayer)
+//                    }
+//                }
+//            }
+//        }
+//        refreshPrayers()
+//    }
+//
+//    func refreshData() {
+//        sortedPrayers = [:]
+//        if self.preSortedPrayers.count > 0 {
+//            for prayer in self.preSortedPrayers.reversed() {
+//                if let prayerCategory = prayer.prayerCategory {
+//                    if self.sortedPrayers.keys.contains(prayerCategory) {
+//                        if var prayerArray = sortedPrayers[prayerCategory] {
+//                            prayerArray.append(prayer)
+//                            sortedPrayers[prayerCategory] = prayerArray
+//                        }
+//                    } else {
+//                        let newArray = [prayer]
+//                        sortedPrayers[prayerCategory] = newArray
+//                    }
+//                }
+//            }
+//        }
+//        DispatchQueue.main.async {
+//            UIView.performWithoutAnimation {
+//                self.tableView.reloadData()
+//                self.toggleTableIsHidden()
+//            }
+//        }
+//    }
+    
+    
+    func loadData() {
+        self.cleanData = [:]
+        self.invitationUsers = []
+        self.membershipPrayers = []
+        
+        
+        var matchDetermined = false
+        while matchDetermined == false {
+            for user in CurrentUser.firebaseMembershipUsers {
+                if let membershipStatus = user.membershipStatus {
+                    if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
+                        self.invitationUsers.append(user)
+                        matchDetermined = true
+                    }
+                }
+            }
+            matchDetermined = true
+        }
+        
+        for prayer in CurrentUser.firebaseMembershipPrayers {
+            self.membershipPrayers.append(prayer)
+        }
+        
+        //        for prayer in CurrentUser.membershipCirclePrayers {
+        //            self.membershipPrayers.append(prayer)
+        //        }
+        
+        if self.invitationUsers.count > 0 {
+            self.cleanData["invitationUsers"] = self.invitationUsers
+        }
+        
+        if self.membershipPrayers.count > 0 {
+            self.cleanData["membershipPrayers"] = self.membershipPrayers
+        }
+        
+        DispatchQueue.main.async {
+            self.showHideTable()
+            UIView.performWithoutAnimation {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    func showHideTable() {
+        if self.cleanData.count > 0 {
+            self.tableView.isHidden = false
+            self.messageLabel.isHidden = true
+        } else {
+            self.tableView.isHidden = true
+            self.messageLabel.isHidden = false
         }
     }
     
@@ -241,7 +429,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         case "membershipPrayers":
             let cell = tableView.dequeueReusableCell(withIdentifier: "circlePrayerCell", for: indexPath) as! CirclePrayerTableViewCell
             
-            if let prayerArray = cleanData["membershipPrayers"] as? [CirclePrayer] {
+            if let prayerArray = cleanData["membershipPrayers"] as? [MembershipPrayer] {
                 let prayer = prayerArray[indexPath.row]
                 
                 if let agreedCount = prayer.agreedCount {
@@ -264,11 +452,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
                 
-                var whoAgreed = [String]()
-                if let whoAgreedCheck = prayer.whoAgreed {
-                    whoAgreed = whoAgreedCheck
-                }
-                
+                // PRAYER OWNER PROFILE IMAGE
                 if let ownerUserID = prayer.prayerOwnerUserID {
                     for membershipUser in CurrentUser.firebaseMembershipUsers {
                         if let memberUserID = membershipUser.userID {
@@ -276,36 +460,33 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 if let profileImage = membershipUser.profileImageAsImage {
                                     cell.profileImageView.image = profileImage
                                 }
-                                if let membershipUserCircleUsers = membershipUser.membershipUserCircleUsers {
-                                    if membershipUserCircleUsers.count > 0 {
-                                        
-                                        for i in 0...4 {
-                                            if i < membershipUserCircleUsers.count {
-                                                let circleUser = membershipUserCircleUsers[i]
-                                                if let circleUserProfileImage = circleUser.profileImageAsImage {
-                                                    if let circleUserID = circleUser.userID {
-                                                        
-                                                        if whoAgreed.contains(circleUserID) {
-                                                            let imageView = cell.senderPrayerCircleMembers[i]
-                                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
-                                                            imageView.image = circleUserProfileImage
-                                                            imageView.isHidden = false
-                                                            tint.isHidden = true
-                                                        } else {
-                                                            let imageView = cell.senderPrayerCircleMembers[i]
-                                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
-                                                            imageView.image = circleUserProfileImage
-                                                            imageView.isHidden = false
-                                                            tint.isHidden = false
-                                                        }
-                                                    }
-                                                }
-                                            } else {
-                                                let imageView = cell.senderPrayerCircleMembers[i]
-                                                let tint = cell.senderPrayerCircleMembersTintImage[i]
-                                                imageView.isHidden = true
-                                                tint.isHidden = true
-                                            }
+                            }
+                        }
+                    }
+                }
+                
+                if let ownerCircleUsers = prayer.ownerCircleUsers {
+                    for ownerCircleUser in ownerCircleUsers {
+                        if let profileImage = ownerCircleUser.profileImageAsImage {
+                            if let whoAgreed = prayer.whoAgreedIds {
+                                if whoAgreed.count > 0 {
+                                    for i in 0...4 {
+                                        if i < ownerCircleUsers.count && i < whoAgreed.count {
+                                            let imageView = cell.senderPrayerCircleMembers[i]
+                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
+                                            imageView.image = profileImage
+                                            imageView.isHidden = false
+                                            tint.isHidden = true
+                                        } else if i < ownerCircleUsers.count && i >= whoAgreed.count {
+                                            let imageView = cell.senderPrayerCircleMembers[i]
+                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
+                                            imageView.isHidden = true
+                                            tint.isHidden = true
+                                        } else {
+                                            let imageView = cell.senderPrayerCircleMembers[i]
+                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
+                                            imageView.isHidden = true
+                                            tint.isHidden = true
                                         }
                                     }
                                 }
@@ -328,7 +509,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         var amenAction = UIContextualAction()
         amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
             self.markPrayed(indexPath: indexPath)
-            CurrentUser().updateMemberPrayers()
+//            CurrentUser().updateMemberPrayers()
             success(true)
         })
         amenAction.backgroundColor = UIColor.StyleFile.TealColor
@@ -344,7 +525,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let sectionTitles = Array(cleanData.keys) as [String]
         let section = sectionTitles[indexPath.section]
         if let objectArray = cleanData[section] {
-            if objectArray[indexPath.row] is CirclePrayer {
+            if objectArray[indexPath.row] is MembershipPrayer {
                 isPrayerCell = true
             }
         }
@@ -360,7 +541,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let section = sender.section
         let indexPath = NSIndexPath(row: row, section: section)
         agreeInPrayer(indexPath: indexPath as IndexPath)
-        CurrentUser().updateMemberPrayers()
+//        CurrentUser().updateMemberPrayers()
     }
     
     func agreeInPrayer(indexPath: IndexPath) {
@@ -372,12 +553,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func prayerAtIndexPath(indexPath: IndexPath) -> CirclePrayer? {
-        var prayer = CirclePrayer()
+    func prayerAtIndexPath(indexPath: IndexPath) -> MembershipPrayer? {
+        var prayer = MembershipPrayer()
         let sectionTitles = Array(cleanData.keys) as [String]
         let section = sectionTitles[indexPath.section]
         if let objectArray = cleanData[section] {
-            if let prayerCheck = objectArray[indexPath.row] as? CirclePrayer {
+            if let prayerCheck = objectArray[indexPath.row] as? MembershipPrayer {
                 prayer = prayerCheck
             }
         }
@@ -438,60 +619,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         loadData()
     }
     
-//    @objc func handleNotification4(_ notification: NSNotification) {
-//       loadData()
-//    }
-//    
+    @objc func handleNotification4(_ notification: NSNotification) {
+       loadData()
+    }
+    
     @objc func handleNotification5(_ notification: NSNotification) {
         loadData()
-    }
-    
-    func loadData() {
-        self.cleanData = [:]
-        self.invitationUsers = []
-        self.membershipPrayers = []
-
-        var matchDetermined = false
-        while matchDetermined == false {
-            for user in CurrentUser.firebaseMembershipUsers {
-                if let membershipStatus = user.membershipStatus {
-                    if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
-                        self.invitationUsers.append(user)
-                        matchDetermined = true
-                    }
-                }
-            }
-            matchDetermined = true
-        }
-        
-        for prayer in CurrentUser.membershipCirclePrayers {
-            self.membershipPrayers.append(prayer)
-        }
-        
-        if self.invitationUsers.count > 0 {
-            self.cleanData["invitationUsers"] = self.invitationUsers
-        }
-    
-        if self.membershipPrayers.count > 0 {
-            self.cleanData["membershipPrayers"] = self.membershipPrayers
-        }
-        
-        DispatchQueue.main.async {
-            self.showHideTable()
-            UIView.performWithoutAnimation {
-                self.tableView.reloadData()
-            }
-        }
-    }
-    
-    func showHideTable() {
-        if self.cleanData.count > 0 {
-            self.tableView.isHidden = false
-            self.messageLabel.isHidden = true
-        } else {
-            self.tableView.isHidden = true
-            self.messageLabel.isHidden = false
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -499,7 +632,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayersUpdated"), object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
     }
 
 }
