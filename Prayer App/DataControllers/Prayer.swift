@@ -176,10 +176,13 @@ class MembershipPrayer: CirclePrayer {
             let userRef = Database.database().reference().child("users").child(ownerID).child("circleUsers")
             userRef.observeSingleEvent(of: .value, with: { (snapshot) in
                 for childSnap in snapshot.children {
+                    print("called")
                     let circleUser = CircleUser().circleUserFromSnapshot(snapshot: childSnap as! DataSnapshot)
                     circleUsers.append(circleUser)
                 }
                 prayer.ownerCircleUsers = circleUsers
+                self.setMembershipPrayerCircleImages(membershipPrayer: prayer)
+                print(prayer.ownerCircleUsers?.count)
             })
         }
         
@@ -188,8 +191,6 @@ class MembershipPrayer: CirclePrayer {
                 prayer.whoAgreedIds = whoAgreed
             }
         }
-        
-        self.setMembershipPrayerCircleImages(membershipPrayer: prayer)
         
         return prayer
     }

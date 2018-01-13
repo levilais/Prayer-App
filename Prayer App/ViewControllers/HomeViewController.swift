@@ -391,7 +391,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let sectionTitles = Array(cleanData.keys) as [String]
         let section = sectionTitles[indexPath.section]
         
@@ -466,31 +465,30 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 
                 if let ownerCircleUsers = prayer.ownerCircleUsers {
-                    for ownerCircleUser in ownerCircleUsers {
-                        if let profileImage = ownerCircleUser.profileImageAsImage {
-                            if let whoAgreed = prayer.whoAgreedIds {
-                                if whoAgreed.count > 0 {
-                                    for i in 0...4 {
-                                        if i < ownerCircleUsers.count && i < whoAgreed.count {
-                                            let imageView = cell.senderPrayerCircleMembers[i]
-                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
-                                            imageView.image = profileImage
-                                            imageView.isHidden = false
-                                            tint.isHidden = true
-                                        } else if i < ownerCircleUsers.count && i >= whoAgreed.count {
-                                            let imageView = cell.senderPrayerCircleMembers[i]
-                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
-                                            imageView.isHidden = true
-                                            tint.isHidden = true
-                                        } else {
-                                            let imageView = cell.senderPrayerCircleMembers[i]
-                                            let tint = cell.senderPrayerCircleMembersTintImage[i]
-                                            imageView.isHidden = true
-                                            tint.isHidden = true
-                                        }
+                    for i in 0...4 {
+                        if i < ownerCircleUsers.count {
+                            if let ownerCircleUserID = ownerCircleUsers[i].key {
+                                if let profileImage = ownerCircleUsers[i].profileImageAsImage {
+                                    var whoAgreed = [String]()
+                                    if let whoAgreedIds = prayer.whoAgreedIds {
+                                        whoAgreed = whoAgreedIds
                                     }
+                                    let imageView = cell.senderPrayerCircleMembers[i]
+                                    let tint = cell.senderPrayerCircleMembersTintImage[i]
+                                    imageView.image = profileImage
+                                    if whoAgreed.contains(ownerCircleUserID) {
+                                        tint.isHidden = true
+                                    } else {
+                                        tint.isHidden = false
+                                    }
+                                    imageView.isHidden = false
                                 }
                             }
+                        } else {
+                            let imageView = cell.senderPrayerCircleMembers[i]
+                            let tint = cell.senderPrayerCircleMembersTintImage[i]
+                            imageView.isHidden = true
+                            tint.isHidden = true
                         }
                     }
                 }
