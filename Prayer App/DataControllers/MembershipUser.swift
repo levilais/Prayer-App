@@ -103,106 +103,38 @@ class MembershipUser: CircleUser {
         }
     }
     
-    
-    // NEED TO FIX
-//    func getMembershipUserCircleUsers(membershipUser: MembershipUser) {
-//        if let urlString = membershipUser.profileImageAsString {
-//            if let url = URL(string: urlString) {
-//                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-//                    if error != nil {
-//                        print(error!.localizedDescription)
-//                        return
-//                    }
-//                    if let imageData = data {
-//                        if let image = UIImage(data: imageData) {
-//                            membershipUser.profileImageAsImage = image
-//                            var userExists = false
-//                            var i = 0
-//                            var userExistsDetermined = false
-//                            while userExistsDetermined == false {
-//                                for user in CurrentUser.firebaseMembershipUsers {
-//                                    if let email = user.userEmail {
-//                                        if let userEmail = membershipUser.userEmail {
-//                                            if email == userEmail {
-//                                                userExists = true
-//                                                userExistsDetermined = true
-//                                            }
-//                                        }
-//                                    }
-//                                    i += 1
-//                                }
-//                                userExistsDetermined = true
-//                            }
-//                            if userExists == false {
-//                                CurrentUser.firebaseMembershipUsers.append(membershipUser)
-//
-//                                if let membershipUserID = membershipUser.userID {
-//                                    Database.database().reference().child("users").child(membershipUserID).child("circleUsers").observe(.childAdded, with: { (snapshot) in
-//                                        if let userDictionary = snapshot.value as? NSDictionary {
-//                                            if let profileImageString = userDictionary["profileImageURL"] as? String {
-//                                                if let url = URL(string: profileImageString) {
-//                                                    URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-//                                                        if error != nil {
-//                                                            print(error!.localizedDescription)
-//                                                            return
-//                                                        }
-//                                                        if let imageData = data {
-//                                                            if let image = UIImage(data: imageData) {
-//                                                                var i = 0
-//                                                                for user in CurrentUser.firebaseMembershipUsers {
-//                                                                    if let userID = user.userID {
-//                                                                        if let membershipUserID = membershipUser.userID {
-//                                                                            if userID == membershipUserID {
-//                                                                                let newUser = CircleUser()
-//                                                                                var newUsersArray = [CircleUser]()
-//                                                                                var circleUserID = String()
-//                                                                                var circleUserAgreedCount = Int()
-//                                                                                if let circleUserIDCheck = userDictionary["userID"] as? String {
-//                                                                                    circleUserID = circleUserIDCheck
-//                                                                                }
-//
-//                                                                                if let circleUserAgreedCheck = userDictionary["agreedInPrayerCount"] as? Int {
-//                                                                                    circleUserAgreedCount = circleUserAgreedCheck
-//                                                                                }
-//
-//                                                                                if let existingUserArray = user.membershipUserCircleUsers {
-//                                                                                    newUsersArray = existingUserArray
-//                                                                                    newUser.profileImageAsImage = image
-//                                                                                    newUser.userID = circleUserID
-//                                                                                    newUser.agreedInPrayerCount = circleUserAgreedCount
-//                                                                                    newUsersArray.append(newUser)
-//                                                                                    user.membershipUserCircleUsers = newUsersArray
-//                                                                                    CurrentUser.firebaseMembershipUsers[i] = user
-//                                                                                } else {
-//                                                                                    newUser.profileImageAsImage = image
-//                                                                                    newUser.userID = circleUserID
-//                                                                                    newUser.agreedInPrayerCount = circleUserAgreedCount
-//                                                                                    newUsersArray.append(newUser)
-//                                                                                    user.membershipUserCircleUsers = newUsersArray
-//                                                                                    CurrentUser.firebaseMembershipUsers[i] = user
-//                                                                                }
-//                                                                            }
-//                                                                        }
-//                                                                    }
-//                                                                    i += 1
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    }).resume()
-//                                                }
-//                                            }
-//
-//                                        }
-//                                    })
-//                                }
-//                            }
-//                        }
-//                    }
-//                }).resume()
-//            }
-//        }
-//    }
-    
+    func leaveUsersCircle(membershipUser: MembershipUser) {
+        if let currentUserMembershipRef = membershipUser.currentUserMembershipRef {
+            if let membershipUserCircleRef = membershipUser.membershipUserCircleRef {
+                currentUserMembershipRef.removeValue()
+                membershipUserCircleRef.removeValue()
+                
+                var i = 0
+                for firebaseMembershipUser in CurrentUser.firebaseMembershipUsers {
+                    if let membershipUserEmail = membershipUser.userEmail {
+                        if let emailToCheck = firebaseMembershipUser.userEmail {
+                            if membershipUserEmail == emailToCheck {
+                                CurrentUser.firebaseMembershipUsers.remove(at: i)
+                                if let firebaseMembershipUserID = firebaseMembershipUser.userID {
+                                    i = 0
+                                    for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
+                                        if let prayerOwnerID = membershipPrayer.prayerOwnerUserID {
+                                            if prayerOwnerID == firebaseMembershipUserID {
+                                                CurrentUser.firebaseMembershipPrayers.remove(at: i)
+                                            }
+                                        }
+                                        i += 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    i += 1
+                }
+            }
+        }
+    }
+
     func declineInvite(membershipUser: MembershipUser) {
         if let membershipRef = membershipUser.currentUserMembershipRef {
             if let circleRef = membershipUser.membershipUserCircleRef {

@@ -44,7 +44,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification5(_:)), name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
         
@@ -168,7 +168,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     
     // THESE ARE SUPER MESSED UP - FIGURE IT OUT!!!!!!
-    
     func setupMembershipPrayerObservers() {
         self.membershipPrayersFirstLoad(completed: { (success) in
             for membershipUser in CurrentUser.firebaseMembershipUsers {
@@ -465,24 +464,35 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 
                 if let ownerCircleUsers = prayer.ownerCircleUsers {
+                    var usersToDisplay = [CircleUser]()
+                    for user in ownerCircleUsers {
+                        if let relationship = user.relationshipToCurrentUser {
+                            if relationship == CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue {
+                                usersToDisplay.append(user)
+                            }
+                        }
+                    }
+                    
                     for i in 0...4 {
-                        if i < ownerCircleUsers.count {
-                            if let ownerCircleUserID = ownerCircleUsers[i].key {
-                                if let profileImage = ownerCircleUsers[i].profileImageAsImage {
+                        if i < usersToDisplay.count {
+                            if let ownerCircleUserID = usersToDisplay[i].key {
+                                let imageView = cell.senderPrayerCircleMembers[i]
+                                if let profileImage = usersToDisplay[i].profileImageAsImage {
                                     var whoAgreed = [String]()
                                     if let whoAgreedIds = prayer.whoAgreedIds {
                                         whoAgreed = whoAgreedIds
                                     }
-                                    let imageView = cell.senderPrayerCircleMembers[i]
                                     let tint = cell.senderPrayerCircleMembersTintImage[i]
-                                    imageView.image = profileImage
                                     if whoAgreed.contains(ownerCircleUserID) {
                                         tint.isHidden = true
                                     } else {
                                         tint.isHidden = false
                                     }
-                                    imageView.isHidden = false
+                                    imageView.image = profileImage
+                                } else {
+                                    imageView.image = UIImage(named: "profilImageDefault.pdf")
                                 }
+                                imageView.isHidden = false
                             }
                         } else {
                             let imageView = cell.senderPrayerCircleMembers[i]
@@ -630,7 +640,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
     }
 
 }

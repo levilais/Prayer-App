@@ -129,7 +129,6 @@ class CircleUser: User {
                                 if let circleMemberEmail = circleMember.userEmail {
                                     if userEmailString as String == circleMemberEmail {
                                         // invited
-                                        print("NOTICE - Invitation determined and attempting to set user")
                                         user = CurrentUser.firebaseCircleMembers[i]
                                         relationshipDetermined = true
                                     }

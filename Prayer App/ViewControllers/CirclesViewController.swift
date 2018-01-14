@@ -59,7 +59,8 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
-         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "circleUserProfileImageDidSet"), object: nil)
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         
@@ -68,12 +69,12 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             userLoggedInView.isHidden = false
             selectedCircleMember = 0
             if let userID = Auth.auth().currentUser?.uid {
-                print("set up observers called")
                 userRef = Database.database().reference().child("users").child(userID)
                 setupObservers()
+                setupCircleUserObservers()
             }
             setCircleData()
-//            toggleTableIsHidden()
+            toggleTableIsHidden()
         } else {
             userNotLoggedInView.isHidden = false
             userLoggedInView.isHidden = true
@@ -93,7 +94,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func toggleTableIsHidden() {
-        print("prayerCount: \(CurrentUser.currentUserCirclePrayers.count)")
         if CurrentUser.currentUserCirclePrayers.count > 0 {
             tableView.isHidden = false
         } else {
@@ -117,7 +117,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     func setupObservers() {
         firstLoad { (success) in
             self.userRef.child("circlePrayers").observe(.childAdded, with: { (snapshot) -> Void in
-                print("childAdded fired")
                 let newPrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: snapshot)
                 var matchExists = false
                 for prayer in CurrentUser.currentUserCirclePrayers {
@@ -142,7 +141,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             })
             
             self.userRef.child("circlePrayers").observe(.childRemoved, with: { (snapshot) -> Void in
-                print("childRemoved fired")
                 let removedPrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: snapshot)
                 if let removedPrayerKey = removedPrayer.key {
                     var i = 0
@@ -163,7 +161,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             })
             
             self.userRef.child("circlePrayers").observe(.childChanged, with: { (snapshot) -> Void in
-                print("childChanged fired")
                 let changedPrayer = CirclePrayer().circlePrayerFromSnapshot(snapshot: snapshot)
                 if let changedPrayerKey = changedPrayer.key {
                     var i = 0
@@ -191,6 +188,91 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }
                         i += 1
                     }
+                }
+            })
+        }
+    }
+    
+    func firstCircleUserLoad(completed: @escaping (Bool) -> Void) {
+        userRef.child("circleUsers").observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+            for userSnap in snapshot.children {
+                let newUser = CircleUser().circleUserFromSnapshot(snapshot: userSnap as! DataSnapshot)
+                var matchExists = false
+                for user in CurrentUser.firebaseCircleMembers {
+                    if let userKey = user.key {
+                        if let newUserKey = newUser.key {
+                            if userKey == newUserKey {
+                                matchExists = true
+                            }
+                        }
+                    }
+                }
+                if !matchExists {
+                    CurrentUser.firebaseCircleMembers.append(newUser)
+                    FirebaseHelper().setCircleUserProfileImageFromFirebase(circleUser: newUser)
+                    self.setCircleData()
+                }
+            }
+            self.setCircleData()
+            completed(true)
+        })
+    }
+    
+    func setupCircleUserObservers() {
+        firstCircleUserLoad { (success) in
+            self.userRef.child("circleUsers").observe(.childAdded, with: { (snapshot) -> Void in
+                let newUser = CircleUser().circleUserFromSnapshot(snapshot: snapshot)
+                var matchExists = false
+                for user in CurrentUser.firebaseCircleMembers {
+                    if let userKey = user.key {
+                        if let newUserKey = newUser.key {
+                            if userKey == newUserKey {
+                                matchExists = true
+                            }
+                        }
+                    }
+                }
+                
+                if !matchExists {
+                    CurrentUser.firebaseCircleMembers.append(newUser)
+                    FirebaseHelper().setCircleUserProfileImageFromFirebase(circleUser: newUser)
+                    self.setCircleData()
+                }
+            })
+            
+            self.userRef.child("circleUsers").observe(.childRemoved, with: { (snapshot) -> Void in
+                let removedUser = CircleUser().circleUserFromSnapshot(snapshot: snapshot)
+                if let removedUserKey = removedUser.key {
+                    var i = 0
+                    for user in CurrentUser.firebaseCircleMembers {
+                        if let key = user.key {
+                            if removedUserKey == key {
+                                if self.selectedCircleMember > 0 {
+                                    self.selectedCircleMember -= 1
+                                }
+                                CurrentUser.firebaseCircleMembers.remove(at: i)
+                            }
+                        }
+                        i += 1
+                    }
+                }
+                self.setCircleData()
+            })
+            
+            self.userRef.child("circleUsers").observe(.childChanged, with: { (snapshot) -> Void in
+                let changedUser = CircleUser().circleUserFromSnapshot(snapshot: snapshot)
+                if let changedUserKey = changedUser.key {
+                    var i = 0
+                    for user in CurrentUser.firebaseCircleMembers {
+                        if let key = user.key {
+                            if changedUserKey == key {
+                                CurrentUser.firebaseCircleMembers[i] = changedUser
+                                FirebaseHelper().setCircleUserProfileImageFromFirebase(circleUser: changedUser)
+                            }
+                        }
+                        i += 1
+                    }
+                    self.setCircleData()
                 }
             })
         }
@@ -277,7 +359,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let agreedCountCheck = prayer.agreedCount {
             cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: agreedCountCheck))"
         }
-        print("returning cell #: \(indexPath.row)")
         return cell
     }
     
@@ -322,15 +403,34 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func reloadData() {
-        circlePrayers = CurrentUser.currentUserCirclePrayers.reversed()
-        if circlePrayers.count > 0 {
-            DispatchQueue.main.async {
-                UIView.performWithoutAnimation {
-                    self.tableView.reloadData()
+        if CurrentUser.firebaseCircleMembers.count > 0 {
+            var acceptedUserExists = false
+            for user in CurrentUser.firebaseCircleMembers {
+                if let userRelationship = user.relationshipToCurrentUser {
+                    if userRelationship == CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue {
+                        acceptedUserExists = true
+                    }
                 }
             }
-        } else {
-            self.toggleTableIsHidden()
+            if acceptedUserExists {
+                circlePrayers = CurrentUser.currentUserCirclePrayers.reversed()
+                if circlePrayers.count > 0 {
+                    DispatchQueue.main.async {
+                        UIView.performWithoutAnimation {
+                            self.tableView.reloadData()
+                        }
+                    }
+                } else {
+                    self.toggleTableIsHidden()
+                }
+            } else {
+                if let currentUserRef = CurrentUser.currentUser.userRef {
+                    currentUserRef.child("circlePrayers").removeValue()
+                }
+                CurrentUser.currentUserCirclePrayers.removeAll()
+                circlePrayers.removeAll()
+                self.toggleTableIsHidden()
+            }
         }
     }
     
@@ -419,7 +519,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if let image = circleUser.profileImageAsImage {
                     circleProfileImages[i].image = image
                 }
-                
                 circleSpotFilled[i] = true
             case circleCount ... 4:
                 circleProfileImages[i].image = UIImage(named: "addCircleMemberIcon.pdf")
@@ -429,6 +528,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
         toggleCircleMemberDetailContent(buttonTag: selectedCircleMember)
+        self.reloadData()
     }
     
     
@@ -487,11 +587,18 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.setCircleData()
         }
     }
+    
+    @objc func handleNotification4(_ notification: NSNotification) {
+        DispatchQueue.main.async {
+            self.setCircleData()
+        }
+    }
 
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "circleUserProfileImageDidSet"), object: nil)
         viewIsVisible = false
     }
 }

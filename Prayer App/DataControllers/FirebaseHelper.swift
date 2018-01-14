@@ -23,32 +23,32 @@ class FirebaseHelper {
                 CurrentUser.currentUser = User().currentUserFromSnapshot(snapshot: snapshot)
             }
             
-            userRef.child("circleUsers").observe(.value, with: { snapshot in
-                for snapChild in snapshot.children {
-                    let circleUser = CircleUser().circleUserFromSnapshot(snapshot: snapChild as! DataSnapshot)
-                    if let circleUserEmail = circleUser.userEmail {
-                        var userExists = false
-                        if CurrentUser.firebaseCircleMembers.count > 0 {
-                            var matchDetermined = false
-                            while matchDetermined == false {
-                                for userToCheck in CurrentUser.firebaseCircleMembers {
-                                    if let userToCheckEmail = userToCheck.userEmail {
-                                        if userToCheckEmail == circleUserEmail {
-                                            userExists = true
-                                            matchDetermined = true
-                                        }
-                                    }
-                                }
-                                matchDetermined = true
-                            }
-                        }
-                        if userExists != true {
-                            CurrentUser.firebaseCircleMembers.append(circleUser)
-                        }
-                    }
-                    self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
-                }
-            })
+//            userRef.child("circleUsers").observeSingleEvent(of: .value, with: { snapshot in
+//                for snapChild in snapshot.children {
+//                    let circleUser = CircleUser().circleUserFromSnapshot(snapshot: snapChild as! DataSnapshot)
+//                    if let circleUserEmail = circleUser.userEmail {
+//                        var userExists = false
+//                        if CurrentUser.firebaseCircleMembers.count > 0 {
+//                            var matchDetermined = false
+//                            while matchDetermined == false {
+//                                for userToCheck in CurrentUser.firebaseCircleMembers {
+//                                    if let userToCheckEmail = userToCheck.userEmail {
+//                                        if userToCheckEmail == circleUserEmail {
+//                                            userExists = true
+//                                            matchDetermined = true
+//                                        }
+//                                    }
+//                                }
+//                                matchDetermined = true
+//                            }
+//                        }
+//                        if userExists != true {
+//                            CurrentUser.firebaseCircleMembers.append(circleUser)
+//                        }
+//                    }
+//                    self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
+//                }
+//            })
             
 //            userRef.child("memberships").observe(.childAdded) { (snapshot) in
 //                let membershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
@@ -128,6 +128,7 @@ class FirebaseHelper {
                                     if let userEmail = circleUser.userEmail {
                                         if email == userEmail {
                                             CurrentUser.firebaseCircleMembers[i] = circleUser
+                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "circleUserProfileImageDidSet"), object: nil, userInfo: nil)
                                         }
                                     }
                                 }

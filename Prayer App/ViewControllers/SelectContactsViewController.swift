@@ -121,7 +121,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func loadCorrectView() {
-        // if not logged in, dismiss
         if ContactsHandler().contactsAuthStatus() == ".authorized" {
             if segueFromSettings == true {
                 dismiss(animated: true, completion: nil)

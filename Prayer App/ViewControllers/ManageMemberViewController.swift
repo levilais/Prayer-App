@@ -14,6 +14,7 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
     
     @IBOutlet weak var tableView: UITableView!
     var ref: DatabaseReference!
+    var usersToDisplay = [MembershipUser]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,19 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
     
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
+        refreshData()
+    }
+    
+    func refreshData() {
+        usersToDisplay = []
+        for membershipUser in CurrentUser.firebaseMembershipUsers {
+            if let membershipStatus = membershipUser.membershipStatus {
+                if membershipStatus == MembershipUser.currentUserMembershipStatus.member.rawValue {
+                    usersToDisplay.append(membershipUser)
+                }
+            }
+        }
+        self.tableView.reloadData()
     }
 
     @IBAction func doneButtonDidPress(_ sender: Any) {
@@ -30,13 +44,13 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return CurrentUser.firebaseMembershipUsers.count
+        return usersToDisplay.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "manageMembersTableViewCell", for: indexPath) as! ManageMembersTableViewCell
         
-        let user = CurrentUser.firebaseMembershipUsers[indexPath.row]
+        let user = usersToDisplay[indexPath.row]
         
         if let profileImage = user.profileImageAsImage {
             print("got image as UIImage")
@@ -51,28 +65,15 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
     }
     
     @objc func deleteUserFromCircle(sender: UIButton) {
-        let memberToDelete = CurrentUser.firebaseMembershipUsers[sender.tag]
-        if let memberToDeleteID = memberToDelete.userID {
-            if let userID = Auth.auth().currentUser?.uid {
-                ref.child("users").child(memberToDeleteID).child("circleUsers").child(userID).removeValue { error, _ in
-                    if let error = error {
-                        print("error \(error.localizedDescription)")
-                    }
-                }
-                ref.child("users").child(userID).child("memberships").child(memberToDeleteID).removeValue { error, _ in
-                    if let error = error {
-                        print("error \(error.localizedDescription)")
-                    }
-                }
-//                CurrentUser.membershipUserPrayers.removeAll()
-            }
-        }
+        let memberToDelete = usersToDisplay[sender.tag]
+        MembershipUser().leaveUsersCircle(membershipUser: memberToDelete)
+        refreshData()
     }
     
     @objc func handleNotification3(_ notification: NSNotification) {
         DispatchQueue.main.async {
             UIView.performWithoutAnimation {
-                self.tableView.reloadData()
+                self.refreshData()
             }
         }
     }
