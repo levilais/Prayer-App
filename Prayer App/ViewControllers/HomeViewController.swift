@@ -269,25 +269,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     
     func loadData() {
-        self.invitationUsers = []
-        self.membershipPrayers = []
-        
+        var newInvitationUsers = [MembershipUser]()
         var matchDetermined = false
         while matchDetermined == false {
             for user in CurrentUser.firebaseMembershipUsers {
                 if let membershipStatus = user.membershipStatus {
                     if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
-                        self.invitationUsers.append(user)
+                        newInvitationUsers.append(user)
                         matchDetermined = true
                     }
                 }
             }
             matchDetermined = true
         }
+        self.invitationUsers = newInvitationUsers
         
+        var newMembershipPrayers = [MembershipPrayer]()
         for prayer in CurrentUser.firebaseMembershipPrayers {
-            self.membershipPrayers.append(prayer)
+            newMembershipPrayers.append(prayer)
         }
+        self.membershipPrayers = newMembershipPrayers
         
         var newCleanData = [String:[Any]]()
         if self.invitationUsers.count > 0 {
