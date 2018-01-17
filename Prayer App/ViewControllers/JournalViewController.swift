@@ -89,6 +89,12 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 CurrentUser.currentUserPrayers.append(newPrayer)
             }
             self.reloadPrayers()
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadData()
+                    self.toggleTableIsHidden()
+                }
+            }
             completed(true)
         })
     }
@@ -113,6 +119,12 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                         self.showRefreshButton()
                     } else {
                         self.reloadPrayers()
+                        DispatchQueue.main.async {
+                            UIView.performWithoutAnimation {
+                                self.tableView.reloadData()
+                                self.toggleTableIsHidden()
+                            }
+                        }
                         self.tableView.scrollsToTop = true
                     }
                 }
@@ -132,6 +144,12 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                     }
                 }
                 self.reloadPrayers()
+                DispatchQueue.main.async {
+                    UIView.performWithoutAnimation {
+                        self.tableView.reloadData()
+                        self.toggleTableIsHidden()
+                    }
+                }
             })
             
             self.userRef.child("prayers").observe(.childChanged, with: { (snapshot) -> Void in
@@ -147,6 +165,12 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                                         if prayerIsAnswered == false && changedPrayerIsAnswered == true {
                                             print("is new answer, reload called")
                                             self.reloadPrayers()
+                                            DispatchQueue.main.async {
+                                                UIView.performWithoutAnimation {
+                                                    self.tableView.reloadData()
+                                                    self.toggleTableIsHidden()
+                                                }
+                                            }
                                         } else {
                                             print("not new answer, refresh called")
                                             i = 0
@@ -155,6 +179,8 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                                                     if prayerKey == changedPrayerKey {
                                                         self.preSortedPrayers[i] = changedPrayer
                                                         self.refreshPrayers()
+                                                        let indexPath = self.indexPathForPrayer(currentUserPrayer: changedPrayer)
+                                                        self.tableView.reloadRows(at: [indexPath], with: .automatic)
                                                     }
                                                 }
                                                 i += 1
@@ -173,6 +199,12 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @IBAction func refreshButtonDidPress(_ sender: Any) {
         reloadPrayers()
+        DispatchQueue.main.async {
+            UIView.performWithoutAnimation {
+                self.tableView.reloadData()
+                self.toggleTableIsHidden()
+            }
+        }
         tableView.scrollsToTop = true
         hideRefreshButton()
     }
@@ -207,6 +239,12 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         toggleButton.setBackgroundImage(UIImage(named: "tableToggleRightSelected.pdf"), for: .normal)
         answeredShowing = true
         reloadPrayers()
+        DispatchQueue.main.async {
+            UIView.performWithoutAnimation {
+                self.tableView.reloadData()
+                self.toggleTableIsHidden()
+            }
+        }
     }
     
     func showActive() {
@@ -215,6 +253,12 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         toggleButton.setBackgroundImage(UIImage(named: "tableToggleLeftSelected.pdf"), for: .normal)
         answeredShowing = false
         reloadPrayers()
+        DispatchQueue.main.async {
+            UIView.performWithoutAnimation {
+                self.tableView.reloadData()
+                self.toggleTableIsHidden()
+            }
+        }
     }
     
     func reloadPrayers() {
@@ -250,12 +294,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                         sortedPrayers[prayerCategory] = newArray
                     }
                 }
-            }
-        }
-        DispatchQueue.main.async {
-            UIView.performWithoutAnimation {
-                self.tableView.reloadData()
-                self.toggleTableIsHidden()
             }
         }
     }
@@ -465,6 +503,37 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             prayer = arrayOfPrayersInSection[indexPath.row]
         }
         return prayer
+    }
+    
+    func indexPathForPrayer(currentUserPrayer: CurrentUserPrayer) -> IndexPath {
+        var section = Int()
+        var row = Int()
+        if let prayerCategory = currentUserPrayer.prayerCategory {
+            if let currentUserPrayerKey = currentUserPrayer.key {
+                let prayerKeys = Array(sortedPrayers.keys)
+                
+                var sectionIndex = 0
+                for key in prayerKeys {
+                    if key == prayerCategory {
+                        section = sectionIndex
+                    }
+                    sectionIndex += 1
+                }
+                
+                if let arrayOfPrayersInSection = sortedPrayers[prayerCategory] {
+                    var rowIndex = 0
+                    for prayer in arrayOfPrayersInSection {
+                        if let prayerKey = prayer.key {
+                            if currentUserPrayerKey == prayerKey {
+                                row = rowIndex
+                            }
+                        }
+                        rowIndex += 1
+                    }
+                }
+            }
+        }
+        return IndexPath(row: row, section: section)
     }
     
     @objc func handleNotification(_ notification: NSNotification) {

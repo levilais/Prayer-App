@@ -55,7 +55,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             userLoggedInView.isHidden = false
             userRef = Database.database().reference().child("users").child(userID)
             self.setupObservers()
-            self.setupMembershipPrayerObservers()
         } else {
             userNotLoggedInView.isHidden = false
             userLoggedInView.isHidden = true
@@ -143,6 +142,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
             })
+            self.setupMembershipPrayerObservers()
         }
     }
     
@@ -279,7 +279,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     
     func loadData() {
-        self.cleanData = [:]
+//        self.cleanData = [:]
         self.invitationUsers = []
         self.membershipPrayers = []
         
@@ -305,13 +305,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //            self.membershipPrayers.append(prayer)
         //        }
         
+        var newCleanData = [String:[Any]]()
         if self.invitationUsers.count > 0 {
-            self.cleanData["invitationUsers"] = self.invitationUsers
+            newCleanData["invitationUsers"] = self.invitationUsers
         }
         
         if self.membershipPrayers.count > 0 {
-            self.cleanData["membershipPrayers"] = self.membershipPrayers
+            newCleanData["membershipPrayers"] = self.membershipPrayers
         }
+        
+        self.cleanData = newCleanData
         
         DispatchQueue.main.async {
             self.showHideTable()
@@ -332,6 +335,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @IBAction func refreshButtonDidPress(_ sender: Any) {
+        self.setupMembershipPrayerObservers()
         loadData()
         tableView.scrollsToTop = true
         hideRefreshButton()
@@ -641,6 +645,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
+        
     }
 
 }
