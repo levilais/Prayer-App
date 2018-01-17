@@ -31,6 +31,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var invitationUsers = [MembershipUser]()
     var membershipPrayers = [MembershipPrayer]()
+    var prayerQueue = [MembershipPrayer]()
     var cleanData = [String:[Any]]()
     
     override func viewDidLoad() {
@@ -62,10 +63,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableViewAutomaticDimension
+        
         if dataFirstLoaded {
             self.loadData()
+            refreshTable()
         }
         greetingLabel.text = "Prayerline"
+    }
+    
+    override func viewWillLayoutSubviews() {
+        
     }
     
     func firstLoad(completed: @escaping (Bool) -> Void) {
@@ -77,6 +84,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             if self.dataFirstLoaded {
                 self.loadData()
+                self.refreshTable()
             }
             completed(true)
         })
@@ -103,6 +111,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                             self.showRefreshButton()
                         } else {
                             self.loadData()
+                            self.refreshTable()
                             self.tableView.scrollsToTop = true
                         }
                     }
@@ -123,9 +132,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
                 self.loadData()
+                self.refreshTable()
             })
             
             self.userRef.child("memberships").observe(.childChanged, with: { (snapshot) -> Void in
+                print("membership changed")
                 let changedMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
                 if let changedMembershipUserKey = changedMembershipUser.key {
                     var i = 0
@@ -135,6 +146,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 CurrentUser.firebaseMembershipUsers[i] = changedMembershipUser
                                 if self.dataFirstLoaded {
                                     self.loadData()
+                                    self.refreshTable()
                                 }
                             }
                         }
@@ -158,6 +170,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 CurrentUser.firebaseMembershipPrayers.append(newMembershipPrayer)
                             }
                             self.loadData()
+                            self.refreshTable()
                             completed(true)
                         })
                     }
@@ -166,8 +179,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    
-    // THESE ARE SUPER MESSED UP - FIGURE IT OUT!!!!!!
     func setupMembershipPrayerObservers() {
         self.membershipPrayersFirstLoad(completed: { (success) in
             for membershipUser in CurrentUser.firebaseMembershipUsers {
@@ -175,6 +186,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     if membershipStatus == MembershipUser.currentUserMembershipStatus.member.rawValue {
                         if let membershipUserCirclePrayersRef = membershipUser.membershipUserCirclePrayersRef {
                             membershipUserCirclePrayersRef.observe(.childAdded, with: { (snapshot) -> Void in
+                                print("child added called")
                                 let newMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
                                 var matchExists = false
                                 for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
@@ -186,17 +198,29 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                         }
                                     }
                                 }
+                                
+                                for membershipPrayer in self.prayerQueue {
+                                    if let prayerKey = membershipPrayer.key {
+                                        if let newPrayerKey = newMembershipPrayer.key {
+                                            if prayerKey == newPrayerKey {
+                                                matchExists = true
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                print("match exists: \(matchExists)")
                                 if matchExists == false {
-                                    CurrentUser.firebaseMembershipPrayers.append(newMembershipPrayer)
                                     if self.viewIsVisible {
+                                        self.prayerQueue.append(newMembershipPrayer)
                                         self.showRefreshButton()
                                     } else {
-                                        self.loadData()
-                                        self.tableView.scrollsToTop = true
+                                        CurrentUser.firebaseMembershipPrayers.append(newMembershipPrayer)
                                     }
                                 }
                             })
                             membershipUserCirclePrayersRef.observe(.childRemoved, with: { (snapshot) -> Void in
+                                print("child removed called")
                                 let removedMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
                                 if let removedMembershipPrayerKey = removedMembershipPrayer.key {
                                     var i = 0
@@ -210,16 +234,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                     }
                                 }
                                 self.loadData()
+                                self.refreshTable()
                             })
                             membershipUserCirclePrayersRef.observe(.childChanged, with: { (snapshot) -> Void in
                                 let changedMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
                                 if let changedMembershipPrayerKey = changedMembershipPrayer.key {
+                                    print("child changed called for prayerKey: \(changedMembershipPrayer)")
                                     var i = 0
                                     for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
                                         if let key = membershipPrayer.key {
                                             if changedMembershipPrayerKey == key {
                                                 CurrentUser.firebaseMembershipPrayers[i] = changedMembershipPrayer
                                                 self.loadData()
+                                                let indexPath = self.indexPathForPrayer(membershipPrayer: changedMembershipPrayer)
+                                                DispatchQueue.main.async {
+                                                    UIView.performWithoutAnimation {
+                                                        let contentOffset = self.tableView.contentOffset
+                                                        self.tableView.reloadRows(at: [indexPath], with: .none)
+                                                        self.tableView.contentOffset = contentOffset
+                                                    }
+                                                }
                                             }
                                         }
                                         i += 1
@@ -234,55 +268,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     
-//    func reloadData() {
-//        preSortedPrayers = []
-//        for prayer in CurrentUser.currentUserPrayers {
-//            if let isAnswered = prayer.isAnswered {
-//                if answeredShowing {
-//                    if isAnswered {
-//                        self.preSortedPrayers.append(prayer)
-//                    }
-//                } else {
-//                    if !isAnswered {
-//                        self.preSortedPrayers.append(prayer)
-//                    }
-//                }
-//            }
-//        }
-//        refreshPrayers()
-//    }
-//
-//    func refreshData() {
-//        sortedPrayers = [:]
-//        if self.preSortedPrayers.count > 0 {
-//            for prayer in self.preSortedPrayers.reversed() {
-//                if let prayerCategory = prayer.prayerCategory {
-//                    if self.sortedPrayers.keys.contains(prayerCategory) {
-//                        if var prayerArray = sortedPrayers[prayerCategory] {
-//                            prayerArray.append(prayer)
-//                            sortedPrayers[prayerCategory] = prayerArray
-//                        }
-//                    } else {
-//                        let newArray = [prayer]
-//                        sortedPrayers[prayerCategory] = newArray
-//                    }
-//                }
-//            }
-//        }
-//        DispatchQueue.main.async {
-//            UIView.performWithoutAnimation {
-//                self.tableView.reloadData()
-//                self.toggleTableIsHidden()
-//            }
-//        }
-//    }
-    
-    
     func loadData() {
-//        self.cleanData = [:]
         self.invitationUsers = []
         self.membershipPrayers = []
-        
         
         var matchDetermined = false
         while matchDetermined == false {
@@ -301,10 +289,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.membershipPrayers.append(prayer)
         }
         
-        //        for prayer in CurrentUser.membershipCirclePrayers {
-        //            self.membershipPrayers.append(prayer)
-        //        }
-        
         var newCleanData = [String:[Any]]()
         if self.invitationUsers.count > 0 {
             newCleanData["invitationUsers"] = self.invitationUsers
@@ -315,7 +299,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         self.cleanData = newCleanData
-        
+    }
+    
+    func refreshTable() {
         DispatchQueue.main.async {
             self.showHideTable()
             UIView.performWithoutAnimation {
@@ -335,8 +321,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @IBAction func refreshButtonDidPress(_ sender: Any) {
+        for prayer in self.prayerQueue {
+            CurrentUser.firebaseMembershipPrayers.append(prayer)
+        }
+        self.prayerQueue = []
         self.setupMembershipPrayerObservers()
         loadData()
+        refreshTable()
         tableView.scrollsToTop = true
         hideRefreshButton()
     }
@@ -394,6 +385,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let sectionTitles = Array(cleanData.keys) as [String]
         let section = sectionTitles[indexPath.section]
         
@@ -404,9 +396,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             if let membershipStatus = membershipUser.membershipStatus {
                 if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
-                    print("got membershipStatus")
                     if let image = membershipUser.profileImageAsImage {
-                        print("got profile image as image and set")
                         cell.profileImage.image = image
                     }
                     
@@ -521,7 +511,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         var amenAction = UIContextualAction()
         amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
             self.markPrayed(indexPath: indexPath)
-//            CurrentUser().updateMemberPrayers()
             success(true)
         })
         amenAction.backgroundColor = UIColor.StyleFile.TealColor
@@ -553,7 +542,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let section = sender.section
         let indexPath = NSIndexPath(row: row, section: section)
         agreeInPrayer(indexPath: indexPath as IndexPath)
-//        CurrentUser().updateMemberPrayers()
     }
     
     func agreeInPrayer(indexPath: IndexPath) {
@@ -575,6 +563,33 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
         return prayer
+    }
+    
+    func indexPathForPrayer(membershipPrayer: MembershipPrayer) -> IndexPath {
+        var section = Int()
+        var row = Int()
+        var sectionIndex = 0
+        for sectionKey in Array(cleanData.keys) {
+            if sectionKey == "membershipPrayers" {
+                section = sectionIndex
+            }
+            sectionIndex += 1
+        }
+        
+        if let membershipPrayerKey = membershipPrayer.key {
+            if let arrayOfPrayersInSection = cleanData["membershipPrayers"] as? [MembershipPrayer] {
+                var rowIndex = 0
+                for prayer in arrayOfPrayersInSection {
+                    if let prayerKey = prayer.key {
+                        if membershipPrayerKey == prayerKey {
+                            row = rowIndex
+                        }
+                    }
+                    rowIndex += 1
+                }
+            }
+        }
+        return IndexPath(row: row, section: section)
     }
 
     @objc func acceptInvite(sender: CellButton) {
@@ -629,14 +644,17 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @objc func handleNotification3(_ notification: NSNotification) {
         dataFirstLoaded = true
         loadData()
+        refreshTable()
     }
     
     @objc func handleNotification4(_ notification: NSNotification) {
        loadData()
+        refreshTable()
     }
     
     @objc func handleNotification5(_ notification: NSNotification) {
         loadData()
+        refreshTable()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -645,7 +663,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
-        
+        for prayer in self.prayerQueue {
+            CurrentUser.firebaseMembershipPrayers.append(prayer)
+        }
+        self.prayerQueue = []
     }
-
 }

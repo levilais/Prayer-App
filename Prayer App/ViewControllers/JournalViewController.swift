@@ -163,7 +163,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                                 if let changedPrayerIsAnswered = changedPrayer.isAnswered {
                                     if let prayerIsAnswered = prayer.isAnswered {
                                         if prayerIsAnswered == false && changedPrayerIsAnswered == true {
-                                            print("is new answer, reload called")
                                             self.reloadPrayers()
                                             DispatchQueue.main.async {
                                                 UIView.performWithoutAnimation {
@@ -172,7 +171,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                                                 }
                                             }
                                         } else {
-                                            print("not new answer, refresh called")
                                             i = 0
                                             for preSortedPrayer in self.preSortedPrayers {
                                                 if let prayerKey = preSortedPrayer.key {
