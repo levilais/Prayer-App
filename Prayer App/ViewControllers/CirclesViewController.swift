@@ -388,11 +388,24 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func markPrayed(indexPath: IndexPath) {
         let prayer = circlePrayers[indexPath.row]
-        if let agreedCountCheck = prayer.agreedCount {
-            let newCount = agreedCountCheck + 1
-            FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount))
+        if let prayerRef = prayer.itemRef {
+            prayerRef.runTransactionBlock({ (currentData: MutableData) -> TransactionResult in
+                if var prayer = currentData.value as? [String : AnyObject] {
+                    var agreedCount = prayer["agreedCount"] as? Int ?? 0
+                    agreedCount += 1
+                    prayer["agreedCount"] = agreedCount as AnyObject?
+                    prayer["lastPrayedDate"] = ServerValue.timestamp() as AnyObject?
+                    currentData.value = prayer
+                    return TransactionResult.success(withValue: currentData)
+                }
+                return TransactionResult.success(withValue: currentData)
+            }) { (error, committed, snapshot) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
         }
-        indexPathForEdit = indexPath
+        //            indexPathForEdit = indexPath
     }
     
     func loadData() {

@@ -186,7 +186,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     if membershipStatus == MembershipUser.currentUserMembershipStatus.member.rawValue {
                         if let membershipUserCirclePrayersRef = membershipUser.membershipUserCirclePrayersRef {
                             membershipUserCirclePrayersRef.observe(.childAdded, with: { (snapshot) -> Void in
-                                print("child added called")
                                 let newMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
                                 var matchExists = false
                                 for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
@@ -208,8 +207,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                         }
                                     }
                                 }
-                                
-                                print("match exists: \(matchExists)")
                                 if matchExists == false {
                                     if self.viewIsVisible {
                                         self.prayerQueue.append(newMembershipPrayer)
@@ -220,7 +217,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 }
                             })
                             membershipUserCirclePrayersRef.observe(.childRemoved, with: { (snapshot) -> Void in
-                                print("child removed called")
                                 let removedMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
                                 if let removedMembershipPrayerKey = removedMembershipPrayer.key {
                                     var i = 0
@@ -239,7 +235,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                             membershipUserCirclePrayersRef.observe(.childChanged, with: { (snapshot) -> Void in
                                 let changedMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
                                 if let changedMembershipPrayerKey = changedMembershipPrayer.key {
-                                    print("child changed called for prayerKey: \(changedMembershipPrayer)")
+                                    print("child changed called for prayerKey: \(changedMembershipPrayer.key)")
                                     var i = 0
                                     for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
                                         if let key = membershipPrayer.key {
@@ -547,10 +543,29 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func agreeInPrayer(indexPath: IndexPath) {
         if let prayer = prayerAtIndexPath(indexPath: indexPath) {
-            if let agreedCountCheck = prayer.agreedCount {
-                let newCount = agreedCountCheck + 1
-                FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount))
+            if let prayerRef = prayer.itemRef {
+                prayerRef.runTransactionBlock({ (currentData: MutableData) -> TransactionResult in
+                    if var prayer = currentData.value as? [String : AnyObject] {
+                        var agreedCount = prayer["agreedCount"] as? Int ?? 0
+                        agreedCount += 1
+                        prayer["agreedCount"] = agreedCount as AnyObject?
+                        prayer["lastPrayedDate"] = ServerValue.timestamp() as AnyObject?
+                        currentData.value = prayer
+                        return TransactionResult.success(withValue: currentData)
+                    }
+                    return TransactionResult.success(withValue: currentData)
+                }) { (error, committed, snapshot) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }
+                }
             }
+            
+            
+//            if let agreedCountCheck = prayer.agreedCount {
+//                let newCount = agreedCountCheck + 1
+//                FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount))
+//            }
         }
     }
     
@@ -668,5 +683,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             CurrentUser.firebaseMembershipPrayers.append(prayer)
         }
         self.prayerQueue = []
+        self.hideRefreshButton()
     }
 }
