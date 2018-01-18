@@ -235,7 +235,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                             membershipUserCirclePrayersRef.observe(.childChanged, with: { (snapshot) -> Void in
                                 let changedMembershipPrayer = MembershipPrayer().membershipPrayerFromSnapshot(snapshot: snapshot)
                                 if let changedMembershipPrayerKey = changedMembershipPrayer.key {
-                                    print("child changed called for prayerKey: \(changedMembershipPrayer.key)")
                                     var i = 0
                                     for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
                                         if let key = membershipPrayer.key {
@@ -263,7 +262,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         })
     }
     
-    
     func loadData() {
         var newInvitationUsers = [MembershipUser]()
         var matchDetermined = false
@@ -284,7 +282,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         for prayer in CurrentUser.firebaseMembershipPrayers {
             newMembershipPrayers.append(prayer)
         }
-        self.membershipPrayers = newMembershipPrayers
+        self.membershipPrayers = newMembershipPrayers.reversed()
         
         var newCleanData = [String:[Any]]()
         if self.invitationUsers.count > 0 {
@@ -548,6 +546,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     if var prayer = currentData.value as? [String : AnyObject] {
                         var agreedCount = prayer["agreedCount"] as? Int ?? 0
                         agreedCount += 1
+                        
+                        var newWhoAgreed = [String:AnyObject]()
+                        if let userID = CurrentUser.currentUser.userID {
+                            if let whoAgreed = prayer["whoAgreed"] as? [String : AnyObject] {
+                                newWhoAgreed = whoAgreed
+                            }
+                            newWhoAgreed[userID] = userID as AnyObject?
+                        }
+                        
+                        prayer["whoAgreed"] = newWhoAgreed as AnyObject?
                         prayer["agreedCount"] = agreedCount as AnyObject?
                         prayer["lastPrayedDate"] = ServerValue.timestamp() as AnyObject?
                         currentData.value = prayer
@@ -560,12 +568,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
             }
-            
-            
-//            if let agreedCountCheck = prayer.agreedCount {
-//                let newCount = agreedCountCheck + 1
-//                FirebaseHelper().markCirlePrayerPrayedInFirebase(prayer: prayer, newAgreedCount: Int(newCount))
-//            }
         }
     }
     

@@ -69,11 +69,21 @@ class CurrentUserPrayer: Prayer {
     }
     
     func markPrayerPrayed(prayer: CurrentUserPrayer) {
-        if let itemRef = prayer.itemRef {
-            if let prayerCount = prayer.prayerCount {
-                let newPrayerCount = prayerCount + 1
-                itemRef.child("lastPrayedDate").setValue(ServerValue.timestamp())
-                itemRef.child("prayerCount").setValue(newPrayerCount)
+        if let prayerRef = prayer.itemRef {
+            prayerRef.runTransactionBlock({ (currentData: MutableData) -> TransactionResult in
+                if var prayer = currentData.value as? [String : AnyObject] {
+                    var prayedCount = prayer["prayerCount"] as? Int ?? 0
+                    prayedCount += 1
+                    prayer["prayerCount"] = prayedCount as AnyObject?
+                    prayer["lastPrayedDate"] = ServerValue.timestamp() as AnyObject?
+                    currentData.value = prayer
+                    return TransactionResult.success(withValue: currentData)
+                }
+                return TransactionResult.success(withValue: currentData)
+            }) { (error, committed, snapshot) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
             }
         }
     }

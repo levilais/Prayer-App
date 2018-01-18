@@ -35,16 +35,4 @@ class PrayerTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    func updateCellToShowIfRecentlyPrayed(cell: PrayerTableViewCell, lastPrayedString: String) {
-        if lastPrayedString == "today" {
-            cell.prayedLastLabel.textColor = UIColor.StyleFile.TealColor
-            cell.prayedLastLabel.font = UIFont.StyleFile.LastPrayedBold
-            cell.recentlyPrayed = true
-        } else {
-            cell.prayedLastLabel.textColor = UIColor.StyleFile.MediumGrayColor
-            cell.prayedLastLabel.font = UIFont.StyleFile.LastPrayedMedium
-            cell.recentlyPrayed = false
-        }
-    }
-
 }

@@ -62,7 +62,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
-        tableView.estimatedRowHeight = 40
+        tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableViewAutomaticDimension
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         viewIsVisible = true
@@ -178,7 +178,9 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                                                         self.preSortedPrayers[i] = changedPrayer
                                                         self.refreshPrayers()
                                                         let indexPath = self.indexPathForPrayer(currentUserPrayer: changedPrayer)
-                                                        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                                                        let contentOffset = self.tableView.contentOffset
+                                                        self.tableView.reloadRows(at: [indexPath], with: .none)
+                                                        self.tableView.contentOffset = contentOffset
                                                     }
                                                 }
                                                 i += 1
