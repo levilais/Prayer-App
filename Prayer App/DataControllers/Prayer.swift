@@ -143,11 +143,7 @@ class CirclePrayer: Prayer {
     }
 }
 
-class MembershipPrayer: CirclePrayer {
-    var ownerCircleIds: [String]?
-    var ownerCircleUsers: [CircleUser]?
-    var whoAgreedIds: [String]?
-    
+class MembershipPrayer: CirclePrayer {    
     func membershipPrayerFromSnapshot(snapshot: DataSnapshot) -> MembershipPrayer {
         let prayer = MembershipPrayer()
         
@@ -180,80 +176,7 @@ class MembershipPrayer: CirclePrayer {
                 prayer.prayerOwnerUserID = prayerOwnerUserIDCheck
             }
         }
-        
-        if let ownerID = prayer.prayerOwnerUserID {
-            var circleUsers = [CircleUser]()
-            let userRef = Database.database().reference().child("users").child(ownerID).child("circleUsers")
-            userRef.observeSingleEvent(of: .value, with: { (snapshot) in
-                for childSnap in snapshot.children {
-                    let circleUser = CircleUser().circleUserFromSnapshot(snapshot: childSnap as! DataSnapshot)
-                    circleUsers.append(circleUser)
-                }
-                prayer.ownerCircleUsers = circleUsers
-                self.setMembershipPrayerCircleImages(membershipPrayer: prayer)
-            })
-        }
-        
-        if let whoAgreedDict = snapshot.childSnapshot(forPath: "whoAgreed").value as? NSDictionary {
-            if let whoAgreed = whoAgreedDict.allKeys as? [String] {
-                prayer.whoAgreedIds = whoAgreed
-            }
-        }
-        
         return prayer
-    }
-    
-    func setMembershipPrayerCircleImages(membershipPrayer: MembershipPrayer) {
-        if let circleUsers = membershipPrayer.ownerCircleUsers {
-            for circleUser in circleUsers {
-                if let ref = circleUser.userRef {
-                    ref.child("profileImageURL").observeSingleEvent(of: .value, with: { (snapshot) in
-                        if let profileImageURL = snapshot.value as? String {
-                            if let url = URL(string: profileImageURL) {
-                                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-                                    if error != nil {
-                                        print(error!.localizedDescription)
-                                        return
-                                    }
-                                    if let imageData = data {
-                                        if let image = UIImage(data: imageData) {
-                                            circleUser.profileImageAsImage = image
-                                            var arrayToAppend = [CircleUser]()
-                                            if let circleUserKey = circleUser.key {
-                                                var index = 0
-                                                for user in circleUsers {
-                                                    if let userKey = user.key {
-                                                        if circleUserKey == userKey {
-                                                            arrayToAppend.append(circleUser)
-                                                        } else {
-                                                            arrayToAppend.append(user)
-                                                        }
-                                                    }
-                                                    index += 1
-                                                }
-                                                if let membershipPrayerKey = membershipPrayer.key {
-                                                    var i = 0
-                                                    for firebaseMembershipPrayer in CurrentUser.firebaseMembershipPrayers {
-                                                        if let prayerKey = firebaseMembershipPrayer.key {
-                                                            if membershipPrayerKey == prayerKey {
-                                                                CurrentUser.firebaseMembershipPrayers[i] = membershipPrayer
-                                                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil, userInfo: nil)
-                                                            }
-                                                        }
-                                                        i += 1
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }).resume()
-                            }
-                        }
-                    })
-                }
-            }
-            
-        }
     }
 }
 

@@ -45,9 +45,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification3(_:)), name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification5(_:)), name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification4(_:)), name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil)
         
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
@@ -61,7 +60,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             userLoggedInView.isHidden = true
         }
         
-        tableView.estimatedRowHeight = 80
         tableView.rowHeight = UITableViewAutomaticDimension
         
         if dataFirstLoaded {
@@ -69,10 +67,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             refreshTable()
         }
         greetingLabel.text = "Prayerline"
-    }
-    
-    override func viewWillLayoutSubviews() {
-        
     }
     
     func firstLoad(completed: @escaping (Bool) -> Void) {
@@ -282,6 +276,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         for prayer in CurrentUser.firebaseMembershipPrayers {
             newMembershipPrayers.append(prayer)
         }
+        
+        newMembershipPrayers.sort { $0.key! < $1.key! }
         self.membershipPrayers = newMembershipPrayers.reversed()
         
         var newCleanData = [String:[Any]]()
@@ -421,7 +417,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 if let agreedCount = prayer.agreedCount {
                     if let firstName = prayer.firstName {
-                        cell.whoAgreedInPrayerLabel.text = "\(firstName) Circle has agreed in Prayer \(Utilities().numberOfTimesString(count: agreedCount))"
+                        cell.whoAgreedInPrayerLabel.text = "This prayer has been prayed \(Utilities().numberOfTimesString(count: agreedCount)) by \(firstName)'s Circle"
                     }
                 }
                 
@@ -439,7 +435,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
                 
-                // PRAYER OWNER PROFILE IMAGE
                 if let ownerUserID = prayer.prayerOwnerUserID {
                     for membershipUser in CurrentUser.firebaseMembershipUsers {
                         if let memberUserID = membershipUser.userID {
@@ -452,45 +447,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
                 
-                if let ownerCircleUsers = prayer.ownerCircleUsers {
-                    var usersToDisplay = [CircleUser]()
-                    for user in ownerCircleUsers {
-                        if let relationship = user.relationshipToCurrentUser {
-                            if relationship == CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue {
-                                usersToDisplay.append(user)
-                            }
-                        }
-                    }
-                    
-                    for i in 0...4 {
-                        if i < usersToDisplay.count {
-                            if let ownerCircleUserID = usersToDisplay[i].key {
-                                let imageView = cell.senderPrayerCircleMembers[i]
-                                if let profileImage = usersToDisplay[i].profileImageAsImage {
-                                    var whoAgreed = [String]()
-                                    if let whoAgreedIds = prayer.whoAgreedIds {
-                                        whoAgreed = whoAgreedIds
-                                    }
-                                    let tint = cell.senderPrayerCircleMembersTintImage[i]
-                                    if whoAgreed.contains(ownerCircleUserID) {
-                                        tint.isHidden = true
-                                    } else {
-                                        tint.isHidden = false
-                                    }
-                                    imageView.image = profileImage
-                                } else {
-                                    imageView.image = UIImage(named: "profilImageDefault.pdf")
-                                }
-                                imageView.isHidden = false
-                            }
-                        } else {
-                            let imageView = cell.senderPrayerCircleMembers[i]
-                            let tint = cell.senderPrayerCircleMembersTintImage[i]
-                            imageView.isHidden = true
-                            tint.isHidden = true
-                        }
-                    }
-                }
                 cell.agreeButton.tag = indexPath.row
                 cell.agreeButton.section = indexPath.section
                 cell.agreeButton.addTarget(self, action: #selector(markAgreed(sender:)), for: .touchUpInside)
@@ -666,11 +622,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @objc func handleNotification4(_ notification: NSNotification) {
-       loadData()
-        refreshTable()
-    }
-    
-    @objc func handleNotification5(_ notification: NSNotification) {
         loadData()
         refreshTable()
     }
@@ -680,7 +631,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipUserDidSet"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "membershipPrayerDidSet"), object: nil)
         for prayer in self.prayerQueue {
             CurrentUser.firebaseMembershipPrayers.append(prayer)
         }
