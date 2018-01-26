@@ -14,6 +14,10 @@ import ContactsUI
 import MessageUI
 
 class SelectContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UISearchResultsUpdating {
+    
+    var ranCount = Int()
+    
+    
     var explicitDismiss = false
     
     // Authorize Contacts View
@@ -149,9 +153,9 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
 
     func getContactsData() {
-        cnContacts = []
-        cleanContactsAsCircleUsers = []
-        contactsToDisplay = []
+//        cnContacts = []
+//        cleanContactsAsCircleUsers = []
+//        contactsToDisplay = []
 
         let store = CNContactStore()
         store.requestAccess(for: .contacts, completionHandler: {
@@ -166,16 +170,20 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             request.sortOrder = CNContactSortOrder.familyName
             
             do {
+                var newCnContacts = [CNContact]()
                 try store.enumerateContacts(with: request){
                     (contact, cursor) -> Void in
                     if (contact.isKeyAvailable(CNContactFamilyNameKey)) || (contact.isKeyAvailable(CNContactGivenNameKey)) {
-                        self.cnContacts.append(contact)
+                        newCnContacts.append(contact)
                     }
                 }
+                self.cnContacts = newCnContacts
             } catch let error {
                 NSLog("Fetch contact error: \(error)")
             }
             
+            print("cnContacts.count: \(self.cnContacts.count)")
+            var newContactsToDisplay = [CircleUser]()
             for contact in self.cnContacts {
                 var append = true
                 let user = CircleUser().setFromCnContact(cnContact: contact)
@@ -200,11 +208,12 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 
                 if append == true {
                     let userWithStatus = CircleUser().getRelationshipStatus(userToCheck: user)
-                    self.contactsToDisplay.append(userWithStatus)
+                    newContactsToDisplay.append(userWithStatus)
                 }
-                
-                self.cleanContactsAsCircleUsers = self.contactsToDisplay
             }
+            
+            self.contactsToDisplay = newContactsToDisplay
+            self.cleanContactsAsCircleUsers = self.contactsToDisplay
             
             self.setUpContactSections()
             
@@ -216,10 +225,10 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             }
         })
     }
-    
+
     func setUpContactSections() {
-        sortedContacts = [:]
-        sortedKeys = []
+        var newSortedContacts = [String:[CircleUser]]()
+        print("contactsToDisplay: \(self.contactsToDisplay.count)")
         if self.contactsToDisplay.count > 0 {
             for circleUser in self.contactsToDisplay {
                 if let relationship = circleUser.relationshipToCurrentUser {
@@ -227,28 +236,32 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                         if let email = circleUser.userEmail {
                             if let currentUserEmail = CurrentUser.currentUser.userEmail {
                                 if email != currentUserEmail {
-                                    setNewArrayForKey(sectionKey: "Invite member to your Circle", circleUser: circleUser)
+                                    if var oldArray = newSortedContacts["Invite member to your Circle"] {
+                                        oldArray.append(circleUser)
+                                        newSortedContacts["Invite member to your Circle"] = oldArray
+                                    } else {
+                                        let newArray = [circleUser]
+                                        newSortedContacts["Invite member to your Circle"] = newArray
+                                    }
                                 }
                             }
                         }
                     } else {
-                        setNewArrayForKey(sectionKey: "Invite to join Prayer", circleUser: circleUser)
+                        if var oldArray = newSortedContacts["Invite to join Prayer"] {
+                            oldArray.append(circleUser)
+                            newSortedContacts["Invite to join Prayer"] = oldArray
+                        } else {
+                            let newArray = [circleUser]
+                            newSortedContacts["Invite to join Prayer"] = newArray
+                        }
                     }
                 }
             }
         }
+        sortedContacts = newSortedContacts
+        
         let keys = Array(sortedContacts.keys)
         sortedKeys = keys.sorted()
-    }
-    
-    func setNewArrayForKey(sectionKey: String, circleUser: CircleUser) {
-        if var oldArray = sortedContacts[sectionKey] {
-            oldArray.append(circleUser)
-            sortedContacts[sectionKey] = oldArray
-        } else {
-            let newArray = [circleUser]
-            sortedContacts[sectionKey] = newArray
-        }
     }
 
     @IBAction func doneButtonDidPress(_ sender: Any) {
@@ -352,7 +365,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     func updateRelationshipActions(cell: AddCircleMemberTableViewCell, user: CircleUser) {
         if let userRelationship = user.relationshipToCurrentUser {
-            print("userRelationship is \(userRelationship) for \(user.lastName!)")
             switch userRelationship {
             case "invited":
                 cell.inviteButton.isHidden = true
@@ -489,6 +501,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     @objc func deleteCircleMember(sender: CellButton) {
+        ranCount = 0
         let alert = UIAlertController(title: "Are you sure?", message: "Are you sure you want to remove this Circle Member?", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes, I'm sure", style: .default) { (action) in
             let buttonTag = sender.tag
