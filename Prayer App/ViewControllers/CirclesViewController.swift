@@ -613,5 +613,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "circleMemberAdded"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "circleUserProfileImageDidSet"), object: nil)
         viewIsVisible = false
+        selectedCircleMember = 0
     }
 }
