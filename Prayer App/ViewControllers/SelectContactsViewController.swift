@@ -153,9 +153,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
 
     func getContactsData() {
-//        cnContacts = []
-//        cleanContactsAsCircleUsers = []
-//        contactsToDisplay = []
 
         let store = CNContactStore()
         store.requestAccess(for: .contacts, completionHandler: {
@@ -581,7 +578,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             }
             else {
                 self.contactsToDisplay = self.cleanContactsAsCircleUsers
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "showResultsBeforeSearchingNotification"), object: nil) // Calls SearchVC
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "showResultsBeforeSearchingNotification"), object: nil)
                 self.searchActive = false
             }
         }

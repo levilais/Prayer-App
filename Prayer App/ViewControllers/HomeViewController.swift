@@ -617,8 +617,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc func handleNotification3(_ notification: NSNotification) {
         dataFirstLoaded = true
-        loadData()
-        refreshTable()
+        var count = 0
+        print("1")
+        for user in CurrentUser.firebaseMembershipUsers {
+            if let status = user.membershipStatus {
+                if status == MembershipUser.currentUserMembershipStatus.invited.rawValue {
+                    count += 1
+                }
+            }
+        }
+        if invitationUsers.count == count {
+            loadData()
+            refreshTable()
+        }
     }
     
     @objc func handleNotification4(_ notification: NSNotification) {
