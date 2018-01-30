@@ -48,7 +48,7 @@ class CustomTabBarController {
         
         
         let tabHome = tabBar.items![0]
-        tabHome.title = "Home" // tabbar titlee
+        tabHome.title = "Home"
         tabHome.image=UIImage(named: "homeIcon.pdf")?.withRenderingMode(.alwaysOriginal)
         tabHome.selectedImage = UIImage(named: "homeIconSelected.pdf")?.withRenderingMode(.alwaysOriginal)
         tabHome.titlePositionAdjustment.vertical = tabHome.titlePositionAdjustment.vertical

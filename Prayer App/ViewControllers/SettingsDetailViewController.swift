@@ -65,7 +65,6 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
         switch actionType {
         case 0:
             if let cell = tableView.dequeueReusableCell(withIdentifier: "settingsToggleCell", for: indexPath) as? SettingsToggleTableViewCell {
-                
                 if labelText == "Log In" {
                     cell.settingsToggle.addTarget(self, action: #selector(logInLogOut), for: .touchUpInside)
                     if Auth.auth().currentUser != nil {
@@ -91,9 +90,16 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
             }
         case 1:
             if let cell = tableView.dequeueReusableCell(withIdentifier: "settingsButtonCell", for: indexPath) as? SettingsButtonTableViewCell {
+                
+                if labelText == "Delete Account" {
+                    cell.actionButton.addTarget(self, action: #selector(deleteUser), for: .touchUpInside)
+                }
+                
                 cell.label.text = labelString
                 cellToReturn = cell
             }
+            
+            
         case 2:
             if let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as? SettingsTableViewCell {
                 
@@ -105,6 +111,88 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
             cellToReturn = cell
         }
         return cellToReturn
+    }
+    
+    @objc func deleteUser() {
+        let alert = UIAlertController(title: "Are you sure?", message: "Please enter your password to confirm", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "Password"
+            textField.isSecureTextEntry = true
+        }
+        
+        alert.addAction(UIAlertAction(title: "Delete Account", style: .default, handler: { [weak alert] (_) in
+            if let textField = alert?.textFields![0] {
+                if let password = textField.text {
+                    print("getting textfield password")
+                    if let email = CurrentUser.currentUser.userEmail {
+                        print("have email, attempting delete")
+                        self.deleteCurrentUserAccount(email: email, password: password)
+                    }
+                }
+            }
+        }))
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alert.addAction(cancelAction)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+        alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+    }
+    
+    func deleteCurrentUserAccount(email: String, password: String) {
+        if let user = Auth.auth().currentUser {
+            let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+            user.reauthenticate(with: credential) { error in
+                if let error = error {
+                    print("error occured: \(error.localizedDescription)")
+                } else {
+                    if let userID = Auth.auth().currentUser?.uid {
+                        if let memberIDs = CurrentUser.currentUser.usersMembershipUserIds {
+                            for id in memberIDs {
+                                let ref = Database.database().reference().child("users").child(id).child("memberships").child(userID)
+                                ref.removeValue(completionBlock: { (error, reference) in
+                                    if let error = error {
+                                        print("error: \(error.localizedDescription)")
+                                    } else {
+                                        print("member value removed")
+                                    }
+                                })
+                            }
+                        }
+                        if let circleIds = CurrentUser.currentUser.usersCircleUserIds {
+                            for id in circleIds {
+                                let ref = Database.database().reference().child("users").child(id).child("circleUsers").child(userID)
+                                ref.removeValue(completionBlock: { (error, reference) in
+                                    if let error = error {
+                                        print("error: \(error.localizedDescription)")
+                                    } else {
+                                        print("circle value removed")
+                                    }
+                                })
+                            }
+                        }
+                    }
+                    if let userRef = CurrentUser.currentUser.userRef {
+                        userRef.removeValue()
+                    }
+                    user.delete(completion: { (error) in
+                        if error != nil {
+                            print("Error unable to delete user")
+                        } else {
+                            CurrentUser.firebaseCircleMembers.removeAll()
+                            CurrentUser.firebaseMembershipPrayers.removeAll()
+                            CurrentUser.firebaseMembershipUsers.removeAll()
+                            CurrentUser.currentUserCirclePrayers.removeAll()
+                            FirebaseHelper.firebaseUserEmails.removeAll()
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil, userInfo: nil)
+                            let tabBarController = self.tabBarController
+                            _ = self.navigationController?.popToRootViewController(animated: false)
+                            tabBarController?.selectedIndex = 2
+                        }
+                    })
+                }
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -152,8 +240,8 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
             do {
                 try firebaseAuth.signOut()
                 CurrentUser.firebaseCircleMembers.removeAll()
+                CurrentUser.firebaseMembershipPrayers.removeAll()
                 CurrentUser.firebaseMembershipUsers.removeAll()
-//                CurrentUser.membershipUserPrayers.removeAll()
                 CurrentUser.currentUserCirclePrayers.removeAll()
                 FirebaseHelper.firebaseUserEmails.removeAll()
                 

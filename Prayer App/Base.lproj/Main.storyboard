@@ -2656,7 +2656,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ml4-gE-qMD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1342.5" y="1572.8873239436621"/>
+            <point key="canvasLocation" x="1376" y="1554"/>
         </scene>
         <!--Item-->
         <scene sceneID="dzg-OD-aEz">
@@ -3550,8 +3550,8 @@
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="exo-XS-mFi"/>
+        <segue reference="5sI-7B-53b"/>
         <segue reference="YWN-Vu-ZnR"/>
-        <segue reference="gID-Hk-yCK"/>
+        <segue reference="gPu-UL-IfP"/>
     </inferredMetricsTieBreakers>
 </document>
