@@ -13,7 +13,7 @@ import Firebase
 import Contacts
 import ContactsUI
 
-class User {
+class CustomUser {
     var key: String?
     var userRef: DatabaseReference?
     
@@ -28,7 +28,7 @@ class User {
     var usersCircleUserIds: [String]?
     var usersMembershipUserIds: [String]?
     
-    func getFullName(user: User) -> String {
+    func getFullName(user: CustomUser) -> String {
         var fullName = ""
         if let first = user.firstName {
             if let last = user.lastName {
@@ -43,8 +43,8 @@ class User {
         return fullName
     }
     
-    func currentUserFromSnapshot(snapshot: DataSnapshot) -> User {
-        let currentUser = User()
+    func currentUserFromSnapshot(snapshot: DataSnapshot) -> CustomUser {
+        let currentUser = CustomUser()
         
         currentUser.key = snapshot.key
         currentUser.userRef = snapshot.ref

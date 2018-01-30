@@ -24,7 +24,7 @@ class CurrentUser {
     static var firebaseMembershipUsers = [MembershipUser]()
     static var currentUserCirclePrayers = [CirclePrayer]()
     static var currentUserPrayers = [CurrentUserPrayer]()
-    static var currentUser = User()
+    static var currentUser = CustomUser()
 
     func setupCurrentUserFirstNameWelcomeLabel(label: UILabel) -> UILabel {
         if Auth.auth().currentUser != nil {

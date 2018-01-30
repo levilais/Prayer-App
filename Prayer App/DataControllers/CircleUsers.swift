@@ -12,7 +12,7 @@ import Contacts
 import ContactsUI
 import Firebase
 
-class CircleUser: User {
+class CircleUser: CustomUser {
     var currentUserCircleRef: DatabaseReference?
     var circleUserMembershipRef: DatabaseReference?
     

@@ -57,7 +57,7 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
             cell.profileImage.image = profileImage
         }
         
-        let fullName = user.getFullName(user: user as User)
+        let fullName = user.getFullName(user: user as CustomUser)
         cell.nameLabel.text = fullName
         cell.leaveCircleButton.addTarget(self, action: #selector(deleteUserFromCircle(sender:)), for: .touchUpInside)
         

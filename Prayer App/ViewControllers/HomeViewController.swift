@@ -392,7 +392,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     
                     if let currentUserFirstName = CurrentUser.currentUser.firstName {
-                        let name = User().getFullName(user: membershipUser)
+                        let name = CustomUser().getFullName(user: membershipUser)
                         cell.invitationLabel.text = "\(currentUserFirstName), \(name) has invited you to be one of their 5 Prayer Circle members.  Would you like to accept their invitation?"
                         cell.nameLabel.text = name
                     }

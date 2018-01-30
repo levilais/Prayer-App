@@ -20,7 +20,7 @@ class FirebaseHelper {
         if let userID = Auth.auth().currentUser?.uid {
             let userRef = Database.database().reference().child("users").child(userID)
             userRef.observe(.value) { (snapshot) in
-                CurrentUser.currentUser = User().currentUserFromSnapshot(snapshot: snapshot)
+                CurrentUser.currentUser = CustomUser().currentUserFromSnapshot(snapshot: snapshot)
             }
             
             userRef.child("circleUsers").observeSingleEvent(of: .value, with: { snapshot in

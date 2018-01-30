@@ -114,7 +114,11 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     @objc func deleteUser() {
-        let alert = UIAlertController(title: "Are you sure?", message: "Please enter your password to confirm", preferredStyle: .alert)
+        showDeleteUserAlert(title: "Are you sure?", message: "Please enter your password to confrim")
+    }
+    
+    func showDeleteUserAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addTextField { (textField) in
             textField.placeholder = "Password"
             textField.isSecureTextEntry = true
@@ -123,10 +127,8 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
         alert.addAction(UIAlertAction(title: "Delete Account", style: .default, handler: { [weak alert] (_) in
             if let textField = alert?.textFields![0] {
                 if let password = textField.text {
-                    print("getting textfield password")
                     if let email = CurrentUser.currentUser.userEmail {
-                        print("have email, attempting delete")
-                        self.deleteCurrentUserAccount(email: email, password: password)
+                        self.attemptDelete(email: email, password: password)
                     }
                 }
             }
@@ -135,68 +137,121 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
         alert.addAction(cancelAction)
         
         self.present(alert, animated: true, completion: nil)
-        
         alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
     }
     
-    func deleteCurrentUserAccount(email: String, password: String) {
+    func attemptDelete(email: String, password: String) {
         if let user = Auth.auth().currentUser {
             let credential = EmailAuthProvider.credential(withEmail: email, password: password)
             user.reauthenticate(with: credential) { error in
                 if let error = error {
-                    print("error occured: \(error.localizedDescription)")
+                    self.showDeleteUserAlert(title: "Something went wrong", message: "\(error.localizedDescription) Please try again.")
                 } else {
                     if let userID = Auth.auth().currentUser?.uid {
-                        if let memberIDs = CurrentUser.currentUser.usersMembershipUserIds {
-                            for id in memberIDs {
-                                let ref = Database.database().reference().child("users").child(id).child("memberships").child(userID)
-                                ref.removeValue(completionBlock: { (error, reference) in
-                                    if let error = error {
-                                        print("error: \(error.localizedDescription)")
-                                    } else {
-                                        print("member value removed")
-                                    }
-                                })
-                            }
+                        
+                        var doneCount = 0
+                        var goalCount = 0
+                        var memberIDs = [String]()
+                        var circleIDs = [String]()
+                        
+                        if let memberIDsCheck = CurrentUser.currentUser.usersMembershipUserIds {
+                            goalCount += memberIDsCheck.count
+                            memberIDs = memberIDsCheck
                         }
-                        if let circleIds = CurrentUser.currentUser.usersCircleUserIds {
-                            for id in circleIds {
+                        
+                        if let circleIdsCheck = CurrentUser.currentUser.usersCircleUserIds {
+                            goalCount += circleIdsCheck.count
+                            circleIDs = circleIdsCheck
+                        }
+                        
+                        print("goalCount: \(goalCount)")
+                        if goalCount != 0 {
+                            for id in memberIDs {
                                 let ref = Database.database().reference().child("users").child(id).child("circleUsers").child(userID)
                                 ref.removeValue(completionBlock: { (error, reference) in
                                     if let error = error {
                                         print("error: \(error.localizedDescription)")
                                     } else {
-                                        print("circle value removed")
+                                        print("member value removed")
+                                        doneCount += 1
+                                        print("doneCount in members: \(doneCount)")
+                                        if doneCount == goalCount {
+                                            print("counts match emberships")
+                                            self.deleteUserFromDatabase()
+                                        }
                                     }
                                 })
                             }
-                        }
-                    }
-                    if let userRef = CurrentUser.currentUser.userRef {
-                        userRef.removeValue()
-                    }
-                    user.delete(completion: { (error) in
-                        if error != nil {
-                            print("Error unable to delete user")
+                    
+                            for id in circleIDs {
+                                let ref = Database.database().reference().child("users").child(id).child("memberships").child(userID)
+                                ref.removeValue(completionBlock: { (error, reference) in
+                                    if error != nil {
+                                        print("error: \(error!.localizedDescription)")
+                                    } else {
+                                        print("circle value removed")
+                                        doneCount += 1
+                                        print("doneCount in circles: \(doneCount)")
+                                        if doneCount == goalCount {
+                                            print("counts match in circles")
+                                            self.deleteUserFromDatabase()
+                                        }
+                                    }
+                                })
+                            }
                         } else {
-                            CurrentUser.firebaseCircleMembers.removeAll()
-                            CurrentUser.firebaseMembershipPrayers.removeAll()
-                            CurrentUser.firebaseMembershipUsers.removeAll()
-                            CurrentUser.currentUserCirclePrayers.removeAll()
-                            FirebaseHelper.firebaseUserEmails.removeAll()
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil, userInfo: nil)
-                            let tabBarController = self.tabBarController
-                            _ = self.navigationController?.popToRootViewController(animated: false)
-                            tabBarController?.selectedIndex = 2
+                            self.deleteUserFromDatabase()
                         }
-                    })
+                    }
                 }
             }
         }
     }
     
+    func deleteUserFromDatabase() {
+        if let user = Auth.auth().currentUser {
+            let storage = Storage.storage()
+            if let url = CurrentUser.currentUser.profileImageAsString {
+                let storageRef = storage.reference(forURL: url)
+                storageRef.delete { error in
+                    if let error = error {
+                        print(error)
+                    } else {
+                        // File deleted successfully
+                    }
+                }
+            }
+
+            if let userRef = CurrentUser.currentUser.userRef {
+                userRef.removeValue()
+            }
+
+            user.delete(completion: { (error) in
+                if error != nil {
+                    print("Error unable to delete user: \(error!.localizedDescription)")
+                } else {
+                    CurrentUser.firebaseCircleMembers.removeAll()
+                    CurrentUser.firebaseMembershipPrayers.removeAll()
+                    CurrentUser.firebaseMembershipUsers.removeAll()
+                    CurrentUser.currentUserCirclePrayers.removeAll()
+                    FirebaseHelper.firebaseUserEmails.removeAll()
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "clearContentOnLogOut"), object: nil, userInfo: nil)
+
+                    let alert = UIAlertController(title: "We're sad to see you go", message: "You have successfully deleted your Prayer account.", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                        let tabBarController = self.tabBarController
+                        _ = self.navigationController?.popToRootViewController(animated: false)
+                        tabBarController?.selectedIndex = 2
+                    })
+                    alert.addAction(action)
+                    self.present(alert, animated: true, completion: nil)
+                    alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                }
+            })
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         let category = Settings().settingsCategories[chosenSection]
         if let subCategories = category["subCategories"] as? [AnyObject] {
             if let subCategory = subCategories[indexPath.row] as? [String:AnyObject] {
