@@ -1,3 +1,5 @@
+Fix: Tableview jumps to top after prayer is marked "Answered"
+Fix: Counters don't work in Circles page
 Add notificaiton label to HomeScreen (for things like accepted invites)
 Add a notification that someone accepted your invite to Prayer
 Add notification badge for "new items" in Home screen

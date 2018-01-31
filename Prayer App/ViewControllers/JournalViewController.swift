@@ -245,6 +245,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.toggleTableIsHidden()
             }
         }
+        hideRefreshButton()
     }
     
     func showActive() {
@@ -259,6 +260,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.toggleTableIsHidden()
             }
         }
+        hideRefreshButton()
     }
     
     func reloadPrayers() {

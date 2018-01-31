@@ -164,7 +164,6 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                             circleIDs = circleIdsCheck
                         }
                         
-                        print("goalCount: \(goalCount)")
                         if goalCount != 0 {
                             for id in memberIDs {
                                 let ref = Database.database().reference().child("users").child(id).child("circleUsers").child(userID)
@@ -172,11 +171,8 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                                     if let error = error {
                                         print("error: \(error.localizedDescription)")
                                     } else {
-                                        print("member value removed")
                                         doneCount += 1
-                                        print("doneCount in members: \(doneCount)")
                                         if doneCount == goalCount {
-                                            print("counts match emberships")
                                             self.deleteUserFromDatabase()
                                         }
                                     }
@@ -189,11 +185,8 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                                     if error != nil {
                                         print("error: \(error!.localizedDescription)")
                                     } else {
-                                        print("circle value removed")
                                         doneCount += 1
-                                        print("doneCount in circles: \(doneCount)")
                                         if doneCount == goalCount {
-                                            print("counts match in circles")
                                             self.deleteUserFromDatabase()
                                         }
                                     }
