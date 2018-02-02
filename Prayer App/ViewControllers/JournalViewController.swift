@@ -13,6 +13,8 @@ import FirebaseDatabase
 
 class JournalViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     
+    var tempReloadCount = 0
+    
     var preSortedPrayers = [CurrentUserPrayer]()
     var sortedPrayers = [String:[CurrentUserPrayer]]()
     var viewIsVisible = false
@@ -164,6 +166,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                                     if let prayerIsAnswered = prayer.isAnswered {
                                         if prayerIsAnswered == false && changedPrayerIsAnswered == true {
                                             self.reloadPrayers()
+                                            print("prayer answered")
                                             DispatchQueue.main.async {
                                                 UIView.performWithoutAnimation {
                                                     self.tableView.reloadData()
@@ -177,10 +180,15 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                                                     if prayerKey == changedPrayerKey {
                                                         self.preSortedPrayers[i] = changedPrayer
                                                         self.refreshPrayers()
-                                                        let indexPath = self.indexPathForPrayer(currentUserPrayer: changedPrayer)
-                                                        let contentOffset = self.tableView.contentOffset
-                                                        self.tableView.reloadRows(at: [indexPath], with: .none)
-                                                        self.tableView.contentOffset = contentOffset
+
+                                                        if let isAnswered = prayer.isAnswered {
+                                                            if !isAnswered {
+                                                                let indexPath = self.indexPathForPrayer(currentUserPrayer: changedPrayer)
+                                                                if let cell = self.tableView.cellForRow(at: indexPath) as? PrayerTableViewCell {
+                                                                    self.setUnansweredCellLabels(prayer: prayer, cell: cell)
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                                 i += 1
@@ -194,6 +202,54 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                     }
                 }
             })
+            
+//            self.userRef.child("prayers").observe(.childChanged, with: { (snapshot) -> Void in
+//                let changedPrayer = CurrentUserPrayer().currentUserPrayerFromSnapshot(snapshot: snapshot)
+//                if let changedPrayerKey = changedPrayer.key {
+//                    var i = 0
+//                    for prayer in CurrentUser.currentUserPrayers {
+//                        if let key = prayer.key {
+//                            if changedPrayerKey == key {
+//                                CurrentUser.currentUserPrayers[i] = changedPrayer
+//                                if let changedPrayerIsAnswered = changedPrayer.isAnswered {
+//                                    if let prayerIsAnswered = prayer.isAnswered {
+//                                        if prayerIsAnswered == false && changedPrayerIsAnswered == true {
+//                                            self.reloadPrayers()
+//                                            print("prayer answered")
+//                                            DispatchQueue.main.async {
+//                                                UIView.performWithoutAnimation {
+//                                                    self.tableView.reloadData()
+//                                                    self.toggleTableIsHidden()
+//                                                }
+//                                            }
+//                                        } else {
+//                                            i = 0
+//                                            for preSortedPrayer in self.preSortedPrayers {
+//                                                if let prayerKey = preSortedPrayer.key {
+//                                                    if prayerKey == changedPrayerKey {
+//                                                        self.preSortedPrayers[i] = changedPrayer
+//                                                        self.refreshPrayers()
+//
+//                                                        // CRASH HAPPENING HERE WHEN NEW PRAYER ADDED ON MAIN SCREEN
+//                                                        print("prayer changed")
+//                                                        print(changedPrayer.prayerText!)
+//                                                        let indexPath = self.indexPathForPrayer(currentUserPrayer: changedPrayer)
+//                                                        let contentOffset = self.tableView.contentOffset
+//                                                        self.tableView.reloadRows(at: [indexPath], with: .none)
+//                                                        self.tableView.contentOffset = contentOffset
+//                                                    }
+//                                                }
+//                                                i += 1
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        i += 1
+//                    }
+//                }
+//            })
         }
     }
     
@@ -420,16 +476,18 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         if let prayerText = prayer.prayerText {
             cell.prayerTextView.text = prayerText
         }
+    
+        setUnansweredCellLabels(prayer: prayer, cell: cell)
+    }
+    
+    func setUnansweredCellLabels(prayer: CurrentUserPrayer, cell: PrayerTableViewCell) {
+        if let prayerCount = prayer.prayerCount {
+            cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: prayerCount))"
+        }
         
         if !answeredShowing {
             cell.prayedLastLabel = FirebaseHelper().daysSinceTimeStampLabel(cellLabel: cell.prayedLastLabel, prayer: prayer, cell: cell)
         }
-    
-        var prayerCount = Int()
-        if let prayerCountCheck = prayer.prayerCount {
-            prayerCount = prayerCountCheck
-        }
-        cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: prayerCount))"
     }
     
     func configureAnswered(_ cell: AnsweredPrayerTableViewCell, at indexPath: IndexPath) {
