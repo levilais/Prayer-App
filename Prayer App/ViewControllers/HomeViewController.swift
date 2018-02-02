@@ -236,12 +236,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                                 CurrentUser.firebaseMembershipPrayers[i] = changedMembershipPrayer
                                                 self.loadData()
                                                 let indexPath = self.indexPathForPrayer(membershipPrayer: changedMembershipPrayer)
-                                                DispatchQueue.main.async {
-                                                    UIView.performWithoutAnimation {
-                                                        let contentOffset = self.tableView.contentOffset
-                                                        self.tableView.reloadRows(at: [indexPath], with: .none)
-                                                        self.tableView.contentOffset = contentOffset
-                                                    }
+                                                if let cell = self.tableView.cellForRow(at: indexPath) as? CirclePrayerTableViewCell {
+                                                    self.updatePrayerCellLabels(prayer: changedMembershipPrayer, cell: cell)
                                                 }
                                             }
                                         }
@@ -415,16 +411,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             if let prayerArray = cleanData["membershipPrayers"] as? [MembershipPrayer] {
                 let prayer = prayerArray[indexPath.row]
                 
-                if let agreedCount = prayer.agreedCount {
-                    if let firstName = prayer.firstName {
-                        cell.whoAgreedInPrayerLabel.text = "This prayer has been prayed \(Utilities().numberOfTimesString(count: agreedCount)) by \(firstName)'s Circle"
-                    }
-                }
-                
-                if let lastPrayedDate = prayer.lastPrayed {
-                    cell.prayerRequestedDate.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedDate))"
-                }
-                
+                updatePrayerCellLabels(prayer: prayer, cell: cell)
+
                 if let firstName = prayer.firstName {
                     if let lastName = prayer.lastName {
                         let fullName = firstName + " " + lastName
@@ -455,6 +443,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         default:
             let cell = UITableViewCell()
             return cell
+        }
+    }
+    
+    func updatePrayerCellLabels(prayer: MembershipPrayer, cell: CirclePrayerTableViewCell) {
+        if let agreedCount = prayer.agreedCount {
+            if let firstName = prayer.firstName {
+                cell.whoAgreedInPrayerLabel.text = "This prayer has been prayed \(Utilities().numberOfTimesString(count: agreedCount)) by \(firstName)'s Circle"
+            }
+        }
+        
+        if let lastPrayedDate = prayer.lastPrayed {
+            cell.prayerRequestedDate.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedDate))"
         }
     }
     
@@ -521,6 +521,28 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }) { (error, committed, snapshot) in
                     if let error = error {
                         print(error.localizedDescription)
+                    }
+                }
+                
+                if let userID = CurrentUser.currentUser.userID {
+                    if let prayerOwnerID = prayer.prayerOwnerUserID {
+                        let circleRef = Database.database().reference().child("users").child(prayerOwnerID).child("circleUsers").child(userID)
+                        circleRef.runTransactionBlock({ (currentData: MutableData) -> TransactionResult in
+                            if var user = currentData.value as? [String : AnyObject] {
+                                var agreedInPrayerCount = user["agreedInPrayerCount"] as? Int ?? 0
+                                agreedInPrayerCount += 1
+                                
+                                user["agreedInPrayerCount"] = agreedInPrayerCount as AnyObject?
+                                user["lastAgreedInPrayerDate"] = ServerValue.timestamp() as AnyObject?
+                                currentData.value = user
+                                return TransactionResult.success(withValue: currentData)
+                            }
+                            return TransactionResult.success(withValue: currentData)
+                        }) { (error, committed, snapshot) in
+                            if let error = error {
+                                print(error.localizedDescription)
+                            }
+                        }
                     }
                 }
             }

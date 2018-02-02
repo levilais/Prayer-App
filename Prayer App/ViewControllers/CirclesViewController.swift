@@ -168,21 +168,9 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                         if let key = circlePrayer.key {
                             if changedPrayerKey == key {
                                 CurrentUser.currentUserCirclePrayers[i] = changedPrayer
-                            }
-                        }
-                        i += 1
-                    }
-                    
-                    i = 0
-                    for prayer in self.circlePrayers {
-                        if let prayerKey = prayer.key {
-                            if prayerKey == changedPrayerKey {
-                                self.circlePrayers[i] = changedPrayer
-                                let indexPath = IndexPath(row: i, section: 0)
-                                DispatchQueue.main.async {
-                                    UIView.performWithoutAnimation {
-                                        self.tableView.reloadRows(at: [indexPath], with: .automatic)
-                                    }
+                                let indexPath = self.indexPathForPrayer(circlePrayer: changedPrayer)
+                                if let cell = self.tableView.cellForRow(at: indexPath) as? PrayerTableViewCell {
+                                    self.setCellLabels(prayer: changedPrayer, cell: cell)
                                 }
                             }
                         }
@@ -343,25 +331,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         return circlePrayers.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as! PrayerTableViewCell
-        
-        let prayer = circlePrayers[indexPath.row]
-        
-        if let prayerText = prayer.prayerText {
-            cell.prayerTextView.text = prayerText
-        }
-        
-        if let lastPrayedCheck = prayer.lastPrayed {
-            cell.prayedLastLabel.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedCheck))"
-        }
-        
-        if let agreedCountCheck = prayer.agreedCount {
-            cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: agreedCountCheck))"
-        }
-        return cell
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -384,6 +353,30 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         })
         amenAction.backgroundColor = UIColor.StyleFile.TealColor
         return UISwipeActionsConfiguration(actions: [amenAction])
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "prayerCell", for: indexPath) as! PrayerTableViewCell
+        
+        let prayer = circlePrayers[indexPath.row]
+        
+        if let prayerText = prayer.prayerText {
+            cell.prayerTextView.text = prayerText
+        }
+        
+        setCellLabels(prayer: prayer, cell: cell)
+        
+        return cell
+    }
+    
+    func setCellLabels(prayer: CirclePrayer, cell: PrayerTableViewCell) {
+        if let lastPrayedCheck = prayer.lastPrayed {
+            cell.prayedLastLabel.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedCheck))"
+        }
+        
+        if let agreedCountCheck = prayer.agreedCount {
+            cell.prayedCountLabel.text = "Prayed \(Utilities().numberOfTimesString(count: agreedCountCheck))"
+        }
     }
     
     func markPrayed(indexPath: IndexPath) {
@@ -460,6 +453,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func toggleCircleMemberDetailContent(buttonTag: Int) {
         if CurrentUser.firebaseCircleMembers.count == 0 {
+            print("firebase circle members is 0")
             circleNameLabel.text = "Tap above to send invitation"
             circleJoinedLabel.text = ""
             circleAgreedLabel.text = ""
@@ -483,8 +477,10 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             var joinedCircleDate = Double()
             
             if let agreedCountCheck = circleUser.agreedInPrayerCount {
+                print("agreed count found")
                 agreedCount = agreedCountCheck
             } else {
+                print("no agreed count found")
                 agreedCount = 0
             }
             if let lastAgreedDateCheck = circleUser.lastAgreedInPrayerDate {
@@ -541,7 +537,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
         toggleCircleMemberDetailContent(buttonTag: selectedCircleMember)
-        self.reloadData()
+        self.reloadData()   
     }
     
     
@@ -578,6 +574,22 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func createAccountButtonDidPress(_ sender: Any) {
         showSignUp = true
         performSegue(withIdentifier: "loginSignUpSegue", sender: sender)
+    }
+    
+    func indexPathForPrayer(circlePrayer: CirclePrayer) -> IndexPath {
+        var row = Int()
+        if let circlePrayerKey = circlePrayer.key {
+            var rowIndex = 0
+            for prayer in circlePrayers {
+                if let prayerKey = prayer.key {
+                    if circlePrayerKey == prayerKey {
+                        row = rowIndex
+                    }
+                }
+                rowIndex += 1
+            }
+        }
+        return IndexPath(row: row, section: 0)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
