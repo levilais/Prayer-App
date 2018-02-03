@@ -13,6 +13,7 @@ import FirebaseDatabase
 import FirebaseStorage
 import Contacts
 import ContactsUI
+import UserNotifications
 
 class LoginViewController: UIViewController {
     
@@ -332,6 +333,7 @@ class LoginViewController: UIViewController {
                             }
                             
                             if ContactsHandler().contactsAuthStatus() != ".authorized"  {
+                                self.promptUserForNotificationAuth()
                                 self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
                             } else {
                                 self.dismiss(animated: true, completion: nil)
@@ -339,6 +341,26 @@ class LoginViewController: UIViewController {
                         }
                     })
                 }
+            }
+        }
+    }
+    
+    func promptUserForNotificationAuth() {
+        let application: UIApplication = UIApplication.shared
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {_, _ in })
+        application.registerForRemoteNotifications()
+        
+        if let token = InstanceID.instanceID().token() {
+            print("token: \(token)")
+        }
+        
+        if let fcmToken = Messaging.messaging().fcmToken {
+            if let userID = Auth.auth().currentUser?.uid {
+                Database.database().reference().child("users").child(userID).child("messagingTokens").child(fcmToken).setValue(fcmToken)
+                print("fcmToken in refresh: \(fcmToken)")
             }
         }
     }
@@ -357,6 +379,7 @@ class LoginViewController: UIViewController {
                     FirebaseHelper().loadFirebaseData()
                     
                     if ContactsHandler().contactsAuthStatus() != ".authorized"  {
+                        self.promptUserForNotificationAuth()
                         self.performSegue(withIdentifier: "connectToContactsSegue", sender: self)
                     } else  {
                         self.dismiss(animated: true, completion: nil)

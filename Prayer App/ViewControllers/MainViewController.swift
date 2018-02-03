@@ -86,6 +86,34 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let url = URL(string: "https://fcm.googleapis.com/fcm/send") {
+            var request = URLRequest(url: url)
+            request.allHTTPHeaderFields = ["Content-Type":"application/json","Authorization":"key=AAAAWqjLV7Q:APA91bGty5xwztEa8z70MVCMJy-djszfCFlPTvWRBWVghpglVOzbRCCYWXX6b2fEqVmuN69FGuDJLuKtnvSwgxD81pCUnIGLIlpviavOmtRACff2epmiiKEmseGOI4X4xV_U2Y5e2E51"]
+            request.httpMethod = "POST"
+            request.httpBody = "{\"to\":\"e6oZrxa1nW0:APA91bHnC4bOGVDak3olDlmK2sIFZwcNuqSyudjGqNcis91LC31phxsJkpj97V32nvzqwV8j202YbQp8mtlVpprC5RmfQTsW8qpKbrMURDQTg5eAj8udte55f_zhtbaExCHOMQEIghnJ\",\"notification\":{\"title\":\"This is from HTTP!\"}}".data(using: .utf8)
+            URLSession.shared.dataTask(with: request) { (data, urlResponse, error) in
+                if error != nil {
+                    print(error!.localizedDescription)
+                }
+            }.resume()
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         textField.delegate = self
         touchToPrayButton.setTitleColor(UIColor.lightGray, for: .normal)
         

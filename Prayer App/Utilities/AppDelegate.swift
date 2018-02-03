@@ -13,7 +13,7 @@ import FirebaseDatabase
 import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
     var window: UIWindow?
     
@@ -37,16 +37,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         
         UNUserNotificationCenter.current().delegate = self
+        Messaging.messaging().delegate = self
         
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: {_, _ in })
-        application.registerForRemoteNotifications()
-        
-        if let token = InstanceID.instanceID().token() {
-            print("token: \(token)")
-        }
+//        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+//        UNUserNotificationCenter.current().requestAuthorization(
+//            options: authOptions,
+//            completionHandler: {_, _ in })
+//        application.registerForRemoteNotifications()
+//        
+//        if let token = InstanceID.instanceID().token() {
+//            print("token: \(token)")
+//        }
+//        
+//        if let fcmToken = Messaging.messaging().fcmToken {
+//            if let userID = Auth.auth().currentUser?.uid {
+//                Database.database().reference().child("users").child(userID).child("messagingTokens").child(fcmToken).setValue(fcmToken)
+//                print("fcmToken in refresh: \(fcmToken)")
+//            }
+//        }
         
         FirebaseHelper().loadFirebaseData()
         UserDefaultsHelper().getLoads()
@@ -54,6 +62,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UserDefaultsHelper().getLastContactAuthStatus()
                 
         return true
+    }
+    
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        if let userID = Auth.auth().currentUser?.uid {
+            Database.database().reference().child("users").child(userID).child("messagingTokens").child(fcmToken).setValue(fcmToken)
+            print("fcmToken refreshed: \(fcmToken)")
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
