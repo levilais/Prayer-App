@@ -80,8 +80,13 @@ class FirebaseHelper {
                 circleUser.relationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited.rawValue
                 CurrentUser.firebaseCircleMembers.append(circleUser)
                 self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
-                if let messagingTokens = circleUser.messagingTokens {
-                    NotificationsHelper().sendInviteNotification(messagingTokens: messagingTokens)
+                print("1")
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    if let messagingTokens = userDictionary["messagingTokens"] as? NSDictionary {
+                        if let tokens = Array(messagingTokens.allKeys) as? [String] {
+                            NotificationsHelper().sendInviteNotification(messagingTokens: tokens)
+                        }
+                    }
                 }
             })
         }
