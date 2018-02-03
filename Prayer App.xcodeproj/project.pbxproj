@@ -20,6 +20,7 @@
 		044A0EE51FD1AF8C004164D0 /* FirebaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */; };
 		044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */; };
 		044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */; };
+		044E8918202652420023B8B6 /* NotificationsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044E8917202652420023B8B6 /* NotificationsHelper.swift */; };
 		045D217C1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D217B1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift */; };
 		045D217E1FF5DE0400A5E0F6 /* ManageMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D217D1FF5DE0400A5E0F6 /* ManageMemberViewController.swift */; };
 		046203301FA39ACE00BDF8ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */; };
@@ -75,6 +76,7 @@
 		044A0EE41FD1AF8C004164D0 /* FirebaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseHelper.swift; sourceTree = "<group>"; };
 		044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		044E8917202652420023B8B6 /* NotificationsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsHelper.swift; sourceTree = "<group>"; };
 		045D217B1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageMembersTableViewCell.swift; sourceTree = "<group>"; };
 		045D217D1FF5DE0400A5E0F6 /* ManageMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageMemberViewController.swift; sourceTree = "<group>"; };
 		0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 				04410F191FCA398F002EC8F9 /* CurrentUser.swift */,
 				04A1F3151FE6F1CA00E56771 /* User.swift */,
 				0473D3861FEC7C360074921D /* Prayer.swift */,
+				044E8917202652420023B8B6 /* NotificationsHelper.swift */,
 			);
 			path = DataControllers;
 			sourceTree = "<group>";
@@ -434,6 +437,7 @@
 				049E04CD1FC659A000705766 /* CustomUIButton.swift in Sources */,
 				04F0E4DF1FA1271E006D1244 /* UserDefaultsHelper.swift in Sources */,
 				04FE7CDC1FBE077C00E500A5 /* CirclesViewController.swift in Sources */,
+				044E8918202652420023B8B6 /* NotificationsHelper.swift in Sources */,
 				041953141FD3387900186084 /* FirstLoadViewController.swift in Sources */,
 				047002471FBBBF0F00A63AD0 /* AnsweredPrayerTableViewCell.swift in Sources */,
 				04F2255F1FC505BB000549D5 /* SettingsClass.swift in Sources */,

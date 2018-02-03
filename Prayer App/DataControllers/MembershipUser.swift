@@ -65,12 +65,37 @@ class MembershipUser: CircleUser {
                 membershipUser.currentUserMembershipRef = Database.database().reference().child("users").child(membershipKey).child("circleUsers").child(currentUserKey)
                 membershipUser.membershipUserCirclePrayersRef = Database.database().reference().child("users").child(membershipKey).child("circlePrayers")
                 membershipUser.membershipUserCircleRef = Database.database().reference().child("users").child(currentUserKey).child("memberships").child(membershipKey)
+                membershipUser.messagingTokensRef = Database.database().reference().child("users").child(membershipKey).child("messagingTokens")
             }
         }
         
         setMembershipUserProfileImage(membershipUser: membershipUser)
+        setMessagingTokens(circleUser: membershipUser)
         
         return membershipUser
+    }
+    
+    func setMessagingTokens(membershipUser: MembershipUser) {
+        if let messagingTokensRef = membershipUser.messagingTokensRef {
+            messagingTokensRef.observeSingleEvent(of: .value) { (snapshot) in
+                if let tokensDict = snapshot.value as? NSDictionary {
+                    if let tokens = Array(tokensDict.allKeys) as? [String] {
+                        membershipUser.messagingTokens = tokens
+                        var i = 0
+                        for user in CurrentUser.firebaseMembershipUsers {
+                            if let email = user.userEmail {
+                                if let userEmail = membershipUser.userEmail {
+                                    if email == userEmail {
+                                        CurrentUser.firebaseMembershipUsers[i] = membershipUser
+                                    }
+                                }
+                            }
+                            i += 1
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func setMembershipUserProfileImage(membershipUser: MembershipUser) {
@@ -104,10 +129,10 @@ class MembershipUser: CircleUser {
     }
     
     func leaveUsersCircle(membershipUser: MembershipUser) {
-        if let currentUserMembershipRef = membershipUser.currentUserMembershipRef {
-            if let membershipUserCircleRef = membershipUser.membershipUserCircleRef {
-                currentUserMembershipRef.removeValue()
-                membershipUserCircleRef.removeValue()
+        if let membershipRef = membershipUser.currentUserMembershipRef {
+            if let circleRef = membershipUser.membershipUserCircleRef {
+                membershipRef.removeValue()
+                circleRef.removeValue()
                 
                 var i = 0
                 for firebaseMembershipUser in CurrentUser.firebaseMembershipUsers {
@@ -115,22 +140,13 @@ class MembershipUser: CircleUser {
                         if let emailToCheck = firebaseMembershipUser.userEmail {
                             if membershipUserEmail == emailToCheck {
                                 CurrentUser.firebaseMembershipUsers.remove(at: i)
-                                if let firebaseMembershipUserID = firebaseMembershipUser.userID {
-                                    i = 0
-                                    for membershipPrayer in CurrentUser.firebaseMembershipPrayers {
-                                        if let prayerOwnerID = membershipPrayer.prayerOwnerUserID {
-                                            if prayerOwnerID == firebaseMembershipUserID {
-                                                CurrentUser.firebaseMembershipPrayers.remove(at: i)
-                                            }
-                                        }
-                                        i += 1
-                                    }
-                                }
                             }
                         }
                     }
                     i += 1
                 }
+                
+                CurrentUser.firebaseMembershipPrayers.removeAll()
             }
         }
     }
@@ -163,6 +179,9 @@ class MembershipUser: CircleUser {
                 let memberDict = ["membershipStatus":MembershipUser.currentUserMembershipStatus.member.rawValue,"dateJoinedCircle":ServerValue.timestamp()] as AnyObject
                 circleRef.updateChildValues(memberDict as! [AnyHashable : Any])
                 membershipRef.updateChildValues(circleDict as! [AnyHashable : Any])
+                if let messagingTokens = membershipUser.messagingTokens {
+                    NotificationsHelper().sendAcceptNotification(messagingTokens: messagingTokens)
+                }
             }
         }
     }

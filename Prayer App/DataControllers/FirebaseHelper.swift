@@ -49,6 +49,15 @@ class FirebaseHelper {
                     self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
                 }
             })
+            
+            userRef.child("memberships").observeSingleEvent(of: .value, with: { (snapshot) -> Void in
+                var newMembershipUsers = [MembershipUser]()
+                for membershipSnap in snapshot.children {
+                    let newMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: membershipSnap as! DataSnapshot)
+                    newMembershipUsers.append(newMembershipUser)
+                }
+                CurrentUser.firebaseMembershipUsers = newMembershipUsers
+            })
         }
     }
     
@@ -71,6 +80,9 @@ class FirebaseHelper {
                 circleUser.relationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.invited.rawValue
                 CurrentUser.firebaseCircleMembers.append(circleUser)
                 self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
+                if let messagingTokens = circleUser.messagingTokens {
+                    NotificationsHelper().sendInviteNotification(messagingTokens: messagingTokens)
+                }
             })
         }
     }

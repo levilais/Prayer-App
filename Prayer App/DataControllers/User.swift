@@ -16,6 +16,7 @@ import ContactsUI
 class CustomUser {
     var key: String?
     var userRef: DatabaseReference?
+    var messagingTokensRef: DatabaseReference?
     
     var dateJoinedPrayer: Double?
     var firstName: String?
@@ -27,6 +28,7 @@ class CustomUser {
     var profileImageAsImage: UIImage?
     var usersCircleUserIds: [String]?
     var usersMembershipUserIds: [String]?
+    var messagingTokens: [String]?
     
     func getFullName(user: CustomUser) -> String {
         var fullName = ""

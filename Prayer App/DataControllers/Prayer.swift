@@ -137,6 +137,15 @@ class CirclePrayer: Prayer {
                 if let lastName = CurrentUser.currentUser.lastName {
                     let prayer = ["firstName":firstName,"lastName":lastName,"prayerText":prayerText,"lastPrayedDate":ServerValue.timestamp(),"howAnswered":"","isAnswered":false,"agreedCount":1,"prayerOwnerUserID":userID] as AnyObject
                     userRef.child("circlePrayers").childByAutoId().setValue(prayer)
+                    for circleMember in CurrentUser.firebaseCircleMembers {
+                        if let relationship = circleMember.relationshipToCurrentUser {
+                            if relationship == CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue {
+                                if let messagingTokens = circleMember.messagingTokens {
+                                    NotificationsHelper().sendPrayerNotification(messagingTokens: messagingTokens)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

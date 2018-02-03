@@ -28,14 +28,15 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
     }
     
     func refreshData() {
-        usersToDisplay = []
+        var newUsersToDisplay = [MembershipUser]()
         for membershipUser in CurrentUser.firebaseMembershipUsers {
             if let membershipStatus = membershipUser.membershipStatus {
                 if membershipStatus == MembershipUser.currentUserMembershipStatus.member.rawValue {
-                    usersToDisplay.append(membershipUser)
+                    newUsersToDisplay.append(membershipUser)
                 }
             }
         }
+        usersToDisplay = newUsersToDisplay
         self.tableView.reloadData()
     }
 
@@ -58,6 +59,7 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
         }
         
         let fullName = user.getFullName(user: user as CustomUser)
+        cell.leaveCircleButton.tag = indexPath.row
         cell.nameLabel.text = fullName
         cell.leaveCircleButton.addTarget(self, action: #selector(deleteUserFromCircle(sender:)), for: .touchUpInside)
         
@@ -65,7 +67,10 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
     }
     
     @objc func deleteUserFromCircle(sender: UIButton) {
+        print("pressed delete user from circle button")
         let memberToDelete = usersToDisplay[sender.tag]
+        print("deleting index #\(sender.tag)")
+        print("usersToDisplay.count: \(usersToDisplay.count)")
         MembershipUser().leaveUsersCircle(membershipUser: memberToDelete)
         refreshData()
     }

@@ -76,10 +76,36 @@ class CircleUser: CustomUser {
             if let currentUserKey = CurrentUser.currentUser.key {
                 circleUser.circleUserMembershipRef = Database.database().reference().child("users").child(circleKey).child("memberships").child(currentUserKey)
                 circleUser.currentUserCircleRef = Database.database().reference().child("users").child(currentUserKey).child("circleUsers").child(circleKey)
+                circleUser.messagingTokensRef = Database.database().reference().child("users").child(circleKey).child("messagingTokens")
             }
         }
         
+        setMessagingTokens(circleUser: circleUser)
+        
         return circleUser
+    }
+    
+    func setMessagingTokens(circleUser: CircleUser) {
+        if let messagingTokensRef = circleUser.messagingTokensRef {
+            messagingTokensRef.observeSingleEvent(of: .value) { (snapshot) in
+                if let tokensDict = snapshot.value as? NSDictionary {
+                    if let tokens = Array(tokensDict.allKeys) as? [String] {
+                        circleUser.messagingTokens = tokens
+                        var i = 0
+                        for user in CurrentUser.firebaseCircleMembers {
+                            if let email = user.userEmail {
+                                if let userEmail = circleUser.userEmail {
+                                    if email == userEmail {
+                                        CurrentUser.firebaseCircleMembers[i] = circleUser
+                                    }
+                                }
+                            }
+                            i += 1
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func removeUserFromCircle(circleUser: CircleUser) {

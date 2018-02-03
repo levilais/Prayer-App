@@ -71,11 +71,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func firstLoad(completed: @escaping (Bool) -> Void) {
         userRef.child("memberships").observeSingleEvent(of: .value, with: { (snapshot) -> Void in
-            CurrentUser.firebaseMembershipUsers.removeAll()
+            var newMembershipUsers = [MembershipUser]()
             for membershipSnap in snapshot.children {
                 let newMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: membershipSnap as! DataSnapshot)
-                CurrentUser.firebaseMembershipUsers.append(newMembershipUser)
+                newMembershipUsers.append(newMembershipUser)
             }
+            CurrentUser.firebaseMembershipUsers = newMembershipUsers
 //            if self.dataFirstLoaded {
                 self.loadData()
                 self.refreshTable()
