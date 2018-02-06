@@ -60,7 +60,7 @@ class CustomTabBarController {
         tabJournal.titlePositionAdjustment.vertical = tabJournal.titlePositionAdjustment.vertical
         
         let tabMain = tabBar.items![2]
-        tabMain.title = "Prayer"
+        tabMain.title = "Pray"
         tabMain.image=UIImage(named: "prayerIcon.pdf")?.withRenderingMode(.alwaysOriginal)
         tabMain.selectedImage=UIImage(named: "prayerIconSelected.pdf")?.withRenderingMode(.alwaysOriginal)
         tabMain.titlePositionAdjustment.vertical = tabMain.titlePositionAdjustment.vertical

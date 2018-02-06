@@ -39,22 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UNUserNotificationCenter.current().delegate = self
         Messaging.messaging().delegate = self
         
-//        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-//        UNUserNotificationCenter.current().requestAuthorization(
-//            options: authOptions,
-//            completionHandler: {_, _ in })
-//        application.registerForRemoteNotifications()
-//        
-//        if let token = InstanceID.instanceID().token() {
-//            print("token: \(token)")
-//        }
-//        
-//        if let fcmToken = Messaging.messaging().fcmToken {
-//            if let userID = Auth.auth().currentUser?.uid {
-//                Database.database().reference().child("users").child(userID).child("messagingTokens").child(fcmToken).setValue(fcmToken)
-//                print("fcmToken in refresh: \(fcmToken)")
-//            }
-//        }
+        UIApplication.shared.applicationIconBadgeNumber = 0
         
         FirebaseHelper().loadFirebaseData()
         UserDefaultsHelper().getLoads()
@@ -138,7 +123,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //            }
 //        }
 //    }
-
 
 }
 
