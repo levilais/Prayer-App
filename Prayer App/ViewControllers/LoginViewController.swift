@@ -345,26 +345,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func promptUserForNotificationAuth() {
-        let application: UIApplication = UIApplication.shared
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: {_, _ in })
-        application.registerForRemoteNotifications()
-        
-        if let token = InstanceID.instanceID().token() {
-            print("token: \(token)")
-        }
-        
-        if let fcmToken = Messaging.messaging().fcmToken {
-            if let userID = Auth.auth().currentUser?.uid {
-                Database.database().reference().child("users").child(userID).child("messagingTokens").child(fcmToken).setValue(fcmToken)
-                print("fcmToken in refresh: \(fcmToken)")
-            }
-        }
-    }
-    
     func attemptLogin() {
         if let email = loginEmailTextField.text {
             if let password = loginPasswordTextField.text {
@@ -385,6 +365,28 @@ class LoginViewController: UIViewController {
                         self.dismiss(animated: true, completion: nil)
                     }
                 })
+            }
+        }
+    }
+    
+    func promptUserForNotificationAuth() {
+        let application: UIApplication = UIApplication.shared
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {_, _ in })
+        application.registerForRemoteNotifications()
+        
+        if let token = InstanceID.instanceID().token() {
+            if let userID = Auth.auth().currentUser?.uid {
+                Database.database().reference().child("users").child(userID).child("messagingTokens").child(token).setValue(token)
+            }
+        }
+        
+        if let fcmToken = Messaging.messaging().fcmToken {
+            if let userID = Auth.auth().currentUser?.uid {
+                Database.database().reference().child("users").child(userID).child("messagingTokens").child(fcmToken).setValue(fcmToken)
+                print("fcmToken in refresh: \(fcmToken)")
             }
         }
     }

@@ -23,7 +23,7 @@ class FirebaseHelper {
                 CurrentUser.currentUser = CustomUser().currentUserFromSnapshot(snapshot: snapshot)
             }
             
-            userRef.child("circleUsers").observeSingleEvent(of: .value, with: { snapshot in
+            userRef.child("circleUsers").observe(.value, with: { snapshot in
                 for snapChild in snapshot.children {
                     let circleUser = CircleUser().circleUserFromSnapshot(snapshot: snapChild as! DataSnapshot)
                     if let circleUserEmail = circleUser.userEmail {

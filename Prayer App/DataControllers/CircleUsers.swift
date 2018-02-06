@@ -82,7 +82,40 @@ class CircleUser: CustomUser {
         
         setMessagingTokens(circleUser: circleUser)
         
+        setCircleUserProfileImageFromFirebase(circleUser: circleUser)
+        
         return circleUser
+    }
+    
+    func setCircleUserProfileImageFromFirebase(circleUser: CircleUser) {
+        print("called")
+        if let urlString = circleUser.profileImageAsString {
+            if let url = URL(string: urlString) {
+                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                    if error != nil {
+                        print(error!.localizedDescription)
+                        return
+                    }
+                    if let imageData = data {
+                        if let image = UIImage(data: imageData) {
+                            circleUser.profileImageAsImage = image
+                            var i = 0
+                            for user in CurrentUser.firebaseCircleMembers {
+                                if let email = user.userEmail {
+                                    if let userEmail = circleUser.userEmail {
+                                        if email == userEmail {
+                                            CurrentUser.firebaseCircleMembers[i] = circleUser
+                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "circleUserProfileImageDidSet"), object: nil, userInfo: nil)
+                                        }
+                                    }
+                                }
+                                i += 1
+                            }
+                        }
+                    }
+                }).resume()
+            }
+        }
     }
     
     func setMessagingTokens(circleUser: CircleUser) {

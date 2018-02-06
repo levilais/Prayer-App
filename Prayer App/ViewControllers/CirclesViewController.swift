@@ -477,10 +477,8 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             var joinedCircleDate = Double()
             
             if let agreedCountCheck = circleUser.agreedInPrayerCount {
-                print("agreed count found")
                 agreedCount = agreedCountCheck
             } else {
-                print("no agreed count found")
                 agreedCount = 0
             }
             if let lastAgreedDateCheck = circleUser.lastAgreedInPrayerDate {
@@ -526,7 +524,10 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             case 0 ..< circleCount:
                 let circleUser = circleUsers[i]
                 if let image = circleUser.profileImageAsImage {
+                    print("has image and setting it")
                     circleProfileImages[i].image = image
+                } else {
+                    print("no image found")
                 }
                 circleSpotFilled[i] = true
             case circleCount ... 4:

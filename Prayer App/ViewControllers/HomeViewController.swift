@@ -544,6 +544,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 print(error.localizedDescription)
                             }
                         }
+                        for membershipUser in CurrentUser.firebaseMembershipUsers {
+                            print("1")
+                            if let membershipUserID = membershipUser.userID {
+                                print("2")
+                                if prayerOwnerID == membershipUserID {
+                                    print("3")
+                                    if let messagingTokens = membershipUser.messagingTokens {
+                                        print("4")
+                                        NotificationsHelper().sendAgreedNotification(messagingTokens: messagingTokens)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
