@@ -533,28 +533,33 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 var agreedInPrayerCount = user["agreedInPrayerCount"] as? Int ?? 0
                                 agreedInPrayerCount += 1
                                 
+                                let timeStamp = user["lastAgreedInPrayerDate"] as? Double ?? 0
+                                
                                 user["agreedInPrayerCount"] = agreedInPrayerCount as AnyObject?
                                 user["lastAgreedInPrayerDate"] = ServerValue.timestamp() as AnyObject?
                                 currentData.value = user
+                                
+                                for membershipUser in CurrentUser.firebaseMembershipUsers {
+                                    if let membershipUserID = membershipUser.userID {
+                                        if prayerOwnerID == membershipUserID {
+                                            if let messagingTokens = membershipUser.messagingTokens {
+                                                let calendar = NSCalendar.current
+                                                let interval = timeStamp / 1000
+                                                let date = Date(timeIntervalSince1970: interval)
+                                                if !calendar.isDateInToday(date) {
+                                                    NotificationsHelper().sendAgreedNotification(messagingTokens: messagingTokens)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
                                 return TransactionResult.success(withValue: currentData)
                             }
                             return TransactionResult.success(withValue: currentData)
                         }) { (error, committed, snapshot) in
                             if let error = error {
                                 print(error.localizedDescription)
-                            }
-                        }
-                        for membershipUser in CurrentUser.firebaseMembershipUsers {
-                            print("1")
-                            if let membershipUserID = membershipUser.userID {
-                                print("2")
-                                if prayerOwnerID == membershipUserID {
-                                    print("3")
-                                    if let messagingTokens = membershipUser.messagingTokens {
-                                        print("4")
-                                        NotificationsHelper().sendAgreedNotification(messagingTokens: messagingTokens)
-                                    }
-                                }
                             }
                         }
                     }
