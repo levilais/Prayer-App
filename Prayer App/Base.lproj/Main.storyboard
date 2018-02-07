@@ -161,10 +161,10 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0v-om-x6K">
-                                                <rect key="frame" x="189.5" y="0.0" width="28" height="28"/>
+                                                <rect key="frame" x="193.5" y="0.0" width="20" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="28" id="96o-H9-ASU"/>
-                                                    <constraint firstAttribute="width" constant="28" id="haq-eo-wHw"/>
+                                                    <constraint firstAttribute="width" constant="20" id="haq-eo-wHw"/>
                                                 </constraints>
                                                 <state key="normal" backgroundImage="timerIcon"/>
                                             </button>
@@ -3530,12 +3530,12 @@
         <image name="signUpButton" width="150" height="60"/>
         <image name="spinner" width="120" height="120"/>
         <image name="tableToggleLeftSelected" width="36" height="36"/>
-        <image name="timerIcon" width="58" height="58"/>
+        <image name="timerIcon" width="42" height="58"/>
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5sI-7B-53b"/>
+        <segue reference="JFD-5x-ZFN"/>
         <segue reference="YWN-Vu-ZnR"/>
-        <segue reference="7If-Zn-bA6"/>
+        <segue reference="Db2-Hu-Ozc"/>
     </inferredMetricsTieBreakers>
 </document>

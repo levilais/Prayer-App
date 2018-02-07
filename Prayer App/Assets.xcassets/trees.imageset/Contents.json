@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "timerIconSelected1.pdf",
+      "filename" : "trees.pdf",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "timerIconSelected1@2x.pdf",
+      "filename" : "trees@2x.pdf",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "timerIconSelected1@3x.pdf",
+      "filename" : "trees@3x.pdf",
       "scale" : "3x"
     }
   ],

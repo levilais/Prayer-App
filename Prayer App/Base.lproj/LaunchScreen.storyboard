@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13526" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14087.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14075.4"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,10 +25,27 @@
                                     <constraint firstAttribute="width" constant="120" id="sgk-6n-yCc"/>
                                 </constraints>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="trees" translatesAutoresizingMaskIntoConstraints="NO" id="pPa-4x-NRh">
+                                <rect key="frame" x="0.0" y="582" width="375" height="85"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="85" id="3fi-KN-ZGx"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Prayerfully crafted in Portland, Oregon by AppVolks, LLC" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mCx-GS-Wve">
+                                <rect key="frame" x="46.5" y="560" width="281.5" height="14"/>
+                                <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="12"/>
+                                <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.92920595407485962" green="0.9334074854850769" blue="0.93326789140701294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="pPa-4x-NRh" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="AKK-sx-UIe"/>
                             <constraint firstItem="jJm-u7-xSA" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="QQn-Ya-YLO"/>
+                            <constraint firstItem="pPa-4x-NRh" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Ssg-cZ-W8h"/>
+                            <constraint firstItem="pPa-4x-NRh" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="ZmH-0I-MKa"/>
+                            <constraint firstItem="pPa-4x-NRh" firstAttribute="top" secondItem="mCx-GS-Wve" secondAttribute="bottom" constant="8" id="nyN-cT-UDx"/>
+                            <constraint firstItem="mCx-GS-Wve" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="sgU-jx-fUc"/>
                             <constraint firstItem="jJm-u7-xSA" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="sr5-ai-vaq"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -36,10 +53,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="52" y="374.66266866566718"/>
         </scene>
     </scenes>
     <resources>
-        <image name="AV" width="720" height="360"/>
+        <image name="AV" width="240" height="120"/>
+        <image name="trees" width="639" height="168"/>
     </resources>
 </document>
