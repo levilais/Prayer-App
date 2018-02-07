@@ -159,7 +159,9 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         }, completion: nil)
         
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
+        
         if !TimerStruct.timerIsRunning {
+            print("timer running")
             timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
         } else {
             timerIcon.setBackgroundImage(UIImage(named: "timerIconSelected.pdf"), for: .normal)
@@ -172,7 +174,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
             Animations().animateLoad(doneButton: doneButton, titleImage: titleImage, toolbarView: toolbarView, view: self.view, textView: textField)
         } else {
             titleImage.alpha = 1
-            titleImage.isHidden = false
             doneButton.alpha = 1
             doneButton.isHidden = false
         }

@@ -20,7 +20,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var settingsProfileButtonImage: UIButton!
     @IBOutlet weak var welcomeLabel: UILabel!
     
-    var sectionHeaders = ["Timer Duration","Review The Prayer App","Settings"]
+    var sectionHeaders = ["Timer Duration","Give Feedback","Settings"]
     var selectedRow = Int()
     
     override func viewDidLoad() {
@@ -86,7 +86,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         case 0:
             numberOfRows = 1
         case 1:
-            numberOfRows = 1
+            numberOfRows = 2
         case 2:
             numberOfRows = Settings().settingsCategories.count
         default:
@@ -101,10 +101,23 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             let cell = tableView.dequeueReusableCell(withIdentifier: "timerPreferenceCell", for: indexPath) as! TimerPreferenceTableViewCell
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-            cell.customCellImageView.image = UIImage(named: "reviewImage.pdf")
-            cell.isUserInteractionEnabled = true
-            return cell
+            switch indexPath.row {
+            case 0:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+                cell.customCellImageView.image = UIImage(named: "reviewImage.pdf")
+                cell.isUserInteractionEnabled = true
+                return cell
+            case 1:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+                cell.customCellImageView.image = UIImage(named: "email.pdf")
+                cell.isUserInteractionEnabled = true
+                return cell
+            default:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+                cell.customCellImageView.isHidden = true
+                return cell
+            }
+
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as! SettingsTableViewCell
             if let label = Settings().settingsCategories[indexPath.row]["title"] as? String {
@@ -133,8 +146,17 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 1:
-            tableView.deselectRow(at: indexPath, animated: true)
-            SKStoreReviewController.requestReview()
+            switch indexPath.row {
+            case 0:
+                tableView.deselectRow(at: indexPath, animated: true)
+                SKStoreReviewController.requestReview()
+            case 1:
+                tableView.deselectRow(at: indexPath, animated: true)
+                // do work for launching email here
+                print("email")
+            default:
+                print("default called")
+            }
         case 2:
             selectedRow = indexPath.row
             performSegue(withIdentifier: "settingsToDetailSettings", sender: self)
