@@ -98,7 +98,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         }
     }
     
-    
     func setupSearchResultsController() {
         self.resultSearchController = ({
             let controller = UISearchController(searchResultsController: nil)

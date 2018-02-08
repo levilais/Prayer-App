@@ -10,8 +10,9 @@ import UIKit
 import StoreKit
 import Firebase
 import SDWebImage
+import MessageUI
 
-class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var titleImage: UIImageView!
@@ -162,6 +163,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 SKStoreReviewController.requestReview()
             case 1:
                 tableView.deselectRow(at: indexPath, animated: true)
+                if MFMailComposeViewController.canSendMail() {
+                    let composeVC = MFMailComposeViewController()
+                    composeVC.mailComposeDelegate = self
+                    composeVC.setToRecipients(["levilais@gmail.com"])
+                    composeVC.setSubject("Prayer Feedback")
+                    composeVC.setMessageBody("A note from Prayer: We are always committed to making Prayer the best experience possible.  Please let us know what you think!", isHTML: false)
+
+                    self.present(composeVC, animated: true, completion: nil)
+                }
                 // do work for launching email here
                 print("email")
             default:
@@ -173,6 +183,28 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             tableView.deselectRow(at: indexPath, animated: true)
         default:
             break
+        }
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                               didFinishWith result: MFMailComposeResult, error: Error?) {
+        var labelText = ""
+        
+        switch result {
+        case .cancelled:
+            print("cancelled")
+        case .sent:
+            labelText = "Sent!"
+        case .saved:
+            labelText = "Saved!"
+        case .failed:
+            print("failed")
+        }
+        
+        controller.dismiss(animated: true) {
+            if labelText != "" {
+                Animations().showPopup(labelText: labelText, presentingVC: self)
+            }
         }
     }
     

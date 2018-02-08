@@ -326,8 +326,6 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
             toViewController.segueFromSettings = true
         }
     }
-
-    
     
     @IBAction func timerHeaderButtonDidPress(_ sender: Any) {
         TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
