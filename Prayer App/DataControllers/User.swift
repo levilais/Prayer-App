@@ -23,7 +23,7 @@ class CustomUser {
     var lastName: String?
     var userID: String?
     var userEmail: String?
-    var profileImageAsString: String? // will be converted to url then image
+    var profileImageAsString: String?
     var profileImageAsData: Data?
     var profileImageAsImage: UIImage?
     var usersCircleUserIds: [String]?

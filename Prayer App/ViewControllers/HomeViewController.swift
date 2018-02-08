@@ -62,10 +62,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         tableView.rowHeight = UITableViewAutomaticDimension
         
-//        if dataFirstLoaded {
-            self.loadData()
-            refreshTable()
-//        }
+        self.loadData()
+        refreshTable()
         greetingLabel.text = "Prayerline"
     }
     
@@ -77,10 +75,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 newMembershipUsers.append(newMembershipUser)
             }
             CurrentUser.firebaseMembershipUsers = newMembershipUsers
-//            if self.dataFirstLoaded {
-                self.loadData()
-                self.refreshTable()
-//            }
+            self.loadData()
+            self.refreshTable()
             completed(true)
         })
     }
@@ -101,15 +97,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 if matchExists == false {
                     CurrentUser.firebaseMembershipUsers.append(newMembershipUser)
-//                    if self.dataFirstLoaded {
-                        if self.viewIsVisible {
-                            self.showRefreshButton()
-                        } else {
-                            self.loadData()
-                            self.refreshTable()
-                            self.tableView.scrollsToTop = true
-                        }
-//                    }
+                    if self.viewIsVisible {
+                        self.showRefreshButton()
+                    } else {
+                        self.loadData()
+                        self.refreshTable()
+                        self.tableView.scrollsToTop = true
+                    }
                 }
             })
             
@@ -131,7 +125,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             })
             
             self.userRef.child("memberships").observe(.childChanged, with: { (snapshot) -> Void in
-                print("membership changed")
                 let changedMembershipUser = MembershipUser().membershipUserFromSnapshot(snapshot: snapshot)
                 if let changedMembershipUserKey = changedMembershipUser.key {
                     var i = 0
@@ -139,10 +132,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         if let key = membershipUser.key {
                             if changedMembershipUserKey == key {
                                 CurrentUser.firebaseMembershipUsers[i] = changedMembershipUser
-//                                if self.dataFirstLoaded {
-                                    self.loadData()
-                                    self.refreshTable()
-//                                }
+                                self.loadData()
+                                self.refreshTable()
                             }
                         }
                         i += 1
@@ -657,9 +648,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @objc func handleNotification3(_ notification: NSNotification) {
-//        dataFirstLoaded = true
         var count = 0
-        print("1")
         for user in CurrentUser.firebaseMembershipUsers {
             if let status = user.membershipStatus {
                 if status == MembershipUser.currentUserMembershipStatus.invited.rawValue {

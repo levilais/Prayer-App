@@ -14,14 +14,6 @@ class CustomUIButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        //TODO: Code for our button
-//        let bthWidth = 200
-//        let btnHeight = 60
-//
-//        self.frame.size = CGSize(width: bthWidth, height: btnHeight)
-//        self.frame.origin = CGPoint(x: (((superview?.frame.width)! / 2) - (self.frame.width / 2)), y: self.frame.origin.y)
-        
-        
         self.layer.cornerRadius = CGFloat(self.frame.size.height / 2)
         self.layer.borderWidth = 1.0
         self.layer.borderColor = UIColor.StyleFile.DarkGrayColor.cgColor
@@ -33,9 +25,7 @@ class CustomUIButton: UIButton {
         self.setTitle(self.titleLabel?.text?.capitalized, for: .normal)
     }
     
-    // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
-        // Drawing code
         if drawCount == 0 {
             self.sizeToFit()
             let width = self.frame.size.width + 20

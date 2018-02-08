@@ -181,7 +181,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 NSLog("Fetch contact error: \(error)")
             }
             
-            print("cnContacts.count: \(self.cnContacts.count)")
             var newContactsToDisplay = [CircleUser]()
             for contact in self.cnContacts {
                 var append = true
@@ -227,7 +226,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
 
     func setUpContactSections() {
         var newSortedContacts = [String:[CircleUser]]()
-        print("contactsToDisplay: \(self.contactsToDisplay.count)")
         if self.contactsToDisplay.count > 0 {
             for circleUser in self.contactsToDisplay {
                 if let relationship = circleUser.relationshipToCurrentUser {
@@ -525,9 +523,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         alert.addAction(okAction)
         alert.addAction(cancelAction)
-        present(alert, animated: true) {
-            print("completed alert")
-        }
+        present(alert, animated: true)
         alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
     }
     

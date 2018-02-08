@@ -88,7 +88,6 @@ class CircleUser: CustomUser {
     }
     
     func setCircleUserProfileImageFromFirebase(circleUser: CircleUser) {
-        print("called")
         if let urlString = circleUser.profileImageAsString {
             if let url = URL(string: urlString) {
                 URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in

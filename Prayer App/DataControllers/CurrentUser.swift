@@ -59,7 +59,6 @@ class CurrentUser {
         return button
     }
     
-    // HELPER METHOD FOR SETTING INITIAL PROFILE IMAGE
     func profileImageFromNameAsData(firstName: String) -> Data {
         var imageDataToSave = Data()
         let firstLetter = String(describing: firstName.first!)

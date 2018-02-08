@@ -179,7 +179,6 @@ class LoginViewController: UIViewController {
                     explanationLabel.textColor = UIColor.StyleFile.WineColor
                 } else {
                     Auth.auth().sendPasswordReset(withEmail: email, completion: { (error) in
-                        // show alert
                         if let error = error {
                             self.explanationLabel.text = error.localizedDescription
                             self.explanationLabel.textColor = UIColor.StyleFile.WineColor
@@ -400,7 +399,6 @@ class LoginViewController: UIViewController {
         if let fcmToken = Messaging.messaging().fcmToken {
             if let userID = Auth.auth().currentUser?.uid {
                 Database.database().reference().child("users").child(userID).child("messagingTokens").child(fcmToken).setValue(fcmToken)
-                print("fcmToken in refresh: \(fcmToken)")
             }
         }
     }

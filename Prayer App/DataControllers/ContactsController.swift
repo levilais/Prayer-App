@@ -57,7 +57,6 @@ class ContactsHandler: NSObject,CNContactPickerDelegate {
         let authorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
         switch authorizationStatus {
         case .authorized:
-            // this is unlikely to ever be the result
             print("already has access - this shouldn't be called")
         case .notDetermined:
             self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (access, accessError) -> Void in
