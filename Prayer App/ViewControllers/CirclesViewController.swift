@@ -398,7 +398,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
         }
-        //            indexPathForEdit = indexPath
     }
     
     func loadData() {
@@ -453,7 +452,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func toggleCircleMemberDetailContent(buttonTag: Int) {
         if CurrentUser.firebaseCircleMembers.count == 0 {
-            print("firebase circle members is 0")
             circleNameLabel.text = "Tap above to send invitation"
             circleJoinedLabel.text = ""
             circleAgreedLabel.text = ""
@@ -524,7 +522,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             case 0 ..< circleCount:
                 let circleUser = circleUsers[i]
                 if let image = circleUser.profileImageAsImage {
-                    print("has image and setting it")
                     circleProfileImages[i].image = image
                 } else {
                     print("no image found")
@@ -557,9 +554,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         alert.addAction(okAction)
         alert.addAction(cancelAction)
-        present(alert, animated: true) {
-            print("completed alert")
-        }
+        present(alert, animated: true)
         alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
     }
     

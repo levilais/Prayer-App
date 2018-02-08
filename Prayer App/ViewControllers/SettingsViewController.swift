@@ -172,8 +172,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 
                     self.present(composeVC, animated: true, completion: nil)
                 }
-                // do work for launching email here
-                print("email")
             default:
                 print("default called")
             }

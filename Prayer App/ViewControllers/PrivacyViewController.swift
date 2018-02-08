@@ -27,15 +27,9 @@ class PrivacyViewController: UIViewController, WKUIDelegate {
             }
             
         }
-        
-//        let myURL = URL(string: "https://www.apple.com")
-//        let myRequest = URLRequest(url: myURL!)
-//        webView.load(myRequest)
     }
 
     @IBAction func doneButtonDidPress(_ sender: Any) {
-        print("done pressed")
         dismiss(animated: true, completion: nil)
     }
-
 }

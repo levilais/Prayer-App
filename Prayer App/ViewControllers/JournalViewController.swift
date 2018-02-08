@@ -48,7 +48,6 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var markAnsweredTextView: UITextView!
     var indexPathToMarkAnswered: IndexPath = IndexPath()
     
-    // DATA HANDLING
     var userRef: DatabaseReference!
     @IBOutlet weak var refreshButton: UIButton!
     

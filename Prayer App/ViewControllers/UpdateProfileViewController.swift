@@ -123,7 +123,6 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
                     } else {
                         if let downloadURL = metadata?.downloadURL()?.absoluteString {
                             self.ref.child("users").child(userID).child("profileImageURL").setValue(downloadURL)
-                            print("firebaseMembers.count: \(CurrentUser.firebaseMembershipUsers.count)")
                             for member in CurrentUser.firebaseMembershipUsers {
                                 if let memberID = member.userID {
                                     self.ref.child("users").child(memberID).child("memberships").child(userID).child("profileImageURL").setValue(downloadURL)
@@ -131,7 +130,6 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
                                     self.ref.child("users").child(memberID).child("memberships").child(userID).child("lastName").setValue(lastName)
                                 }
                             }
-                            print("firebaseMembers.count: \(CurrentUser.firebaseMembershipUsers.count)")
                             for circleUser in CurrentUser.firebaseCircleMembers {
                                 if let circleUserID = circleUser.userID {
                                     self.ref.child("users").child(circleUserID).child("circleUsers").child(userID).child("profileImageURL").setValue(downloadURL)

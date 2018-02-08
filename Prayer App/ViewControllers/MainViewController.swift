@@ -161,7 +161,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         TimerStruct().showTimerIfRunning(timerHeaderButton: timerHeaderButton, titleImage: titleImage)
         
         if !TimerStruct.timerIsRunning {
-            print("timer running")
             timerIcon.setBackgroundImage(UIImage(named: "timerIcon.pdf"), for: .normal)
         } else {
             timerIcon.setBackgroundImage(UIImage(named: "timerIconSelected.pdf"), for: .normal)

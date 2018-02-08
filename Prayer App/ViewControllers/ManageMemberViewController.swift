@@ -54,7 +54,6 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
         let user = usersToDisplay[indexPath.row]
         
         if let profileImage = user.profileImageAsImage {
-            print("got image as UIImage")
             cell.profileImage.image = profileImage
         }
         
@@ -67,10 +66,7 @@ class ManageMemberViewController: UIViewController, UITableViewDataSource, UITab
     }
     
     @objc func deleteUserFromCircle(sender: UIButton) {
-        print("pressed delete user from circle button")
         let memberToDelete = usersToDisplay[sender.tag]
-        print("deleting index #\(sender.tag)")
-        print("usersToDisplay.count: \(usersToDisplay.count)")
         MembershipUser().leaveUsersCircle(membershipUser: memberToDelete)
         refreshData()
     }
