@@ -17,7 +17,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     var ranCount = Int()
     
-    
     var explicitDismiss = false
     
     // Authorize Contacts View
@@ -38,6 +37,8 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     var filteredContacts = [CircleUser]()
     var sortedContacts = [String:[CircleUser]]()
     
+    var mailComposeDelegate: MFMessageComposeViewControllerDelegate!
+    
     var segueFromSettings = false
     var members = [CircleUser]()
     var nonMembers = [CircleUser]()
@@ -56,6 +57,8 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         ref = Database.database().reference()
         self.getUsers()
         setupSearchResultsController()
+        
+        mailComposeDelegate = self
 
         let backView = UIView(frame: self.tableView.bounds)
         backView.backgroundColor = UIColor.StyleFile.BackgroundColor
@@ -448,11 +451,13 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                         let action = UIAlertAction(title: emailString, style: .default, handler: { (action) in
                             let composeVC = MFMailComposeViewController()
                             composeVC.mailComposeDelegate = self
-                            
                             composeVC.setToRecipients([emailString])
-                            composeVC.setSubject("An invitation from [username]")
-                            composeVC.setMessageBody("I want to invite you to download Prayer - Swipe To Send.  (There would be a link to download the app here in the near future)", isHTML: false)
-                            
+                            if let firstName = CurrentUser.currentUser.firstName {
+                                if let lastName = CurrentUser.currentUser.lastName {
+                                    composeVC.setSubject("A Prayer invitation from \(firstName) \(lastName)")
+                                    composeVC.setMessageBody("I want to invite you to download Prayer - Swipe To Send.  (There would be a link to download the app here in the near future)", isHTML: false)
+                                }
+                            }
                             self.present(composeVC, animated: true, completion: nil)
                         })
                         alert.addAction(action)

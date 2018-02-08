@@ -1,4 +1,7 @@
 THIS VERSION
+(bug) "Prayer App" needs to say "Prayer - Swipe To Send" in the Privacy and Terms docs
+(bug) Mail crashed when cancelled was selected in mail compose view
+(bug) Mail wouldn't open in Settings when selecting the Envelope icon
 Make sure link to disclaimer is on Sign Up screen (won't link for some reason)
 Make sure links to download in Invite are correct
 
