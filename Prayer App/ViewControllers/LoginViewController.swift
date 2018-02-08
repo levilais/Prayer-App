@@ -39,6 +39,7 @@ class LoginViewController: UIViewController {
     var signupShowing = Bool()
     var firstLoadSignUp = Bool()
     var ref: DatabaseReference!
+    var showingPrivacyFromLogin = false
     
     var firstNameCapitalCheck = String()
     
@@ -61,6 +62,9 @@ class LoginViewController: UIViewController {
             self.dismiss(animated: false, completion: nil)
         } else {
             showLoginSignup()
+            if showingPrivacyFromLogin {
+                showingPrivacyFromLogin = false
+            }
         }
     }
     
@@ -99,6 +103,12 @@ class LoginViewController: UIViewController {
             showLogIn()
         }
     }
+    @IBAction func showPrivacyDidPress(_ sender: Any) {
+        if !signupShowing {
+            showingPrivacyFromLogin = true
+        }
+        performSegue(withIdentifier: "loginToPrivacySegue", sender: self)
+    }
     
     func showSignUp() {
         signupView.isHidden = false
@@ -116,8 +126,12 @@ class LoginViewController: UIViewController {
         loginView.isHidden = false
         explanationLabel.text = "Please enter your login information below"
         titleLabel.text = "Login To Prayer"
-        loginSignupButtonTopConstraint.constant -= 123
-        loginSignupButtonTopContraint2.constant -= 123
+        
+        if !showingPrivacyFromLogin {
+            loginSignupButtonTopConstraint.constant -= 123
+            loginSignupButtonTopContraint2.constant -= 123
+        }
+
         UIView.performWithoutAnimation {
             loginSignupButton.setBackgroundImage(UIImage(named: "logInButton.pdf"), for: .normal)
             switchToLoginButton.setTitle("Switch To Sign Up", for: .normal)
@@ -155,7 +169,7 @@ class LoginViewController: UIViewController {
                 self.dismiss(animated: true, completion: nil)
             }
         }
-    }
+    }    
     
     @IBAction func forgotPasswordDidPress(_ sender: Any) {
         if let email = loginEmailTextField.text {

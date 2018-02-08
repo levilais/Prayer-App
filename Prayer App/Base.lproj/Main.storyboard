@@ -1256,30 +1256,6 @@
                                         <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tnj-g6-FTo">
-                                        <rect key="frame" x="123" y="438.5" width="75" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="Eyl-IO-g1E"/>
-                                            <constraint firstAttribute="width" constant="75" id="FKK-Ne-T7I"/>
-                                        </constraints>
-                                        <state key="normal" backgroundImage="signUpButton"/>
-                                        <connections>
-                                            <action selector="loginSignupDidPress:" destination="e92-fH-MMI" eventType="touchUpInside" id="ro4-Ug-7n0"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fvP-c5-o7t">
-                                        <rect key="frame" x="129" y="478.5" width="63" height="20"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="20" id="UDR-3y-Mya"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="12"/>
-                                        <state key="normal" title="Maybe Later">
-                                            <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="maybeLaterDidPress:" destination="e92-fH-MMI" eventType="touchUpInside" id="uS3-9b-JZ1"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H7d-Kb-T1e">
                                         <rect key="frame" x="10" y="33" width="90" height="20"/>
                                         <constraints>
@@ -1293,6 +1269,50 @@
                                             <action selector="switchDidPress:" destination="e92-fH-MMI" eventType="touchUpInside" id="fdH-Ao-15B"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tnj-g6-FTo">
+                                        <rect key="frame" x="123" y="438" width="75" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Eyl-IO-g1E"/>
+                                            <constraint firstAttribute="width" constant="75" id="FKK-Ne-T7I"/>
+                                        </constraints>
+                                        <state key="normal" backgroundImage="signUpButton"/>
+                                        <connections>
+                                            <action selector="loginSignupDidPress:" destination="e92-fH-MMI" eventType="touchUpInside" id="ro4-Ug-7n0"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="HHI-gg-hRR">
+                                        <rect key="frame" x="62" y="507" width="197" height="14"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="197" id="fhk-wM-MaE"/>
+                                            <constraint firstAttribute="height" constant="14" id="xVV-fs-JGs"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-MediumItalic" family="Helvetica Neue" pointSize="12"/>
+                                        <state key="normal" title="Terms and Privacy Policy">
+                                            <color key="titleColor" red="0.57394379380000005" green="0.65887439250000002" blue="0.67592817540000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showPrivacyDidPress:" destination="e92-fH-MMI" eventType="touchUpInside" id="Sss-ik-573"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By signing up you agree to our" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iq0-em-oB0">
+                                        <rect key="frame" x="81" y="488" width="158.5" height="14"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-LightItalic" family="Helvetica Neue" pointSize="12"/>
+                                        <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fvP-c5-o7t">
+                                        <rect key="frame" x="129" y="485" width="63" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="UDR-3y-Mya"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Baskerville" family="Baskerville" pointSize="12"/>
+                                        <state key="normal" title="Maybe Later">
+                                            <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="maybeLaterDidPress:" destination="e92-fH-MMI" eventType="touchUpInside" id="uS3-9b-JZ1"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="H7d-Kb-T1e" firstAttribute="top" secondItem="2Ya-DK-r4I" secondAttribute="bottom" constant="-3" id="0Qo-KN-ZeF"/>
@@ -1302,19 +1322,23 @@
                                     <constraint firstAttribute="bottom" secondItem="fvP-c5-o7t" secondAttribute="bottom" constant="60" id="Aru-0T-4nT"/>
                                     <constraint firstAttribute="trailing" secondItem="hiu-Wf-uVt" secondAttribute="trailing" id="B7T-vx-hKF"/>
                                     <constraint firstItem="hiu-Wf-uVt" firstAttribute="top" secondItem="h72-2f-Iq2" secondAttribute="bottom" constant="10" id="Be6-Rf-AIM"/>
+                                    <constraint firstItem="HHI-gg-hRR" firstAttribute="top" secondItem="Iq0-em-oB0" secondAttribute="bottom" constant="5" id="Dsf-O5-9j6"/>
                                     <constraint firstItem="hiu-Wf-uVt" firstAttribute="leading" secondItem="AE3-96-M9N" secondAttribute="leading" id="GU2-hJ-C2j"/>
                                     <constraint firstAttribute="trailing" secondItem="vmd-IY-VFc" secondAttribute="trailing" id="I0y-nG-uha"/>
                                     <constraint firstAttribute="trailing" secondItem="2Ya-DK-r4I" secondAttribute="trailing" constant="10" id="IfX-Yp-LvE"/>
                                     <constraint firstItem="H7d-Kb-T1e" firstAttribute="leading" secondItem="AE3-96-M9N" secondAttribute="leading" constant="10" id="Kqc-z0-kNO"/>
-                                    <constraint firstItem="fvP-c5-o7t" firstAttribute="top" secondItem="tnj-g6-FTo" secondAttribute="bottom" constant="10" id="MHu-9C-tps"/>
+                                    <constraint firstItem="Iq0-em-oB0" firstAttribute="top" secondItem="tnj-g6-FTo" secondAttribute="bottom" constant="20" id="Nj7-xe-dci"/>
                                     <constraint firstItem="tnj-g6-FTo" firstAttribute="top" secondItem="vmd-IY-VFc" secondAttribute="bottom" constant="133" id="Qb3-bI-3MJ"/>
                                     <constraint firstItem="h72-2f-Iq2" firstAttribute="top" secondItem="2Ya-DK-r4I" secondAttribute="bottom" constant="20" id="Sko-9A-OGk"/>
                                     <constraint firstItem="2Ya-DK-r4I" firstAttribute="leading" secondItem="AE3-96-M9N" secondAttribute="leading" constant="10" id="Wak-Px-krt"/>
+                                    <constraint firstItem="Iq0-em-oB0" firstAttribute="centerX" secondItem="AE3-96-M9N" secondAttribute="centerX" id="ZaK-cV-idt"/>
                                     <constraint firstItem="tnj-g6-FTo" firstAttribute="centerX" secondItem="AE3-96-M9N" secondAttribute="centerX" id="and-28-A02"/>
                                     <constraint firstItem="vmd-IY-VFc" firstAttribute="leading" secondItem="AE3-96-M9N" secondAttribute="leading" id="bq3-vz-ZQ8"/>
                                     <constraint firstItem="tnj-g6-FTo" firstAttribute="top" secondItem="hiu-Wf-uVt" secondAttribute="bottom" constant="10" id="dp2-rl-Fln"/>
                                     <constraint firstItem="vmd-IY-VFc" firstAttribute="top" secondItem="h72-2f-Iq2" secondAttribute="bottom" constant="10" id="e6D-J9-1Jr"/>
                                     <constraint firstItem="2Ya-DK-r4I" firstAttribute="top" secondItem="AE3-96-M9N" secondAttribute="top" constant="4" id="gwi-yU-Gbf"/>
+                                    <constraint firstItem="HHI-gg-hRR" firstAttribute="centerX" secondItem="AE3-96-M9N" secondAttribute="centerX" id="kuW-se-ZDI"/>
+                                    <constraint firstItem="fvP-c5-o7t" firstAttribute="top" secondItem="Iq0-em-oB0" secondAttribute="bottom" constant="30" id="sQE-tf-4pm"/>
                                     <constraint firstItem="h72-2f-Iq2" firstAttribute="leading" secondItem="AE3-96-M9N" secondAttribute="leading" constant="10" id="xuO-nF-9a2"/>
                                 </constraints>
                             </scrollView>
@@ -1350,6 +1374,7 @@
                         <outlet property="switchToLoginButton" destination="H7d-Kb-T1e" id="fbU-3W-IC9"/>
                         <outlet property="titleLabel" destination="2Ya-DK-r4I" id="IJZ-ed-OLn"/>
                         <segue destination="n3B-qY-OVx" kind="presentation" identifier="connectToContactsSegue" modalTransitionStyle="flipHorizontal" id="O3R-Xk-xiP"/>
+                        <segue destination="Ovo-Iv-u5K" kind="presentation" identifier="loginToPrivacySegue" id="7oD-1x-fJm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fa1-6K-Wkm" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1763,6 +1788,9 @@
                                                         <state key="normal" title="Terms and Privacy Policy">
                                                             <color key="titleColor" red="0.57394379380000005" green="0.65887439250000002" blue="0.67592817540000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </state>
+                                                        <connections>
+                                                            <segue destination="Ovo-Iv-u5K" kind="presentation" id="rEX-Yc-Vp6"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                             </stackView>
@@ -1856,6 +1884,55 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hRq-Vd-C9f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1343" y="2948"/>
+        </scene>
+        <!--Privacy View Controller-->
+        <scene sceneID="RVB-dj-Ocu">
+            <objects>
+                <viewController storyboardIdentifier="privacyViewController" id="Ovo-Iv-u5K" customClass="PrivacyViewController" customModule="Prayer_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5KA-PF-dzp">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7t1-2f-OjO">
+                                <rect key="frame" x="0.0" y="66" width="320" height="502"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MzW-ow-UYw">
+                                <rect key="frame" x="10" y="30" width="42" height="28"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="lOB-iv-nDQ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Baskerville-SemiBold" family="Baskerville" pointSize="17"/>
+                                <state key="normal" title="Done">
+                                    <color key="titleColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="doneButtonDidPress:" destination="Ovo-Iv-u5K" eventType="touchUpInside" id="JQc-xX-h3j"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.92920595409999995" green="0.93340748549999997" blue="0.93326789139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="7t1-2f-OjO" firstAttribute="bottom" secondItem="vS8-tR-SLY" secondAttribute="bottom" id="22R-vm-WD0"/>
+                            <constraint firstItem="7t1-2f-OjO" firstAttribute="leading" secondItem="vS8-tR-SLY" secondAttribute="leading" id="4Ms-Qa-lyH"/>
+                            <constraint firstItem="7t1-2f-OjO" firstAttribute="top" secondItem="vS8-tR-SLY" secondAttribute="top" constant="46" id="ZZ7-9K-fhv"/>
+                            <constraint firstItem="7t1-2f-OjO" firstAttribute="top" secondItem="MzW-ow-UYw" secondAttribute="bottom" constant="8" id="aqm-dc-A2v"/>
+                            <constraint firstItem="MzW-ow-UYw" firstAttribute="leading" secondItem="vS8-tR-SLY" secondAttribute="leading" constant="10" id="gK9-RI-81z"/>
+                            <constraint firstItem="7t1-2f-OjO" firstAttribute="trailing" secondItem="vS8-tR-SLY" secondAttribute="trailing" id="vu4-DQ-lxc"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="vS8-tR-SLY"/>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="7t1-2f-OjO" id="DAS-n9-lyo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uFC-fj-46f" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2979" y="3012"/>
         </scene>
         <!--Select Contacts View Controller-->
         <scene sceneID="e4H-Vp-JbK">
@@ -2635,6 +2712,7 @@
                         <segue destination="n3B-qY-OVx" kind="presentation" identifier="settingsDetailToContactsAuth" modalTransitionStyle="flipHorizontal" id="5sI-7B-53b"/>
                         <segue destination="cum-ni-amF" kind="presentation" identifier="settingsDetailToUpdateProfileSegue" modalTransitionStyle="flipHorizontal" id="YWN-Vu-ZnR"/>
                         <segue destination="qbl-Hg-Jmg" kind="presentation" identifier="settingsDetailToManageMembershipsSegue" modalTransitionStyle="flipHorizontal" id="QIJ-DK-Yk1"/>
+                        <segue destination="Ovo-Iv-u5K" kind="presentation" identifier="showPrivacySegue" id="x9S-p5-3jp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ml4-gE-qMD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3513,7 +3591,7 @@
         <image name="firstLoadImage" width="600" height="500"/>
         <image name="firstLoadTitle" width="348" height="54"/>
         <image name="homeTitleImage" width="365" height="59"/>
-        <image name="ideaIcon" width="38" height="58"/>
+        <image name="ideaIcon" width="36" height="57"/>
         <image name="inviteButton" width="118" height="60"/>
         <image name="journalTitleImage" width="372" height="60"/>
         <image name="largeShareIcon" width="143" height="171"/>
@@ -3534,8 +3612,9 @@
         <image name="undoButtonBackground" width="150" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="JFD-5x-ZFN"/>
+        <segue reference="O3R-Xk-xiP"/>
+        <segue reference="7oD-1x-fJm"/>
         <segue reference="YWN-Vu-ZnR"/>
-        <segue reference="Db2-Hu-Ozc"/>
+        <segue reference="N2M-3L-v3D"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -271,6 +271,8 @@ class SettingsDetailViewController: UIViewController, UITableViewDelegate, UITab
                             alert.addAction(action)
                             self.present(alert, animated: true, completion: nil)
                         }
+                    } else if subTitle == "Terms & Privacy Policy" {
+                        performSegue(withIdentifier: "showPrivacySegue", sender: self)
                     }
                 }
             }

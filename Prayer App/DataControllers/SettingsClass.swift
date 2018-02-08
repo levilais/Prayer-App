@@ -36,6 +36,14 @@ class Settings {
             ["subTitle":"Connect To Contacts","actionType":0],
             ["subTitle":"Manage Prayer Circle Memberships","actionType":2]
             ]
+        ],
+        
+        [
+        "title": "Security & Privacy",
+        "subCategories":
+            [
+            ["subTitle":"Terms & Privacy Policy","actionType":2]
+            ]
         ]
     ]
     

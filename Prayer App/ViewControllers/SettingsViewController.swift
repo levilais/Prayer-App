@@ -28,7 +28,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
         settingsProfileButtonImage.layer.cornerRadius = settingsProfileButtonImage.frame.size.height / 2
         settingsProfileButtonImage.clipsToBounds = true
-        tableView.tableFooterView = UIView()
+        
+        setupFooterView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,6 +56,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBAction func timerButtonDidPress(_ sender: Any) {
         TimerStruct().stopTimer(timerButton: timerHeaderButton, titleImageView: titleImage)
+    }
+    
+    func setupFooterView() {
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 230))
+        let footerImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: (tableView.tableFooterView?.frame.height)!))
+        let footerImage = UIImage(named: "trees.pdf")
+        footerImageView.image = footerImage
+        footerImageView.contentMode = UIViewContentMode.scaleAspectFill
+        tableView.tableFooterView?.addSubview(footerImageView)
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
