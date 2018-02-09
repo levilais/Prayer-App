@@ -10,7 +10,6 @@
 		041470B4202BDB7400A0A5B2 /* PrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041470B3202BDB7400A0A5B2 /* PrivacyViewController.swift */; };
 		041953121FD23D4A00186084 /* CellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041953111FD23D4A00186084 /* CellButton.swift */; };
 		041953141FD3387900186084 /* FirstLoadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041953131FD3387900186084 /* FirstLoadViewController.swift */; };
-		04249C35202BE226005AFBFB /* termsAndPrivacy.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 04249C34202BE226005AFBFB /* termsAndPrivacy.pdf */; };
 		042FCA7F1FAE26FB00545786 /* Prayer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA7D1FAE26FB00545786 /* Prayer.xcdatamodeld */; };
 		042FCA811FAE458500545786 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA801FAE458500545786 /* Utilities.swift */; };
 		042FCA871FAF7BC500545786 /* PrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042FCA861FAF7BC500545786 /* PrayerTableViewCell.swift */; };
@@ -23,6 +22,7 @@
 		044C7AAC1FA51D4000AFCEA5 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */; };
 		044C7AAE1FA51D8C00AFCEA5 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */; };
 		044E8918202652420023B8B6 /* NotificationsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044E8917202652420023B8B6 /* NotificationsHelper.swift */; };
+		04541020202D06B20001E4CD /* termsAndPrivacy.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 0454101F202D06B20001E4CD /* termsAndPrivacy.pdf */; };
 		045D217C1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D217B1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift */; };
 		045D217E1FF5DE0400A5E0F6 /* ManageMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D217D1FF5DE0400A5E0F6 /* ManageMemberViewController.swift */; };
 		046203301FA39ACE00BDF8ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */; };
@@ -68,7 +68,6 @@
 		041470B3202BDB7400A0A5B2 /* PrivacyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewController.swift; sourceTree = "<group>"; };
 		041953111FD23D4A00186084 /* CellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellButton.swift; sourceTree = "<group>"; };
 		041953131FD3387900186084 /* FirstLoadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLoadViewController.swift; sourceTree = "<group>"; };
-		04249C34202BE226005AFBFB /* termsAndPrivacy.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = termsAndPrivacy.pdf; sourceTree = "<group>"; };
 		042FCA7E1FAE26FB00545786 /* Prayer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Prayer.xcdatamodel; sourceTree = "<group>"; };
 		042FCA801FAE458500545786 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		042FCA861FAF7BC500545786 /* PrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTableViewCell.swift; sourceTree = "<group>"; };
@@ -81,6 +80,7 @@
 		044C7AAB1FA51D4000AFCEA5 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		044C7AAD1FA51D8C00AFCEA5 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		044E8917202652420023B8B6 /* NotificationsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsHelper.swift; sourceTree = "<group>"; };
+		0454101F202D06B20001E4CD /* termsAndPrivacy.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = termsAndPrivacy.pdf; sourceTree = SOURCE_ROOT; };
 		045D217B1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageMembersTableViewCell.swift; sourceTree = "<group>"; };
 		045D217D1FF5DE0400A5E0F6 /* ManageMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageMemberViewController.swift; sourceTree = "<group>"; };
 		0462032F1FA39ACE00BDF8ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -251,7 +251,7 @@
 				049E04D11FC69F1F00705766 /* ViewControllers */,
 				04D325231F9E8EA700EC615D /* Main.storyboard */,
 				04D325261F9E8EA700EC615D /* Assets.xcassets */,
-				04249C34202BE226005AFBFB /* termsAndPrivacy.pdf */,
+				0454101F202D06B20001E4CD /* termsAndPrivacy.pdf */,
 				04D325281F9E8EA700EC615D /* LaunchScreen.storyboard */,
 				04D3252B1F9E8EA700EC615D /* Info.plist */,
 				04CDE8621FC0A74600F20EFB /* GoogleService-Info.plist */,
@@ -345,7 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04D3252A1F9E8EA700EC615D /* LaunchScreen.storyboard in Resources */,
-				04249C35202BE226005AFBFB /* termsAndPrivacy.pdf in Resources */,
+				04541020202D06B20001E4CD /* termsAndPrivacy.pdf in Resources */,
 				04CDE8631FC0A74600F20EFB /* GoogleService-Info.plist in Resources */,
 				04D325271F9E8EA700EC615D /* Assets.xcassets in Resources */,
 				0473D3851FEC79F60074921D /* To Do List in Resources */,
@@ -602,7 +602,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.AppVolks.Prayer-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -620,7 +620,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.AppVolks.Prayer-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

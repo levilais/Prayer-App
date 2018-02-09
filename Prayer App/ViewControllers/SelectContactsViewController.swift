@@ -452,7 +452,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                             if let firstName = CurrentUser.currentUser.firstName {
                                 if let lastName = CurrentUser.currentUser.lastName {
                                     composeVC.setSubject("A Prayer invitation from \(firstName) \(lastName)")
-                                    composeVC.setMessageBody("I want to invite you to download Prayer - Swipe To Send.  (There would be a link to download the app here in the near future)", isHTML: false)
+                                    composeVC.setMessageBody("I want to invite you to download Prayer - Swipe To Send.  Get it here: https://itunes.apple.com/us/app/prayer-swipe-to-send/id1303817456?ls=1&mt=8", isHTML: false)
                                 }
                             }
                             self.present(composeVC, animated: true, completion: nil)
@@ -475,7 +475,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                             let composeVC = MFMessageComposeViewController()
                             composeVC.messageComposeDelegate = self
                             composeVC.recipients = [number]
-                            composeVC.body = "I want to invite you to download Prayer - Swipe To Send."
+                            composeVC.body = "I want to invite you to download Prayer - Swipe To Send.  Get it here: https://itunes.apple.com/us/app/prayer-swipe-to-send/id1303817456?ls=1&mt=8"
                             self.present(composeVC, animated: true, completion: nil)
                         })
                         alert.addAction(action)

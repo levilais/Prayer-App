@@ -112,6 +112,24 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
         if let userID = Auth.auth().currentUser?.uid {
             self.ref.child("users").child(userID).child("firstName").setValue(firstName)
             self.ref.child("users").child(userID).child("lastName").setValue(lastName)
+            CurrentUser.currentUser.firstName = firstName
+            CurrentUser.currentUser.lastName = lastName
+            for member in CurrentUser.firebaseMembershipUsers {
+                if let memberID = member.key {
+                    print("member found")
+                    self.ref.child("users").child(memberID).child("circleUsers").child(userID).child("firstName").setValue(firstName)
+                    self.ref.child("users").child(memberID).child("circleUsers").child(userID).child("lastName").setValue(lastName)
+                }
+            }
+            
+            for circleUser in CurrentUser.firebaseCircleMembers {
+                if let circleUserID = circleUser.key {
+                    print("circleUser found")
+                    self.ref.child("users").child(circleUserID).child("memberships").child(userID).child("firstName").setValue(firstName)
+                    self.ref.child("users").child(circleUserID).child("memberships").child(userID).child("lastName").setValue(lastName)
+                }
+            }
+            
             
             let imagesFolder = Storage.storage().reference().child("images")
             
@@ -122,19 +140,19 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
                         errorMessage = error.localizedDescription
                     } else {
                         if let downloadURL = metadata?.downloadURL()?.absoluteString {
+                            
                             self.ref.child("users").child(userID).child("profileImageURL").setValue(downloadURL)
+                            
                             for member in CurrentUser.firebaseMembershipUsers {
-                                if let memberID = member.userID {
-                                    self.ref.child("users").child(memberID).child("memberships").child(userID).child("profileImageURL").setValue(downloadURL)
-                                    self.ref.child("users").child(memberID).child("memberships").child(userID).child("firstName").setValue(firstName)
-                                    self.ref.child("users").child(memberID).child("memberships").child(userID).child("lastName").setValue(lastName)
+                                if let memberID = member.key {
+                                    print("member found")
+                                    self.ref.child("users").child(memberID).child("circleUsers").child(userID).child("profileImageURL").setValue(downloadURL)
                                 }
                             }
                             for circleUser in CurrentUser.firebaseCircleMembers {
-                                if let circleUserID = circleUser.userID {
-                                    self.ref.child("users").child(circleUserID).child("circleUsers").child(userID).child("profileImageURL").setValue(downloadURL)
-                                    self.ref.child("users").child(circleUserID).child("circleUsers").child(userID).child("firstName").setValue(firstName)
-                                    self.ref.child("users").child(circleUserID).child("circleUsers").child(userID).child("lastName").setValue(lastName)
+                                if let circleUserID = circleUser.key {
+                                    print("circleUser found")
+                                    self.ref.child("users").child(circleUserID).child("memberships").child(userID).child("profileImageURL").setValue(downloadURL)
                                 }
                             }
                         }

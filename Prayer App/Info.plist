@@ -19,9 +19,13 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.3</string>
+	<string>1.0.4</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSContactsUsageDescription</key>
+	<string>Prayer requires access to Contacts for Prayer Circles</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>In order to access your photos, you'll need to allow Prayer access to your photo libraries </string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,9 +45,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSContactsUsageDescription</key>
-	<string>Prayer requires access to Contacts for Prayer Circles</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>In order to access your photos, you&apos;ll need to allow Prayer access to your photo libraries </string>
 </dict>
 </plist>

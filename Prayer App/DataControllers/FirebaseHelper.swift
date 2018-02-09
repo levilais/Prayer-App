@@ -16,10 +16,12 @@ class FirebaseHelper {
     static var firebaseUserEmails = [String]()
     
     func loadFirebaseData() {
+        print("data loaded")
         if let userID = Auth.auth().currentUser?.uid {
             let userRef = Database.database().reference().child("users").child(userID)
             userRef.observe(.value) { (snapshot) in
                 CurrentUser.currentUser = CustomUser().currentUserFromSnapshot(snapshot: snapshot)
+                print("currentuser created")
             }
             
             userRef.child("circleUsers").observe(.value, with: { snapshot in
@@ -47,6 +49,7 @@ class FirebaseHelper {
                     }
                     self.setCircleUserProfileImageFromFirebase(circleUser: circleUser)
                 }
+                print("currentUser found")
             })
             
             userRef.child("memberships").observeSingleEvent(of: .value, with: { (snapshot) -> Void in
@@ -56,6 +59,7 @@ class FirebaseHelper {
                     newMembershipUsers.append(newMembershipUser)
                 }
                 CurrentUser.firebaseMembershipUsers = newMembershipUsers
+                print("membership users found")
             })
         }
     }
@@ -65,6 +69,7 @@ class FirebaseHelper {
             ref.child("users").queryOrdered(byChild: "userEmail").queryEqual(toValue: userEmail).observeSingleEvent(of: .childAdded, with: { snapshot in
                 let circleUser = CircleUser().circleUserFromSnapshot(snapshot: snapshot)
                 let circleUserDict = ["firstName":circleUser.firstName!,"lastName":circleUser.lastName!,"userEmail":circleUser.userEmail!,"uid":circleUser.key!,"profileImageURL":circleUser.profileImageAsString!,"relationship":CircleUser.userRelationshipToCurrentUser.invited.rawValue,"dateInvited":ServerValue.timestamp()] as AnyObject
+                
                 let membershipDict = ["firstName":CurrentUser.currentUser.firstName!,"lastName":CurrentUser.currentUser.lastName!,"userID":userID,"profileImageURL":CurrentUser.currentUser.profileImageAsString!,"userEmail":CurrentUser.currentUser.userEmail!,"membershipStatus":MembershipUser.currentUserMembershipStatus.invited.rawValue,"dateInvited":ServerValue.timestamp()] as AnyObject
                                                         
                                                         
@@ -106,6 +111,7 @@ class FirebaseHelper {
                                 if let email = user.userEmail {
                                     if let userEmail = circleUser.userEmail {
                                         if email == userEmail {
+                                            print("circleUser profile image was set")
                                             CurrentUser.firebaseCircleMembers[i] = circleUser
                                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "circleUserProfileImageDidSet"), object: nil, userInfo: nil)
                                         }
