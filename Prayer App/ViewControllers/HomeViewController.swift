@@ -455,7 +455,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         var amenAction = UIContextualAction()
         amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-            self.markPrayed(indexPath: indexPath)
+            if let isConnected = ConnectionTracker.isConnected {
+                if isConnected {
+                    self.markPrayed(indexPath: indexPath)
+                } else {
+                    ConnectionTracker().presentNotConnectedAlert(messageDirections: "Marking a Prayer prayed requires an internet connection.  Please re-establish your internet connection and try again.", viewController: self)
+                }
+            }
             success(true)
         })
         amenAction.backgroundColor = UIColor.StyleFile.TealColor
@@ -483,10 +489,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @objc func markAgreed(sender: CellButton) {
-        let row = sender.tag
-        let section = sender.section
-        let indexPath = NSIndexPath(row: row, section: section)
-        agreeInPrayer(indexPath: indexPath as IndexPath)
+        if let isConnected = ConnectionTracker.isConnected {
+            if isConnected {
+                let row = sender.tag
+                let section = sender.section
+                let indexPath = NSIndexPath(row: row, section: section)
+                agreeInPrayer(indexPath: indexPath as IndexPath)
+            } else {
+                ConnectionTracker().presentNotConnectedAlert(messageDirections: "Marking a Prayer prayed requires an internet connection.  Please re-establish your internet connection and try again.", viewController: self)
+            }
+        }
     }
     
     func agreeInPrayer(indexPath: IndexPath) {

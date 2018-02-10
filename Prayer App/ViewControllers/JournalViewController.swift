@@ -480,7 +480,13 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         if !answeredShowing {
             var amenAction = UIContextualAction()
             amenAction = UIContextualAction(style: .normal, title:  "Amen", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
-                self.markPrayed(indexPath: indexPath)
+                if let isConnected = ConnectionTracker.isConnected {
+                    if isConnected {
+                       self.markPrayed(indexPath: indexPath)
+                    } else {
+                        ConnectionTracker().presentNotConnectedAlert(messageDirections: "Marking a Prayer prayed requires an internet connection.  Please re-establish your internet connection and try again.", viewController: self)
+                    }
+                }
                 success(true)
             })
             amenAction.backgroundColor = UIColor.StyleFile.TealColor
