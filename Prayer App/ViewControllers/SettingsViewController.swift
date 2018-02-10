@@ -42,16 +42,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
         if Auth.auth().currentUser != nil {
             settingsProfileButtonImage = CurrentUser().setProfileImageButton(button: settingsProfileButtonImage)
-            
-//            let connectedRef = Database.database().reference(withPath: ".info/connected")
-//            connectedRef.observeSingleEvent(of: .value, with: { snapshot in
-//                if let connected = snapshot.value as? Bool, connected {
-//                    print("Connected")
-//                } else {
-//                    print("Not connected")
-//                }
-//            })
-            
             settingsProfileButtonImage.isEnabled = true
             
             welcomeLabel.text = Utilities().greetingString()

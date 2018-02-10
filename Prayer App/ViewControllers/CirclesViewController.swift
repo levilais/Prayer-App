@@ -380,22 +380,28 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func markPrayed(indexPath: IndexPath) {
-        let prayer = circlePrayers[indexPath.row]
-        if let prayerRef = prayer.itemRef {
-            prayerRef.runTransactionBlock({ (currentData: MutableData) -> TransactionResult in
-                if var prayer = currentData.value as? [String : AnyObject] {
-                    var agreedCount = prayer["agreedCount"] as? Int ?? 0
-                    agreedCount += 1
-                    prayer["agreedCount"] = agreedCount as AnyObject?
-                    prayer["lastPrayedDate"] = ServerValue.timestamp() as AnyObject?
-                    currentData.value = prayer
-                    return TransactionResult.success(withValue: currentData)
+        if let isConnected = ConnectionTracker.isConnected {
+            if isConnected {
+                let prayer = circlePrayers[indexPath.row]
+                if let prayerRef = prayer.itemRef {
+                    prayerRef.runTransactionBlock({ (currentData: MutableData) -> TransactionResult in
+                        if var prayer = currentData.value as? [String : AnyObject] {
+                            var agreedCount = prayer["agreedCount"] as? Int ?? 0
+                            agreedCount += 1
+                            prayer["agreedCount"] = agreedCount as AnyObject?
+                            prayer["lastPrayedDate"] = ServerValue.timestamp() as AnyObject?
+                            currentData.value = prayer
+                            return TransactionResult.success(withValue: currentData)
+                        }
+                        return TransactionResult.success(withValue: currentData)
+                    }) { (error, committed, snapshot) in
+                        if let error = error {
+                            print(error.localizedDescription)
+                        }
+                    }
                 }
-                return TransactionResult.success(withValue: currentData)
-            }) { (error, committed, snapshot) in
-                if let error = error {
-                    print(error.localizedDescription)
-                }
+            } else {
+                ConnectionTracker().presentNotConnectedAlert(messageDirections: "Marking a Prayer prayed requires an internet connection.  Please re-establish your internet connection and try again.", viewController: self)
             }
         }
     }
@@ -446,7 +452,13 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             toggleCircleMemberDetailContent(buttonTag: tag)
             selectedCircleMember = tag
         } else {
-            self.performSegue(withIdentifier: "selectCircleMembersSegue", sender: self)
+            if let isConnected = ConnectionTracker.isConnected {
+                if isConnected {
+                    self.performSegue(withIdentifier: "selectCircleMembersSegue", sender: self)
+                } else {
+                    ConnectionTracker().presentNotConnectedAlert(messageDirections: "Inviting users to your Circle requires an internet connection.  Please re-establish your internet connection and try again.", viewController: self)
+                }
+            }
         }
     }
     
@@ -524,7 +536,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if let image = circleUser.profileImageAsImage {
                     circleProfileImages[i].image = image
                 } else {
-                    print("no image found")
+                    circleProfileImages[i].image = UIImage(named: "settingsPrayerIcon.pdf")
                 }
                 circleSpotFilled[i] = true
             case circleCount ... 4:

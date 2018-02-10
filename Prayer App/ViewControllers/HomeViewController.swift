@@ -377,6 +377,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 if membershipStatus == MembershipUser.currentUserMembershipStatus.invited.rawValue {
                     if let image = membershipUser.profileImageAsImage {
                         cell.profileImage.image = image
+                    } else {
+                        cell.profileImage.image = UIImage(named: "settingsPrayerIcon.pdf")
                     }
                     
                     if let currentUserFirstName = CurrentUser.currentUser.firstName {

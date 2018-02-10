@@ -42,15 +42,21 @@ class CurrentUser {
     }
     
     func setProfileImageButton(button: UIButton) -> UIButton {
-        if Auth.auth().currentUser != nil {
-            if let userID = Auth.auth().currentUser?.uid {
-                Database.database().reference().child("users").child(userID).observe(.value) { (snapshot) in
-                    if let userDictionary = snapshot.value as? NSDictionary {
-                        if let imageURLString = userDictionary["profileImageURL"] as? String {
-                            if let url = URL(string: imageURLString) {
-                                button.sd_setBackgroundImage(with: url, for: .normal, completed: { (image, error, cacheType, imageURL) in
-                                })
-                            }
+        if let userID = Auth.auth().currentUser?.uid {
+            Database.database().reference().child("users").child(userID).observe(.value) { (snapshot) in
+                if let userDictionary = snapshot.value as? NSDictionary {
+                    if let imageURLString = userDictionary["profileImageURL"] as? String {
+                        if let url = URL(string: imageURLString) {
+                            button.sd_setBackgroundImage(with: url, for: .normal, completed: { (image, error, cacheType, imageURL) in
+                                if error != nil {
+                                    print("error in setting image")
+                                    button.setBackgroundImage(UIImage(named: "settingsPrayerIcon.pdf"), for: .normal)
+                                    button.isEnabled = false
+                                } else {
+                                    print("success in setting image")
+                                    button.isEnabled = true
+                                }
+                            })
                         }
                     }
                 }
