@@ -68,7 +68,13 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
     }
     
     @IBAction func saveButtonDidPress(_ sender: Any) {
-        saveUpdates()
+        if let isConnected = ConnectionTracker.isConnected {
+            if isConnected {
+                saveUpdates()
+            } else {
+                ConnectionTracker().presentNotConnectedAlert(messageDirections: "Cannot save without an internet connection.  Please re-establish your internet connection and try again.", viewController: self)
+            }
+        }
     }
     
     @IBAction func editPhotoButtonDidPress(_ sender: Any) {

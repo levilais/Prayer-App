@@ -45,6 +45,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UserDefaultsHelper().getLoads()
         
         UserDefaultsHelper().getLastContactAuthStatus()
+        
+        let connectedRef = Database.database().reference(withPath: ".info/connected")
+        connectedRef.observe(.value, with: { snapshot in
+            if snapshot.value as? Bool ?? false {
+                ConnectionTracker.isConnected = true
+            } else {
+                ConnectionTracker.isConnected = false
+            }
+        })
                 
         return true
     }

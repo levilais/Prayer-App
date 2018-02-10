@@ -32,6 +32,7 @@
 		0473D3871FEC7C360074921D /* Prayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0473D3861FEC7C360074921D /* Prayer.swift */; };
 		0473D38B1FECBA9A0074921D /* CirclePrayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0473D38A1FECBA9A0074921D /* CirclePrayerTableViewCell.swift */; };
 		0474DD6C1F9FE7B4008D79E3 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474DD6B1F9FE7B4008D79E3 /* Animations.swift */; };
+		048514D3202F569400AC7EA2 /* ConnectionTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048514D2202F569400AC7EA2 /* ConnectionTracker.swift */; };
 		0485B3501FD37DF200BC85F0 /* CustomUIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0485B34F1FD37DF200BC85F0 /* CustomUIAlertController.swift */; };
 		04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04933D601FBFA50C0023A6FA /* LoginViewController.swift */; };
 		04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */; };
@@ -90,6 +91,7 @@
 		0473D3861FEC7C360074921D /* Prayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prayer.swift; sourceTree = "<group>"; };
 		0473D38A1FECBA9A0074921D /* CirclePrayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclePrayerTableViewCell.swift; sourceTree = "<group>"; };
 		0474DD6B1F9FE7B4008D79E3 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
+		048514D2202F569400AC7EA2 /* ConnectionTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionTracker.swift; sourceTree = "<group>"; };
 		0485B34F1FD37DF200BC85F0 /* CustomUIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIAlertController.swift; sourceTree = "<group>"; };
 		04933D601FBFA50C0023A6FA /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		04957FF31FAFA66F00A4D7B5 /* JournalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalViewController.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 				04A1F3151FE6F1CA00E56771 /* User.swift */,
 				0473D3861FEC7C360074921D /* Prayer.swift */,
 				044E8917202652420023B8B6 /* NotificationsHelper.swift */,
+				048514D2202F569400AC7EA2 /* ConnectionTracker.swift */,
 			);
 			path = DataControllers;
 			sourceTree = "<group>";
@@ -430,6 +433,7 @@
 				045D217C1FF5DC5000A5E0F6 /* ManageMembersTableViewCell.swift in Sources */,
 				041953121FD23D4A00186084 /* CellButton.swift in Sources */,
 				045D217E1FF5DE0400A5E0F6 /* ManageMemberViewController.swift in Sources */,
+				048514D3202F569400AC7EA2 /* ConnectionTracker.swift in Sources */,
 				043520BC1FABA39600CFD0C1 /* TimerPreferenceTableViewCell.swift in Sources */,
 				04A1F3161FE6F1CA00E56771 /* User.swift in Sources */,
 				04933D611FBFA50C0023A6FA /* LoginViewController.swift in Sources */,
