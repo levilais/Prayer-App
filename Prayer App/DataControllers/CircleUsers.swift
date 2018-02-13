@@ -177,8 +177,9 @@ class CircleUser: CustomUser {
                 userEmails = userEmailsCheck
                 for userEmail in userEmails {
                     let userEmailString = userEmail.value
+                    let cleanEmail = userEmailString.lowercased
                     for email in FirebaseHelper.firebaseUserEmails {
-                        if userEmailString as String == email {
+                        if cleanEmail == email {
                             // user exists
                             userToCheck.userEmail = email
                             userToCheck.relationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue

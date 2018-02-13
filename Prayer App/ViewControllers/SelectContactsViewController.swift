@@ -266,6 +266,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func dismissView() {
+        print("dismiss view called")
         if self.navigationController != nil {
             self.navigationController?.popToRootViewController(animated: true)
         } else if segueFromSettings == true {
