@@ -37,7 +37,8 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     var filteredContacts = [CircleUser]()
     var sortedContacts = [String:[CircleUser]]()
     
-    var mailComposeDelegate: MFMessageComposeViewControllerDelegate!
+    var messageComposeDelegate: MFMessageComposeViewControllerDelegate!
+    var mailComposeDelegate: MFMailComposeViewControllerDelegate!
     
     var segueFromSettings = false
     var members = [CircleUser]()
@@ -58,6 +59,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         self.getUsers()
         setupSearchResultsController()
         
+        messageComposeDelegate = self
         mailComposeDelegate = self
 
         let backView = UIView(frame: self.tableView.bounds)
@@ -155,7 +157,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     }
 
     func getContactsData() {
-
         let store = CNContactStore()
         store.requestAccess(for: .contacts, completionHandler: {
             granted, error in
@@ -471,7 +472,12 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 if MFMessageComposeViewController.canSendText() {
                     for phoneNumber in phoneNumbers {
                         let number = phoneNumber.value.stringValue
-                        let numberString = "(text) " + phoneNumber.value.stringValue
+                        var phoneType = ""
+                        if let label = phoneNumber.label {
+                            let labelString = CNLabeledValue<NSString>.localizedString(forLabel: label)
+                            phoneType = "(\(labelString)) "
+                        }
+                        let numberString = phoneType + phoneNumber.value.stringValue
                         let action = UIAlertAction(title: numberString, style: .default, handler: { (action) in
                             let composeVC = MFMessageComposeViewController()
                             composeVC.messageComposeDelegate = self
