@@ -98,6 +98,8 @@ class Utilities {
             return false
         }
     }
+    
+    
 }
 
 extension UITextView {
