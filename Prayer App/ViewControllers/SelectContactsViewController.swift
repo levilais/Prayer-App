@@ -641,10 +641,10 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         
         phoneAlert.addAction(UIAlertAction(title: "Save Number", style: .default, handler: { [weak phoneAlert] (_) in
             if let textField = phoneAlert?.textFields![0] {
-                if let phoneNumber = textField.text {
-                    let number = phoneNumber.replacingOccurrences(of: "-", with: "")
-                    if number.count == 10 {
+                if let number = textField.text {
+                    if number.count == 12 {
                         self.userRef.child("userPhone").setValue(number)
+                        Animations().showPopup(labelText: "Saved!", presentingVC: self)
                         print("phone number: \(number)")
                     } else {
                         print("attempting to re-set message")

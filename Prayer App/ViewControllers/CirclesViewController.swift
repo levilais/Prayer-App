@@ -624,11 +624,11 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         phoneAlert.addAction(UIAlertAction(title: "Save Number", style: .default, handler: { [weak phoneAlert] (_) in
             if let textField = phoneAlert?.textFields![0] {
-                if let phoneNumber = textField.text {
-                    let number = phoneNumber.replacingOccurrences(of: "-", with: "")
-                    if number.count == 10 {
-                        //                        self.userRef.child("userPhone").setValue(number)
+                if let number = textField.text {
+                    if number.count == 12 {
+                        self.userRef.child("userPhone").setValue(number)
                         print("phone number: \(number)")
+                        Animations().showPopup(labelText: "Saved!", presentingVC: self)
                     } else {
                         print("attempting to re-set message")
                         phoneAlert?.title = "Oops!"
