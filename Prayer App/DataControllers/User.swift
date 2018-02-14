@@ -23,6 +23,7 @@ class CustomUser {
     var lastName: String?
     var userID: String?
     var userEmail: String?
+    var userPhone: String?
     var profileImageAsString: String?
     var profileImageAsData: Data?
     var profileImageAsImage: UIImage?
@@ -66,6 +67,9 @@ class CustomUser {
             }
             if let userID = userDictionary["userID"] as? String {
                 currentUser.userID = userID
+            }
+            if let userPhone = userDictionary["userPhone"] as? String {
+                currentUser.userPhone = userPhone
             }
         }
         

@@ -11,4 +11,5 @@ import Foundation
 class Loads {
     static var loadCount = 0
     static var firstLoadPresented = false
+    static var askedAboutPhone = false
 }

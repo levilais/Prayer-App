@@ -44,7 +44,6 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     var indexPathForEdit: IndexPath?
     var circlePrayers = [CirclePrayer]()
     
-//    var phoneTextField: UITextField?
     var phoneAlert = UIAlertController()
     
     override func viewDidLoad() {
@@ -76,14 +75,23 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 setupObservers()
                 setupCircleUserObservers()
             }
+            if let userPhone = CurrentUser.currentUser.userPhone {
+                print("has phone number")
+            } else {
+                print("no phone")
+                if Loads.askedAboutPhone == false {
+                    print("haven't asked for phone yet")
+                    presentPhoneNumberRequestAlert()
+                } else {
+                    print("already asked for phone")
+                }
+            }
             setCircleData()
             toggleTableIsHidden()
         } else {
             userNotLoggedInView.isHidden = false
             userLoggedInView.isHidden = true
         }
-        
-        presentPhoneNumberRequestAlert()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -618,7 +626,15 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             if let textField = phoneAlert?.textFields![0] {
                 if let phoneNumber = textField.text {
                     let number = phoneNumber.replacingOccurrences(of: "-", with: "")
-                    print("phone number: \(number)")
+                    if number.count == 10 {
+                        //                        self.userRef.child("userPhone").setValue(number)
+                        print("phone number: \(number)")
+                    } else {
+                        print("attempting to re-set message")
+                        phoneAlert?.title = "Oops!"
+                        phoneAlert?.message = "Please make sure that you enter your whole 10-digit phone number"
+                        self.present(phoneAlert!, animated: true, completion: nil)
+                    }
                 }
             }
         }))
@@ -628,6 +644,8 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         self.present(phoneAlert, animated: true, completion: nil)
         phoneAlert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+        Loads.askedAboutPhone = true
+        UserDefaults.standard.set(Loads.askedAboutPhone, forKey: "askedAboutPhone")
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

@@ -12,6 +12,7 @@ class UserDefaultsHelper {
     func saveLoad() {
         UserDefaults.standard.set(Loads.loadCount, forKey: "loads")
         UserDefaults.standard.set(Loads.firstLoadPresented, forKey: "firstLoadPresented")
+        UserDefaults.standard.set(Loads.askedAboutPhone, forKey: "askedAboutPhone")
     }
     func getLoads() {
         if let loads = UserDefaults.standard.object(forKey: "loads") as? Int {
@@ -19,6 +20,9 @@ class UserDefaultsHelper {
         }
         if let firstLoadPresentedCheck = UserDefaults.standard.object(forKey: "firstLoadPresented") as? Bool {
             Loads.firstLoadPresented = firstLoadPresentedCheck
+        }
+        if let askedAboutPhone = UserDefaults.standard.object(forKey: "askedAboutPhone") as? Bool {
+            Loads.askedAboutPhone = askedAboutPhone
         }
     }
     
@@ -50,5 +54,6 @@ class UserDefaultsHelper {
         case preferredTimerDuration = "preferredTimerDuration"
         case hasAllowedContacts = "hasAllowedContacts"
         case lastContactAuthStatus = "lastContactAuthStatus"
+        case askedAboutPhone = "askedAboutPhone"
     }
 }

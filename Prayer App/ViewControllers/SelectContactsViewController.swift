@@ -13,7 +13,7 @@ import Contacts
 import ContactsUI
 import MessageUI
 
-class SelectContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UISearchResultsUpdating {
+class SelectContactsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UISearchResultsUpdating, UITextFieldDelegate {
     
     var ranCount = Int()
     
@@ -26,6 +26,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     @IBOutlet weak var selectContactsView: UIView!
     @IBOutlet weak var connectToContactsButton: UIButton!
     @IBOutlet weak var maybeLaterButton: UIButton!
+    var phoneAlert = UIAlertController()
     
     // Connect To Contacts View
     @IBOutlet weak var tableView: UITableView!
@@ -50,6 +51,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     
     // FIREBASE
     var ref: DatabaseReference!
+    var userRef: DatabaseReference!
     
     // SEARCH
     var searchActive = false
@@ -58,6 +60,9 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         ref = Database.database().reference()
+        if let userID = Auth.auth().currentUser?.uid {
+            userRef = Database.database().reference().child("users").child(userID)
+        }
         self.getUsers()
         setupSearchResultsController()
         
@@ -76,6 +81,12 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
         loadCorrectView()
         
+        if let userPhone = CurrentUser.currentUser.userPhone {
+            print("has phone number")
+        } else {
+            print("no phone")
+            presentPhoneNumberRequestAlert()
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -147,6 +158,13 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 self.getUserEmails(completion: { (success) in
                     self.getContactsData()
                 })
+                if let userPhone = CurrentUser.currentUser.userPhone {
+                    print("has phone number")
+                } else {
+                    if Loads.askedAboutPhone == false {
+                        presentPhoneNumberRequestAlert()
+                    }
+                }
             }
         } else if ContactsHandler().contactsAuthStatus() == ".notDetermined" {
             contactsNotAllowedView.isHidden = false
@@ -610,6 +628,87 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         
         setUpContactSections()
         self.tableView.reloadData()
+    }
+    
+    func presentPhoneNumberRequestAlert() {
+        phoneAlert = UIAlertController(title: "Be Found!", message: "You are currently only able to be found by your email address. Add your phone number so that your contacts can better find you.", preferredStyle: .alert)
+        
+        phoneAlert.addTextField { (textField) in
+            textField.placeholder = "Example: 555-555-5555"
+            textField.keyboardType = UIKeyboardType.numberPad
+            textField.delegate = self
+        }
+        
+        phoneAlert.addAction(UIAlertAction(title: "Save Number", style: .default, handler: { [weak phoneAlert] (_) in
+            if let textField = phoneAlert?.textFields![0] {
+                if let phoneNumber = textField.text {
+                    let number = phoneNumber.replacingOccurrences(of: "-", with: "")
+                    if number.count == 10 {
+                        self.userRef.child("userPhone").setValue(number)
+                        print("phone number: \(number)")
+                    } else {
+                        print("attempting to re-set message")
+                        phoneAlert?.title = "Oops!"
+                        phoneAlert?.message = "Please make sure that you enter your whole 10-digit phone number"
+                        self.present(phoneAlert!, animated: true, completion: nil)
+                    }
+                }
+            }
+        }))
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        phoneAlert.addAction(cancelAction)
+        
+        self.present(phoneAlert, animated: true, completion: nil)
+        phoneAlert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+        Loads.askedAboutPhone = true
+        UserDefaults.standard.set(Loads.askedAboutPhone, forKey: "askedAboutPhone")
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == phoneAlert.textFields![0] {
+            let newString = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+            let components = newString.components(separatedBy: NSCharacterSet.decimalDigits.inverted)
+            
+            let decimalString = components.joined(separator: "") as NSString
+            let length = decimalString.length
+            let hasLeadingOne = length > 0 && decimalString.character(at: 0) == (1 as unichar)
+            
+            if length == 0 || (length > 10 && !hasLeadingOne) || length > 11
+            {
+                let newLength = (textField.text! as NSString).length + (string as NSString).length - range.length as Int
+                return (newLength > 10) ? false : true
+            }
+            var index = 0 as Int
+            let formattedString = NSMutableString()
+            
+            if hasLeadingOne
+            {
+                formattedString.append("1 ")
+                index += 1
+            }
+            if (length - index) > 3
+            {
+                let areaCode = decimalString.substring(with: NSMakeRange(index, 3))
+                formattedString.appendFormat("%@-", areaCode)
+                index += 3
+            }
+            if length - index > 3
+            {
+                let prefix = decimalString.substring(with: NSMakeRange(index, 3))
+                formattedString.appendFormat("%@-", prefix)
+                index += 3
+            }
+            
+            let remainder = decimalString.substring(from: index)
+            formattedString.append(remainder)
+            textField.text = formattedString as String
+            return false
+        }
+        else
+        {
+            return true
+        }
     }
     
     @objc func handleNotification(_ notification: NSNotification) {
