@@ -190,7 +190,6 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
             if phoneNumberTextfield.text?.count == 12 {
                 if let number = phoneNumberTextfield.text {
                     self.userRef.child("userPhone").setValue(number)
-                    print("saved #")
                 }
             } else {
                 self.userRef.child("userPhone").removeValue()

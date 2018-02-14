@@ -78,9 +78,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             if let userPhone = CurrentUser.currentUser.userPhone {
                 print("has phone number")
             } else {
-                print("no phone")
                 if Loads.askedAboutPhone == false {
-                    print("haven't asked for phone yet")
                     presentPhoneNumberRequestAlert()
                 } else {
                     print("already asked for phone")
