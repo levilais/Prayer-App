@@ -37,14 +37,16 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     var filteredContacts = [CircleUser]()
     var sortedContacts = [String:[CircleUser]]()
     
-    var messageComposeDelegate: MFMessageComposeViewControllerDelegate!
-    var mailComposeDelegate: MFMailComposeViewControllerDelegate!
-    
     var segueFromSettings = false
     var members = [CircleUser]()
     var nonMembers = [CircleUser]()
     var sectionHeaders = [String]()
     var sortedKeys = [String]()
+    
+    // COMPOSE VARIABLES
+    var messageComposeDelegate: MFMessageComposeViewControllerDelegate!
+    var mailComposeDelegate: MFMailComposeViewControllerDelegate!
+    var isComposeSegue = false
     
     // FIREBASE
     var ref: DatabaseReference!
@@ -73,6 +75,12 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
         loadCorrectView()
+        
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        isComposeSegue = false
+        print("viewDidAppear Ran")
     }
     
     func getUsers() {
@@ -455,9 +463,10 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                                 if let lastName = CurrentUser.currentUser.lastName {
                                     composeVC.setSubject("A Prayer invitation from \(firstName) \(lastName)")
                                     composeVC.setMessageBody("I want to invite you to download Prayer - Swipe To Send.  Get it here: https://itunes.apple.com/us/app/prayer-swipe-to-send/id1303817456?ls=1&mt=8", isHTML: false)
+                                    self.isComposeSegue = true
+                                    self.present(composeVC, animated: true, completion: nil)
                                 }
                             }
-                            self.present(composeVC, animated: true, completion: nil)
                         })
                         alert.addAction(action)
                         i += 1
@@ -483,6 +492,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                             composeVC.messageComposeDelegate = self
                             composeVC.recipients = [number]
                             composeVC.body = "I want to invite you to download Prayer - Swipe To Send.  Get it here: https://itunes.apple.com/us/app/prayer-swipe-to-send/id1303817456?ls=1&mt=8"
+                            self.isComposeSegue = true
                             self.present(composeVC, animated: true, completion: nil)
                         })
                         alert.addAction(action)
@@ -551,6 +561,11 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         
         controller.dismiss(animated: true) {
             if labelText != "" {
+                if self.resultSearchController.isActive == true {
+                    self.resultSearchController.isActive = false
+                    self.resultSearchController.resignFirstResponder()
+                    self.searchActive = false
+                }
                 Animations().showPopup(labelText: labelText, presentingVC: self)
             }
         }
@@ -571,6 +586,9 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         
         controller.dismiss(animated: true) {
             if labelText != "" {
+                self.resultSearchController.isActive = false
+                self.resultSearchController.resignFirstResponder()
+                self.searchActive = false
                 Animations().showPopup(labelText: labelText, presentingVC: self)
             }
         }
@@ -602,8 +620,10 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
 
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "contactAuthStatusDidChange"), object: nil)
-        if explicitDismiss == false {
-            dismissView()
+        if isComposeSegue == false {
+            if explicitDismiss == false {
+                dismissView()
+            }
         }
     }
 }
