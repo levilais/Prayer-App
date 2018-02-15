@@ -200,15 +200,18 @@ class CircleUser: CustomUser {
                     }
                 }
             }
+            
             for userPhoneNumber in userPhoneNumbers {
                 let cleanPhoneNumber = (userPhoneNumber.value).value(forKey: "digits") as! String
                 for fbUser in FirebaseHelper.firebaseUsers {
                     if let phoneNumber = fbUser.userPhone?.replacingOccurrences(of: "-", with: "") {
                         if cleanPhoneNumber == phoneNumber {
-                            // user exists
                             memberExists = true
                             if let userID = fbUser.userID {
                                 user.userID = userID
+                            }
+                            if let fbUserPhone = fbUser.userPhone {
+                                user.userPhone = fbUserPhone
                             }
                         }
                     }
@@ -220,9 +223,15 @@ class CircleUser: CustomUser {
                 if let userID = user.userID {
                     var i = 0
                     for circleMember in CurrentUser.firebaseCircleMembers {
-                        if let circleMemberID = circleMember.userID {
+                        if let circleMemberID = circleMember.key {
                             if userID == circleMemberID {
+                                if let phone = user.userPhone {
+                                    print("phone1: \(phone)")
+                                }
                                 user = CurrentUser.firebaseCircleMembers[i]
+                                if let phone2 = user.userPhone {
+                                    print("phone2: \(phone2)")
+                                }
                                 relationshipDetermined = true
                             }
                         }

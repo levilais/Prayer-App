@@ -256,6 +256,9 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                     } else {
                         print("no ID")
                     }
+                    if let phone = userWithStatus.userPhone {
+                        print("phone found for: \(phone)")
+                    }
                     newContactsToDisplay.append(userWithStatus)
                 }
             }
@@ -287,17 +290,16 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 currentUserPhone = currentUserPhoneCheck
             }
             for circleUser in self.contactsToDisplay {
-                var email = String()
-                var phone: String?
                 if let circleUserEmail = circleUser.userEmail {
-                    email = circleUserEmail
-                    if email == currentUserEmail {
+                    if circleUserEmail == currentUserEmail {
                         isCurrentUser = true
                     }
                 }
+                print("1")
                 if let circleUserPhone = circleUser.userPhone {
-                    phone = circleUserPhone
-                    if phone == currentUserPhone {
+                    print("2")
+                    if circleUserPhone == currentUserPhone {
+                        print("3")
                         isCurrentUser = true
                     }
                 }
