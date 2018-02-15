@@ -57,6 +57,9 @@ class MembershipUser: CircleUser {
             if let lastAgreedInPrayerDate = userDictionary["lastAgreedInPrayerDate"] as? Double {
                 membershipUser.lastAgreedInPrayerDate = lastAgreedInPrayerDate
             }
+            if let userPhone = userDictionary["userPhone"] as? String {
+                membershipUser.userPhone = userPhone
+            }
         }
         
         if let circleUsersDict = snapshot.childSnapshot(forPath: "circleUsers").value as? NSDictionary {

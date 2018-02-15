@@ -97,9 +97,18 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     func getUsers() {
         ref.child("users").observe(.childAdded) { (snapshot) in
             if let userDictionary = snapshot.value as? NSDictionary {
-                if let email = userDictionary["userEmail"] as? String {
-                    if !FirebaseHelper.firebaseUserEmails.contains(email) {
-                        FirebaseHelper.firebaseUserEmails.append(email)
+                let user = CustomUser().firebaseUserFromDictionary(userDictionary: userDictionary)
+                if let userID = user.userID {
+                    var matchExists = false
+                    for fbUser in FirebaseHelper.firebaseUsers {
+                        if let fbUserID = fbUser.userID {
+                            if userID == fbUserID {
+                                matchExists = true
+                            }
+                        }
+                    }
+                    if !matchExists {
+                        FirebaseHelper.firebaseUsers.append(user)
                     }
                 }
             }
@@ -109,9 +118,18 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     func getUserEmails(completion: @escaping (Bool) -> Void) {
         ref.child("users").queryOrderedByKey().observeSingleEvent(of: .value) { (snapshot) in
             if let userDictionary = snapshot.value as? NSDictionary {
-                if let email = userDictionary["userEmail"] as? String {
-                    if !FirebaseHelper.firebaseUserEmails.contains(email) {
-                        FirebaseHelper.firebaseUserEmails.append(email)
+                let user = CustomUser().firebaseUserFromDictionary(userDictionary: userDictionary)
+                if let userID = user.userID {
+                    var matchExists = false
+                    for fbUser in FirebaseHelper.firebaseUsers {
+                        if let fbUserID = fbUser.userID {
+                            if userID == fbUserID {
+                                matchExists = true
+                            }
+                        }
+                    }
+                    if !matchExists {
+                        FirebaseHelper.firebaseUsers.append(user)
                     }
                 }
             }
@@ -233,6 +251,11 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 
                 if append == true {
                     let userWithStatus = CircleUser().getRelationshipStatus(userToCheck: user)
+                    if let userID = userWithStatus.userID {
+                        print("has ID")
+                    } else {
+                        print("no ID")
+                    }
                     newContactsToDisplay.append(userWithStatus)
                 }
             }
@@ -254,29 +277,48 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     func setUpContactSections() {
         var newSortedContacts = [String:[CircleUser]]()
         if self.contactsToDisplay.count > 0 {
+            var isCurrentUser = false
+            var currentUserEmail = String()
+            var currentUserPhone: String?
+            if let currentUserEmailCheck = CurrentUser.currentUser.userEmail {
+                currentUserEmail = currentUserEmailCheck
+            }
+            if let currentUserPhoneCheck = CurrentUser.currentUser.userPhone {
+                currentUserPhone = currentUserPhoneCheck
+            }
             for circleUser in self.contactsToDisplay {
-                if let relationship = circleUser.relationshipToCurrentUser {
-                    if relationship != CircleUser.userRelationshipToCurrentUser.nonMember.rawValue {
-                        if let email = circleUser.userEmail {
-                            if let currentUserEmail = CurrentUser.currentUser.userEmail {
-                                if email != currentUserEmail {
-                                    if var oldArray = newSortedContacts["Invite member to your Circle"] {
-                                        oldArray.append(circleUser)
-                                        newSortedContacts["Invite member to your Circle"] = oldArray
-                                    } else {
-                                        let newArray = [circleUser]
-                                        newSortedContacts["Invite member to your Circle"] = newArray
-                                    }
-                                }
+                var email = String()
+                var phone: String?
+                if let circleUserEmail = circleUser.userEmail {
+                    email = circleUserEmail
+                    if email == currentUserEmail {
+                        isCurrentUser = true
+                    }
+                }
+                if let circleUserPhone = circleUser.userPhone {
+                    phone = circleUserPhone
+                    if phone == currentUserPhone {
+                        isCurrentUser = true
+                    }
+                }
+                if !isCurrentUser {
+                    if let relationship = circleUser.relationshipToCurrentUser {
+                        if relationship != CircleUser.userRelationshipToCurrentUser.nonMember.rawValue {
+                            if var oldArray = newSortedContacts["Invite member to your Circle"] {
+                                oldArray.append(circleUser)
+                                newSortedContacts["Invite member to your Circle"] = oldArray
+                            } else {
+                                let newArray = [circleUser]
+                                newSortedContacts["Invite member to your Circle"] = newArray
                             }
-                        }
-                    } else {
-                        if var oldArray = newSortedContacts["Invite to join Prayer"] {
-                            oldArray.append(circleUser)
-                            newSortedContacts["Invite to join Prayer"] = oldArray
                         } else {
-                            let newArray = [circleUser]
-                            newSortedContacts["Invite to join Prayer"] = newArray
+                            if var oldArray = newSortedContacts["Invite to join Prayer"] {
+                                oldArray.append(circleUser)
+                                newSortedContacts["Invite to join Prayer"] = oldArray
+                            } else {
+                                let newArray = [circleUser]
+                                newSortedContacts["Invite to join Prayer"] = newArray
+                            }
                         }
                     }
                 }
@@ -422,10 +464,13 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
             let user = contactAtIndexPath(indexPath: indexPath as IndexPath)
             
+            print("1")
             if user.relationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue {
-                if let email = user.userEmail {
-                    FirebaseHelper().inviteUserToCircle(userEmail: email, ref: self.ref)
-                }
+                print("2")
+                FirebaseHelper().inviteUserToCircle(user: user, ref: self.ref)
+//                if let email = user.userEmail {
+//                    FirebaseHelper().inviteUserToCircle(userEmail: email, ref: self.ref)
+//                }
                 
                 updateSpotsLeftLabel()
                 cell.inviteButton.isHidden = true

@@ -70,6 +70,9 @@ class CircleUser: CustomUser {
             if let lastAgreedDateCheck = userDictionary["lastAgreedInPrayerDate"] as? Double {
                 circleUser.lastAgreedInPrayerDate = lastAgreedDateCheck
             }
+            if let userPhone = userDictionary["userPhone"] as? String {
+                circleUser.userPhone = userPhone
+            }
         }
         
         if let circleKey = circleUser.key {
@@ -169,32 +172,61 @@ class CircleUser: CustomUser {
     func getRelationshipStatus(userToCheck: CircleUser) -> CircleUser {
         var user = userToCheck
         var userEmails = [CNLabeledValue<NSString>]()
+        var userPhoneNumbers = [CNLabeledValue<CNPhoneNumber>]()
         
         var relationshipDetermined = false
         user.relationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.nonMember.rawValue
         while relationshipDetermined == false {
             if let userEmailsCheck = user.circleMemberEmails {
                 userEmails = userEmailsCheck
-                for userEmail in userEmails {
-                    let userEmailString = userEmail.value
-                    let cleanEmail = userEmailString.lowercased
-                    for email in FirebaseHelper.firebaseUserEmails {
+            }
+            if let userPhoneNumbersCheck = user.circleMemberPhoneNumbers {
+                userPhoneNumbers = userPhoneNumbersCheck
+            }
+            
+            var memberExists = false
+            for userEmail in userEmails {
+                let userEmailString = userEmail.value
+                let cleanEmail = userEmailString.lowercased
+                for fbUser in FirebaseHelper.firebaseUsers {
+                    if let email = fbUser.userEmail {
                         if cleanEmail == email {
                             // user exists
-                            userToCheck.userEmail = email
-                            userToCheck.relationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue
-                            var i = 0
-                            for circleMember in CurrentUser.firebaseCircleMembers {
-                                if let circleMemberEmail = circleMember.userEmail {
-                                    if userEmailString as String == circleMemberEmail {
-                                        // invited
-                                        user = CurrentUser.firebaseCircleMembers[i]
-                                        relationshipDetermined = true
-                                    }
-                                }
-                                i += 1
+                            memberExists = true
+                            if let userID = fbUser.userID {
+                                user.userID = userID
                             }
                         }
+                    }
+                }
+            }
+            for userPhoneNumber in userPhoneNumbers {
+                let cleanPhoneNumber = (userPhoneNumber.value).value(forKey: "digits") as! String
+                for fbUser in FirebaseHelper.firebaseUsers {
+                    if let phoneNumber = fbUser.userPhone?.replacingOccurrences(of: "-", with: "") {
+                        if cleanPhoneNumber == phoneNumber {
+                            // user exists
+                            memberExists = true
+                            if let userID = fbUser.userID {
+                                user.userID = userID
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if memberExists == true {
+                user.relationshipToCurrentUser = CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue
+                if let userID = user.userID {
+                    var i = 0
+                    for circleMember in CurrentUser.firebaseCircleMembers {
+                        if let circleMemberID = circleMember.userID {
+                            if userID == circleMemberID {
+                                user = CurrentUser.firebaseCircleMembers[i]
+                                relationshipDetermined = true
+                            }
+                        }
+                        i += 1
                     }
                 }
             }

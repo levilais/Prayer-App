@@ -83,5 +83,27 @@ class CustomUser {
         
         return currentUser
     }
+    
+    func firebaseUserFromDictionary(userDictionary: NSDictionary) -> CustomUser {
+        let user = CustomUser()
+        
+        if let firstName = userDictionary["firstName"] as? String {
+            user.firstName = firstName
+        }
+        if let lastName = userDictionary["lastName"] as? String {
+            user.lastName = lastName
+        }
+        if let userEmail = userDictionary["userEmail"] as? String {
+            user.userEmail = userEmail
+        }
+        if let userID = userDictionary["userID"] as? String {
+            user.userID = userID
+        }
+        if let userPhone = userDictionary["userPhone"] as? String {
+            user.userPhone = userPhone
+        }
+        
+        return user
+    }
 }
 
