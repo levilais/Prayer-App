@@ -280,7 +280,6 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
     func setUpContactSections() {
         var newSortedContacts = [String:[CircleUser]]()
         if self.contactsToDisplay.count > 0 {
-            var isCurrentUser = false
             var currentUserEmail = String()
             var currentUserPhone: String?
             if let currentUserEmailCheck = CurrentUser.currentUser.userEmail {
@@ -290,16 +289,14 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                 currentUserPhone = currentUserPhoneCheck
             }
             for circleUser in self.contactsToDisplay {
+                var isCurrentUser = false
                 if let circleUserEmail = circleUser.userEmail {
                     if circleUserEmail == currentUserEmail {
                         isCurrentUser = true
                     }
                 }
-                print("1")
                 if let circleUserPhone = circleUser.userPhone {
-                    print("2")
                     if circleUserPhone == currentUserPhone {
-                        print("3")
                         isCurrentUser = true
                     }
                 }
