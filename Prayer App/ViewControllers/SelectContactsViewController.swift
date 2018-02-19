@@ -679,6 +679,7 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
         
         phoneAlert.addTextField { (textField) in
             textField.placeholder = "Example: 555-555-5555"
+            textField.keyboardAppearance = .dark
             textField.keyboardType = UIKeyboardType.numberPad
             textField.delegate = self
         }

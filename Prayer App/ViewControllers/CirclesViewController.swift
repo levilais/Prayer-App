@@ -38,6 +38,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var viewIsVisible = false
     var circleSpotFilled = [false,false,false,false,false]
+    var profileImageLoaded = [false,false,false,false,false]
     var selectedCircleMember = 0
     var ref: DatabaseReference!
     var userRef: DatabaseReference!
@@ -544,11 +545,16 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
             switch i {
             case 0 ..< circleCount:
                 let circleUser = circleUsers[i]
-                if let image = circleUser.profileImageAsImage {
-                    circleProfileImages[i].image = image
-                } else {
-                    circleProfileImages[i].image = UIImage(named: "settingsPrayerIcon.pdf")
+                
+                if profileImageLoaded[i] == false {
+                    if let image = circleUser.profileImageAsImage {
+                        circleProfileImages[i].image = image
+                        profileImageLoaded[i] = true
+                    } else {
+                        circleProfileImages[i].image = UIImage(named: "settingsPrayerIcon.pdf")
+                    }
                 }
+
                 circleSpotFilled[i] = true
             case circleCount ... 4:
                 circleProfileImages[i].image = UIImage(named: "addCircleMemberIcon.pdf")
