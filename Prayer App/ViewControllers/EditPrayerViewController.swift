@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EditPrayerViewController: UIViewController {
+class EditPrayerViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
 
     @IBOutlet weak var topicTextField: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -22,6 +22,10 @@ class EditPrayerViewController: UIViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        topicTextField.delegate = self
+        prayerTextView.delegate = self
+        
         Utilities().setupTextFieldLook(textField: topicTextField)
         topicTextField.text = topicText
         prayerTextView.text = prayerText
@@ -42,8 +46,11 @@ class EditPrayerViewController: UIViewController {
         var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
         
-        let contentInset: UIEdgeInsets = self.scrollView.contentInset
-        let textViewInset: UIEdgeInsets = self.prayerTextView.contentInset
+        var contentInset: UIEdgeInsets = self.scrollView.contentInset
+        var textViewInset: UIEdgeInsets = self.prayerTextView.contentInset
+        
+        contentInset.bottom = keyboardFrame.size.height + 10
+        textViewInset.bottom = keyboardFrame.size.height + 10
         
         prayerTextView.contentInset = textViewInset
         scrollView.contentInset = contentInset
