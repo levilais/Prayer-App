@@ -556,75 +556,82 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     func shareText() {
-        if CurrentUser.firebaseCircleMembers.count > 0 {
-            var actualMembers = [CircleUser]()
-            for circleUser in CurrentUser.firebaseCircleMembers {
-                if let relationship = circleUser.relationshipToCurrentUser {
-                    if relationship == CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue {
-                        actualMembers.append(circleUser)
-                    }
-                }
-            }
-            
-            if actualMembers.count > 0 {
-                if textField.text != "" {
-                    for imageView in postToPrayerCircleMembers {
-                        imageView.layer.cornerRadius = imageView.frame.height / 2
-                        imageView.clipsToBounds = true
-                    }
-                    
-                    for i in 0...4 {
-                        if i < actualMembers.count {
-                            let circleUser = actualMembers[i]
-                            if let image = circleUser.profileImageAsImage {
-                                postToPrayerCircleMembers[i].image = image
+    
+        if let isConnected = ConnectionTracker.isConnected {
+            if isConnected {
+                if CurrentUser.firebaseCircleMembers.count > 0 {
+                    var actualMembers = [CircleUser]()
+                    for circleUser in CurrentUser.firebaseCircleMembers {
+                        if let relationship = circleUser.relationshipToCurrentUser {
+                            if relationship == CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue {
+                                actualMembers.append(circleUser)
                             }
-                        } else {
-                            postToPrayerCircleMembers[i].image = UIImage(named: "profilImageDefault")
                         }
                     }
                     
-                    Animations().animateShareToCirclePopup(view: postToPrayerCircleView, backgroundButton: postToPrayerCirclePopupBackgroundButton, subView: postToPrayerCircleSubview, viewController: self, textView: textField)
-                    self.swipeLeft.isEnabled = false
-                    self.swipeRight.isEnabled = false
-                } else {
-                    let alert = UIAlertController(title: "Nothing To Share", message: "Please enter text and try again.", preferredStyle: .alert)
-                    let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    if actualMembers.count > 0 {
+                        if textField.text != "" {
+                            for imageView in postToPrayerCircleMembers {
+                                imageView.layer.cornerRadius = imageView.frame.height / 2
+                                imageView.clipsToBounds = true
+                            }
+                            
+                            for i in 0...4 {
+                                if i < actualMembers.count {
+                                    let circleUser = actualMembers[i]
+                                    if let image = circleUser.profileImageAsImage {
+                                        postToPrayerCircleMembers[i].image = image
+                                    }
+                                } else {
+                                    postToPrayerCircleMembers[i].image = UIImage(named: "profilImageDefault")
+                                }
+                            }
+                            
+                            Animations().animateShareToCirclePopup(view: postToPrayerCircleView, backgroundButton: postToPrayerCirclePopupBackgroundButton, subView: postToPrayerCircleSubview, viewController: self, textView: textField)
+                            self.swipeLeft.isEnabled = false
+                            self.swipeRight.isEnabled = false
+                        } else {
+                            let alert = UIAlertController(title: "Nothing To Share", message: "Please enter text and try again.", preferredStyle: .alert)
+                            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                            alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                        }
+                    } else {
+                        let alert = UIAlertController(title: "No Circle Members Found", message: "1) You must invite a user to your Circle and 2) an invite must be accepted in order to share Prayers to your Circle.", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "Add Members", style: .default, handler: { (action) in
+                            self.performSegue(withIdentifier: "mainViewToAddContactsViewSegue", sender: self)
+                        })
+                        alert.addAction(action)
+                        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+                        alert.addAction(cancelAction)
+                        self.present(alert, animated: true, completion: nil)
+                        alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                    }
+                } else if Auth.auth().currentUser != nil {
+                    let alert = UIAlertController(title: "No Circle Members Found", message: "You will need to add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "Add Members", style: .default, handler: { (action) in
+                        self.performSegue(withIdentifier: "mainViewToAddContactsViewSegue", sender: self)
+                    })
                     alert.addAction(action)
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+                    alert.addAction(cancelAction)
+                    self.present(alert, animated: true, completion: nil)
+                    alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                } else {
+                    let alert = UIAlertController(title: "No Account Found", message: "You will need to create an account and add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "Create Account", style: .default, handler: { (action) in
+                        self.performSegue(withIdentifier: "mainViewToSignupViewSegue", sender: self)
+                    })
+                    alert.addAction(action)
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+                    alert.addAction(cancelAction)
                     self.present(alert, animated: true, completion: nil)
                     alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
                 }
             } else {
-                let alert = UIAlertController(title: "No Circle Members Found", message: "1) You must invite a user to your Circle and 2) an invite must be accepted in order to share Prayers to your Circle.", preferredStyle: .alert)
-                let action = UIAlertAction(title: "Add Members", style: .default, handler: { (action) in
-                    self.performSegue(withIdentifier: "mainViewToAddContactsViewSegue", sender: self)
-                })
-                alert.addAction(action)
-                let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
-                alert.addAction(cancelAction)
-                self.present(alert, animated: true, completion: nil)
-                alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                ConnectionTracker().presentNotConnectedAlert(messageDirections: "Sharing a Prayer to your Prayer Circle requires an internet connection.  Please re-establish your internet connection and try again.", viewController: self)
             }
-        } else if Auth.auth().currentUser != nil {
-            let alert = UIAlertController(title: "No Circle Members Found", message: "You will need to add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Add Members", style: .default, handler: { (action) in
-                self.performSegue(withIdentifier: "mainViewToAddContactsViewSegue", sender: self)
-            })
-            alert.addAction(action)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
-            alert.addAction(cancelAction)
-            self.present(alert, animated: true, completion: nil)
-            alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
-        } else {
-            let alert = UIAlertController(title: "No Account Found", message: "You will need to create an account and add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Create Account", style: .default, handler: { (action) in
-                self.performSegue(withIdentifier: "mainViewToSignupViewSegue", sender: self)
-            })
-            alert.addAction(action)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
-            alert.addAction(cancelAction)
-            self.present(alert, animated: true, completion: nil)
-            alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
         }
     }
     

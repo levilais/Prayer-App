@@ -41,15 +41,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         UIApplication.shared.applicationIconBadgeNumber = 0
         
-        FirebaseHelper().loadFirebaseData()
         UserDefaultsHelper().getLoads()
-        
         UserDefaultsHelper().getLastContactAuthStatus()
         
         let connectedRef = Database.database().reference(withPath: ".info/connected")
         connectedRef.observe(.value, with: { snapshot in
             if snapshot.value as? Bool ?? false {
                 ConnectionTracker.isConnected = true
+                if Loads.firebaseDataFirstLoaded == false {
+                    FirebaseHelper().loadFirebaseData()
+                    Loads.firebaseDataFirstLoaded = true
+                }
             } else {
                 ConnectionTracker.isConnected = false
             }
