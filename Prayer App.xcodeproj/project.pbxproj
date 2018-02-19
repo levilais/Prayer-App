@@ -56,6 +56,7 @@
 		04F0E4E11FA12762006D1244 /* LoadsStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0E4E01FA12762006D1244 /* LoadsStruct.swift */; };
 		04F2255D1FC50337000549D5 /* SettingsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F2255C1FC50337000549D5 /* SettingsDetailViewController.swift */; };
 		04F2255F1FC505BB000549D5 /* SettingsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F2255E1FC505BB000549D5 /* SettingsClass.swift */; };
+		04F862C9203B836C00787737 /* EditPrayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F862C8203B836C00787737 /* EditPrayerViewController.swift */; };
 		04FA1FF11FC3906500234033 /* SelectContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FA1FF01FC3906500234033 /* SelectContactsViewController.swift */; };
 		04FA1FF31FC4A77B00234033 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FA1FF21FC4A77B00234033 /* ContactsController.swift */; };
 		04FCD4FA1FC269DD0030557B /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FCD4F91FC269DD0030557B /* SettingsTableViewCell.swift */; };
@@ -118,6 +119,7 @@
 		04F0E4E01FA12762006D1244 /* LoadsStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadsStruct.swift; sourceTree = "<group>"; };
 		04F2255C1FC50337000549D5 /* SettingsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDetailViewController.swift; sourceTree = "<group>"; };
 		04F2255E1FC505BB000549D5 /* SettingsClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsClass.swift; sourceTree = "<group>"; };
+		04F862C8203B836C00787737 /* EditPrayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPrayerViewController.swift; sourceTree = "<group>"; };
 		04FA1FF01FC3906500234033 /* SelectContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectContactsViewController.swift; sourceTree = "<group>"; };
 		04FA1FF21FC4A77B00234033 /* ContactsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsController.swift; sourceTree = "<group>"; };
 		04FCD4F91FC269DD0030557B /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				04695D481FD9FDE50063B5B7 /* PopupViewController.swift */,
 				045D217D1FF5DE0400A5E0F6 /* ManageMemberViewController.swift */,
 				041470B3202BDB7400A0A5B2 /* PrivacyViewController.swift */,
+				04F862C8203B836C00787737 /* EditPrayerViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -418,6 +421,7 @@
 				04410F181FCA2BC5002EC8F9 /* CircleUsers.swift in Sources */,
 				04FA1FF11FC3906500234033 /* SelectContactsViewController.swift in Sources */,
 				049E04D81FC6A40800705766 /* SettingsButtonTableViewCell.swift in Sources */,
+				04F862C9203B836C00787737 /* EditPrayerViewController.swift in Sources */,
 				0473D3871FEC7C360074921D /* Prayer.swift in Sources */,
 				04D325321F9EA88400EC615D /* MainViewController.swift in Sources */,
 				04957FF41FAFA66F00A4D7B5 /* JournalViewController.swift in Sources */,

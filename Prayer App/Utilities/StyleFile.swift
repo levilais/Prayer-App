@@ -20,6 +20,7 @@ extension UIColor {
         static let TealColor = UIColor(red:0.58, green:0.66, blue:0.67, alpha:1.0)
         static let DarkBlueColor = UIColor(red:0.00, green:0.15, blue:0.26, alpha:1.0)
         static let WineColor = UIColor(red:0.65, green:0.23, blue:0.31, alpha:1.0)
+        static let OrangeColor = UIColor(red:0.69, green:0.44, blue:0.34, alpha:1.0)
     }
 }
 

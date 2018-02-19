@@ -51,6 +51,11 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     var userRef: DatabaseReference!
     @IBOutlet weak var refreshButton: UIButton!
     
+    // EDIT PRAYER VARIABLES
+    var editPrayerTopic = String()
+    var editPrayerText = String()
+    var editPrayerID = String()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -363,6 +368,11 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         if (segue.identifier == "loginSignUpSegue") {
             let loginViewController = segue.destination as! LoginViewController
             loginViewController.signupShowing = showSignUp
+        } else if (segue.identifier == "showEditPrayerSegue") {
+            let editPrayerViewController = segue.destination as! EditPrayerViewController
+            editPrayerViewController.prayerID = self.editPrayerID
+            editPrayerViewController.prayerText = self.editPrayerText
+            editPrayerViewController.topicText = self.editPrayerTopic
         }
     }
     
@@ -470,7 +480,22 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 Animations().animateMarkAnsweredPopup(view: self.markAnsweredPopoverView, backgroundButton: self.markAnsweredBackgroundButton, subView: self.markAnsweredSubview, viewController: self, textView: self.markAnsweredTextView)
             }
             answered.backgroundColor = UIColor.StyleFile.DarkBlueColor
-            return [delete, answered]
+            let edit = UITableViewRowAction(style: .default, title: "Edit") { (action:UITableViewRowAction, indexPath:IndexPath) in
+                self.indexPathToMarkAnswered = indexPath
+                let prayer = self.prayerAtIndexPath(indexPath: indexPath)
+                if let prayerTopic = prayer.prayerCategory {
+                    self.editPrayerTopic = prayerTopic
+                }
+                if let prayerText = prayer.prayerText {
+                    self.editPrayerText = prayerText
+                }
+                if let prayerID = prayer.prayerID {
+                    self.editPrayerID = prayerID
+                }
+                self.performSegue(withIdentifier: "showEditPrayerSegue", sender: self)
+            }
+            edit.backgroundColor = UIColor.StyleFile.OrangeColor
+            return [delete, answered, edit]
             
         }
         return [delete]
