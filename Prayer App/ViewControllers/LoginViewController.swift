@@ -28,7 +28,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var explanationLabel: UILabel!
     @IBOutlet weak var switchToLoginButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var scrollView: CustomLoginUIScrollView!
     @IBOutlet weak var forgotPasswordButton: UIButton!
     @IBOutlet weak var loginSignupButton: UIButton!
     @IBOutlet weak var confirmPasswordTextField: UITextField!

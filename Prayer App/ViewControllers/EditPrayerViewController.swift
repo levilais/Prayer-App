@@ -12,7 +12,6 @@ import Firebase
 class EditPrayerViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
 
     @IBOutlet weak var topicTextField: UITextField!
-    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var prayerTextView: UITextView!
     
     @IBOutlet weak var countLabel: UILabel!
@@ -81,14 +80,13 @@ class EditPrayerViewController: UIViewController, UITextFieldDelegate, UITextVie
         var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
         
-        var contentInset: UIEdgeInsets = self.scrollView.contentInset
+        var contentInset: UIEdgeInsets = self.prayerTextView.contentInset
         var textViewInset: UIEdgeInsets = self.prayerTextView.contentInset
         
         contentInset.bottom = keyboardFrame.size.height + 10
         textViewInset.bottom = keyboardFrame.size.height + 10
         
         prayerTextView.contentInset = textViewInset
-        scrollView.contentInset = contentInset
     }
     
     @objc func keyboardWillHide(notification:NSNotification){
@@ -98,7 +96,7 @@ class EditPrayerViewController: UIViewController, UITextFieldDelegate, UITextVie
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
         
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
-        scrollView.contentInset = contentInset
+        prayerTextView.contentInset = contentInset
     }
     
     func setInitialCountLabel() {
