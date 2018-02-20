@@ -446,6 +446,10 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     @IBAction func confirmSaveToJournalDidPress(_ sender: Any) {
+        attemptSave()
+    }
+    
+    func attemptSave() {
         savePrayer(prayerText: textField, prayerHeader: categoryCreationTextField)
         UIView.animate(withDuration: 0.33) {
             self.dismissSaveToJournalPopup()
@@ -811,6 +815,12 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
         } else {
             return false
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        self.attemptSave()
+        return false
     }
     
     @objc func handleNotification(_ notification: NSNotification) {

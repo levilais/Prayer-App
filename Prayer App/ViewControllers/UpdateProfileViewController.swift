@@ -48,6 +48,10 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
         if let phoneNumber = CurrentUser.currentUser.userPhone {
             phoneNumberTextfield.text = phoneNumber
         }
+        
+        firstNameTextField.delegate = self
+        lastNameTextField.delegate = self
+        phoneNumberTextfield.delegate = self
 
         ref = Database.database().reference()
         if let userID = Auth.auth().currentUser?.uid {
@@ -207,6 +211,12 @@ class UpdateProfileViewController: UIViewController, UIImagePickerControllerDele
         
         self.present(alert, animated: true, completion: nil)
         alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        self.saveUpdates()
+        return false
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

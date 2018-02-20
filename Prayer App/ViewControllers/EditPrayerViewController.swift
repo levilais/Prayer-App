@@ -40,7 +40,10 @@ class EditPrayerViewController: UIViewController, UITextFieldDelegate, UITextVie
     }
     
     @IBAction func saveButtonDidPress(_ sender: Any) {
-        print("save pressed")
+        attemptSave()
+    }
+    
+    func attemptSave() {
         if let isConnected = ConnectionTracker.isConnected {
             if isConnected {
                 if let textCheck = prayerTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines) {
@@ -72,10 +75,7 @@ class EditPrayerViewController: UIViewController, UITextFieldDelegate, UITextVie
         dismiss(animated: true, completion: nil)
     }
     
-    
-    
     @objc func keyboardWillShow(notification:NSNotification){
-        print("keyboard will show")
         var userInfo = notification.userInfo!
         var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
@@ -90,7 +90,6 @@ class EditPrayerViewController: UIViewController, UITextFieldDelegate, UITextVie
     }
     
     @objc func keyboardWillHide(notification:NSNotification){
-        print("keyboard will hide")
         var userInfo = notification.userInfo!
         var keyboardFrame:CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
@@ -127,6 +126,12 @@ class EditPrayerViewController: UIViewController, UITextFieldDelegate, UITextVie
         } else {
             return false
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        self.attemptSave()
+        return false
     }
     
     override func viewWillDisappear(_ animated: Bool) {

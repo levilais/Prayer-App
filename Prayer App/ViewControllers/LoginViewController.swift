@@ -15,7 +15,7 @@ import Contacts
 import ContactsUI
 import UserNotifications
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var loginPasswordTextField: UITextField!
     @IBOutlet weak var loginEmailTextField: UITextField!
@@ -71,25 +71,31 @@ class LoginViewController: UIViewController {
     func setupTextFields() {
         Utilities().setupTextFieldLook(textField: signupEmailTextField)
         signupEmailTextField.autocorrectionType = .no
+        signupEmailTextField.delegate = self
         
         Utilities().setupTextFieldLook(textField: signupPasswordTextField)
         signupPasswordTextField.autocorrectionType = .no
+        signupPasswordTextField.delegate = self
 
         Utilities().setupTextFieldLook(textField: loginEmailTextField)
         loginEmailTextField.autocorrectionType = .no
+        loginEmailTextField.delegate = self
 
         Utilities().setupTextFieldLook(textField: loginPasswordTextField)
         loginPasswordTextField.autocorrectionType = .no
+        loginPasswordTextField.delegate = self
 
         Utilities().setupTextFieldLook(textField: confirmPasswordTextField)
         confirmPasswordTextField.autocorrectionType = .no
+        confirmPasswordTextField.delegate = self
 
         Utilities().setupTextFieldLook(textField: firstNameTextField)
         firstNameTextField.autocorrectionType = .no
+        firstNameTextField.delegate = self
 
         Utilities().setupTextFieldLook(textField: lastNameTextField)
         lastNameTextField.autocorrectionType = .no
-
+        lastNameTextField.delegate = self
     }
     
     @IBAction func switchDidPress(_ sender: Any) {
@@ -206,6 +212,18 @@ class LoginViewController: UIViewController {
         } else {
             attemptLogin()
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        if signupShowing == true {
+            if canAttemptSignup() {
+                attemptSignup()
+            }
+        } else {
+            attemptLogin()
+        }
+        return false
     }
     
     func canAttemptSignup() -> Bool {
