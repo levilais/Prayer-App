@@ -66,6 +66,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print("view will appear called")
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name: NSNotification.Name(rawValue: "timerSecondsChanged"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification2(_:)), name: NSNotification.Name(rawValue: "timerExpiredIsTrue"), object: nil)
         tableView.estimatedRowHeight = 80
@@ -372,7 +373,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             let editPrayerViewController = segue.destination as! EditPrayerViewController
             editPrayerViewController.prayerID = self.editPrayerID
             editPrayerViewController.prayerText = self.editPrayerText
-            editPrayerViewController.topicText = self.editPrayerTopic
+            editPrayerViewController.prayerTopic = self.editPrayerTopic
         }
     }
     
@@ -489,7 +490,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 if let prayerText = prayer.prayerText {
                     self.editPrayerText = prayerText
                 }
-                if let prayerID = prayer.prayerID {
+                if let prayerID = prayer.key {
                     self.editPrayerID = prayerID
                 }
                 self.performSegue(withIdentifier: "showEditPrayerSegue", sender: self)

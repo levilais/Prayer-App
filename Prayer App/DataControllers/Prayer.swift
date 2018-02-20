@@ -61,6 +61,13 @@ class CurrentUserPrayer: Prayer {
             userRef.child("prayers").childByAutoId().setValue(prayer)
     }
     
+    func savePrayerEdit(prayerText: String, prayerCategory: String, prayerID: String) {
+        if let userRef = CurrentUser.currentUser.userRef {
+            userRef.child("prayers").child(prayerID).child("prayerText").setValue(prayerText)
+            userRef.child("prayers").child(prayerID).child("prayerCategory").setValue(prayerCategory)
+        }
+    }
+    
     func markPrayerAnswered(prayer: CurrentUserPrayer, howAnswered: String) {
         if let itemRef = prayer.itemRef {
             itemRef.child("howAnswered").setValue(howAnswered)

@@ -14,6 +14,7 @@ class Utilities {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         vc.present(alert, animated: true, completion: nil)
+        alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
     }
     
     func greetingString() -> String {

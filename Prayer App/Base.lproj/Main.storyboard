@@ -768,6 +768,15 @@
                                     <constraint firstItem="HeT-qg-JFj" firstAttribute="leading" secondItem="N3R-1J-bpd" secondAttribute="leading" constant="10" id="ufG-Sh-beK"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="02M-Xa-Sbd">
+                                <rect key="frame" x="290" y="107" width="9" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="5je-8f-ALe"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="8"/>
+                                <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.92920595409999995" green="0.93340748549999997" blue="0.93326789139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -786,11 +795,14 @@
                             <constraint firstItem="2S5-zZ-Omi" firstAttribute="top" secondItem="N3R-1J-bpd" secondAttribute="bottom" id="cAO-hb-6Hf"/>
                             <constraint firstItem="iMJ-JX-vsh" firstAttribute="top" secondItem="Cub-PO-mT9" secondAttribute="top" id="fGi-k8-kgS"/>
                             <constraint firstItem="Cub-PO-mT9" firstAttribute="trailing" secondItem="90a-E5-fJc" secondAttribute="trailing" id="mse-2f-aGB"/>
+                            <constraint firstItem="02M-Xa-Sbd" firstAttribute="leading" secondItem="sI7-hl-Nid" secondAttribute="trailing" constant="-20" id="qfy-z0-fn6"/>
+                            <constraint firstItem="02M-Xa-Sbd" firstAttribute="centerY" secondItem="sI7-hl-Nid" secondAttribute="centerY" id="wBL-mV-Vvs"/>
                             <constraint firstItem="N3R-1J-bpd" firstAttribute="leading" secondItem="Cub-PO-mT9" secondAttribute="leading" id="wKr-Wp-LUz"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Cub-PO-mT9"/>
                     </view>
                     <connections>
+                        <outlet property="countLabel" destination="02M-Xa-Sbd" id="PqW-1H-MEL"/>
                         <outlet property="prayerTextView" destination="2S5-zZ-Omi" id="ZYb-v2-IQ9"/>
                         <outlet property="scrollView" destination="Fe0-qb-cuP" id="fWT-cu-5vD"/>
                         <outlet property="topicTextField" destination="sI7-hl-Nid" id="6Q6-WN-e9j"/>
