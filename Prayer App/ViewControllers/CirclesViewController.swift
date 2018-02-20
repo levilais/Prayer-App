@@ -623,6 +623,7 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         phoneAlert.addTextField { (textField) in
             textField.placeholder = "Example: 555-555-5555"
             textField.keyboardType = UIKeyboardType.numberPad
+            textField.keyboardAppearance = UIKeyboardAppearance.dark
             textField.delegate = self
         }
         
