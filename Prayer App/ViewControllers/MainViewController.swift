@@ -556,7 +556,6 @@ class MainViewController: UIViewController, UITextFieldDelegate, UITextViewDeleg
     }
     
     func shareText() {
-    
         if let isConnected = ConnectionTracker.isConnected {
             if isConnected {
                 if CurrentUser.firebaseCircleMembers.count > 0 {

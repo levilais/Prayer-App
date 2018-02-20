@@ -26,6 +26,13 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var timerHeaderButton: UIButton!
     @IBOutlet weak var headerView: UIView!
     
+    // POST TO CIRCLES POPUP VIEW
+    @IBOutlet weak var postToPrayerCircleView: UIView!
+    @IBOutlet weak var postToPrayerCircleSubview: UIView!
+    @IBOutlet var postToPrayerCircleMembers: [UIImageView]!
+    @IBOutlet weak var postToPrayerCirclePopupBackgroundButton: UIButton!
+    var shareText = String()
+    
     // NOT LOGGED IN VIEW
     @IBOutlet weak var notLoggedInView: UIView!
     var showSignUp = true
@@ -495,8 +502,18 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 }
                 self.performSegue(withIdentifier: "showEditPrayerSegue", sender: self)
             }
-            edit.backgroundColor = UIColor.StyleFile.OrangeColor
-            return [delete, answered, edit]
+            edit.backgroundColor = UIColor.StyleFile.BrownColor
+            
+            let share = UITableViewRowAction(style: .default, title: "Share") { (action:UITableViewRowAction, indexPath:IndexPath) in
+                self.indexPathToMarkAnswered = indexPath
+                let prayer = self.prayerAtIndexPath(indexPath: indexPath)
+                if let prayerText = prayer.prayerText {
+                    self.shareText = prayerText
+                }
+                self.shareToCircle()
+            }
+            share.backgroundColor = UIColor.StyleFile.PurpleColor
+            return [delete, answered, share, edit]
             
         }
         return [delete]
@@ -536,6 +553,93 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
             let howAnswered = trimmedText
             CurrentUserPrayer().markPrayerAnswered(prayer: prayer, howAnswered: howAnswered)
         }
+    }
+    
+    @IBAction func shareDidPress(_ sender: Any) {
+        print("share pressed")
+        CirclePrayer().saveNewCirclePrayer(prayerText: self.shareText.trimmingCharacters(in: .whitespaces), userRef: userRef)
+        dismissShareToPrayerCirclePopup()
+        Animations().showPopup(labelText: "Shared!", presentingVC: self)
+    }
+    
+    @IBAction func cancelDidPress(_ sender: Any) {
+        dismissShareToPrayerCirclePopup()
+    }
+    
+    @IBAction func backgroundButtonDidPress(_ sender: Any) {
+        dismissShareToPrayerCirclePopup()
+    }
+    
+    func shareToCircle() {
+        if let isConnected = ConnectionTracker.isConnected {
+            if isConnected {
+                if CurrentUser.firebaseCircleMembers.count > 0 {
+                    var actualMembers = [CircleUser]()
+                    for circleUser in CurrentUser.firebaseCircleMembers {
+                        if let relationship = circleUser.relationshipToCurrentUser {
+                            if relationship == CircleUser.userRelationshipToCurrentUser.myCircleMember.rawValue {
+                                actualMembers.append(circleUser)
+                            }
+                        }
+                    }
+                    
+                    if actualMembers.count > 0 {
+                        for imageView in postToPrayerCircleMembers {
+                            imageView.layer.cornerRadius = imageView.frame.height / 2
+                            imageView.clipsToBounds = true
+                        }
+                        
+                        for i in 0...4 {
+                            if i < actualMembers.count {
+                                let circleUser = actualMembers[i]
+                                if let image = circleUser.profileImageAsImage {
+                                    postToPrayerCircleMembers[i].image = image
+                                }
+                            } else {
+                                postToPrayerCircleMembers[i].image = UIImage(named: "profilImageDefault")
+                            }
+                        }
+                        Animations().animateShareFromJournalToCirclePopup(view: postToPrayerCircleView, backgroundButton: postToPrayerCirclePopupBackgroundButton, subView: postToPrayerCircleSubview, viewController: self)
+                    } else {
+                        let alert = UIAlertController(title: "No Circle Members Found", message: "1) You must invite a user to your Circle and 2) an invite must be accepted in order to share Prayers to your Circle.", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "Add Members", style: .default, handler: { (action) in
+                            self.performSegue(withIdentifier: "journalViewToAddContactsViewSegue", sender: self)
+                        })
+                        alert.addAction(action)
+                        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+                        alert.addAction(cancelAction)
+                        self.present(alert, animated: true, completion: nil)
+                        alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                    }
+                } else if Auth.auth().currentUser != nil {
+                    let alert = UIAlertController(title: "No Circle Members Found", message: "You will need to add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "Add Members", style: .default, handler: { (action) in
+                        self.performSegue(withIdentifier: "journalViewToAddContactsViewSegue", sender: self)
+                    })
+                    alert.addAction(action)
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+                    alert.addAction(cancelAction)
+                    self.present(alert, animated: true, completion: nil)
+                    alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                } else {
+                    let alert = UIAlertController(title: "No Account Found", message: "You will need to create an account and add Circle Members in order to share Prayers to your Circle.", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "Create Account", style: .default, handler: { (action) in
+                        self.performSegue(withIdentifier: "loginSignUpSegue", sender: self)
+                    })
+                    alert.addAction(action)
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+                    alert.addAction(cancelAction)
+                    self.present(alert, animated: true, completion: nil)
+                    alert.view.tintColor = UIColor.StyleFile.DarkGrayColor
+                }
+            } else {
+                ConnectionTracker().presentNotConnectedAlert(messageDirections: "Sharing a Prayer to your Prayer Circle requires an internet connection.  Please re-establish your internet connection and try again.", viewController: self)
+            }
+        }
+    }
+    
+    func dismissShareToPrayerCirclePopup() {
+        self.postToPrayerCircleView.alpha = 0
     }
     
     func prayerAtIndexPath(indexPath: IndexPath) -> CurrentUserPrayer {

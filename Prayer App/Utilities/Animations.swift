@@ -182,6 +182,25 @@ class Animations {
         })
     }
     
+    func animateShareFromJournalToCirclePopup(view: UIView, backgroundButton: UIButton, subView: UIView, viewController: UIViewController) {
+        UIView.animate(withDuration: 0.33, animations: {
+            backgroundButton.alpha = 0.66
+        }) { (success) in
+            view.alpha = 1
+            subView.alpha = 1
+        }
+        UIView.animate(withDuration: 0.33, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 10, options: UIViewAnimationOptions(rawValue: 0), animations: {
+            subView.center = CGPoint(x: viewController.view.center.x, y: viewController.view.bounds.height / 3 + 20)
+        }, completion: { (completed) in
+            subView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            subView.alpha = 0.0
+            UIView.animate(withDuration: 0.33, animations: {
+                subView.alpha = 1.0
+                subView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            }, completion: nil)
+        })
+    }
+    
     func animateShareToCirclePopup(view: UIView, backgroundButton: UIButton, subView: UIView, viewController: UIViewController, textView: UITextView) {
         textView.resignFirstResponder()
         UIView.animate(withDuration: 0.33, animations: {
