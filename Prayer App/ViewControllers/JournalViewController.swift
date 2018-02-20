@@ -502,7 +502,7 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
                 }
                 self.performSegue(withIdentifier: "showEditPrayerSegue", sender: self)
             }
-            edit.backgroundColor = UIColor.StyleFile.BrownColor
+            edit.backgroundColor = UIColor.StyleFile.GreenColor
             
             let share = UITableViewRowAction(style: .default, title: "Share") { (action:UITableViewRowAction, indexPath:IndexPath) in
                 self.indexPathToMarkAnswered = indexPath
