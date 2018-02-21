@@ -1,9 +1,11 @@
-THIS VERSION
-Make sure link to disclaimer is on Sign Up screen (won't link for some reason)
-Make sure links to download in Invite are correct
-
 NEXT VERSION
+Add action items to prompt photo, adding a phone number, adding circle members
 Add notificaiton label to HomeScreen (for things like accepted invites)
 Add notification badge for "new items" in Home screen
 Add Prayer Groups
 Add more Prayer Topics
+Add add total prayer count for user (part of “Prayer Stats” in “Profile”)
+
+Bug - push notifications don’t work.  Check Firebase settings
+Bug - sharing to circle first time????  Julie was member, mom wasn’t yet - and it would show pop up - showed add member alert.  Could be error with how I’m determining the error alert
+Bug - app crashes when doing new Prayer category/ topic (seems to be only if it’s after praying?  Also, the save works)
