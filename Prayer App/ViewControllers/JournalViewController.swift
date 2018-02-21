@@ -455,6 +455,14 @@ class JournalViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if !answeredShowing {
             cell.prayedLastLabel = FirebaseHelper().daysSinceTimeStampLabel(cellLabel: cell.prayedLastLabel, prayer: prayer, cell: cell)
+            if let lastPrayed = prayer.lastPrayed {
+                let string = Utilities().dayDifference(timeStampAsDouble: lastPrayed)
+                if string == "today" {
+                    cell.prayerTextView.textColor = UIColor.StyleFile.MediumGrayColor
+                } else {
+                    cell.prayerTextView.textColor = UIColor.StyleFile.DarkGrayColor
+                }
+            }
         }
     }
     

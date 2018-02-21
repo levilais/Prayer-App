@@ -378,12 +378,29 @@ class CirclesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         setCellLabels(prayer: prayer, cell: cell)
         
+        if let lastPrayed = prayer.lastPrayed {
+            let string = Utilities().dayDifference(timeStampAsDouble: lastPrayed)
+            if string == "today" {
+                cell.prayerTextView.textColor = UIColor.StyleFile.MediumGrayColor
+            } else {
+                cell.prayerTextView.textColor = UIColor.StyleFile.DarkGrayColor
+            }
+        }
+        
         return cell
     }
     
     func setCellLabels(prayer: CirclePrayer, cell: PrayerTableViewCell) {
         if let lastPrayedCheck = prayer.lastPrayed {
+            let lastPrayed = Utilities().dayDifference(timeStampAsDouble: lastPrayedCheck)
             cell.prayedLastLabel.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedCheck))"
+            if lastPrayed == "today" {
+                cell.prayedLastLabel.textColor = UIColor.StyleFile.TealColor
+                cell.prayedLastLabel.font = UIFont.StyleFile.LastPrayedBold
+            } else {
+                cell.prayedLastLabel.textColor = UIColor.StyleFile.MediumGrayColor
+                cell.prayedLastLabel.font = UIFont.StyleFile.LastPrayedMedium
+            }
         }
         
         if let agreedCountCheck = prayer.agreedCount {

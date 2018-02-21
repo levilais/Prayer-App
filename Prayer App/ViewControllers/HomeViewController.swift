@@ -444,11 +444,22 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if let agreedCount = prayer.agreedCount {
             if let firstName = prayer.firstName {
                 cell.whoAgreedInPrayerLabel.text = "This prayer has been prayed \(Utilities().numberOfTimesString(count: agreedCount)) by \(firstName)'s Circle"
+                cell.whoAgreedInPrayerLabel.textColor = UIColor.StyleFile.MediumGrayColor
             }
         }
         
         if let lastPrayedDate = prayer.lastPrayed {
             cell.prayerRequestedDate.text = "Last prayed \(Utilities().dayDifference(timeStampAsDouble: lastPrayedDate))"
+            let lastPrayed = Utilities().dayDifference(timeStampAsDouble: lastPrayedDate)
+            if lastPrayed == "today" {
+                cell.prayerRequestedDate.textColor = UIColor.StyleFile.TealColor
+                cell.prayerRequestedDate.font = UIFont.StyleFile.LastPrayedBold
+                cell.prayerTextLabel.textColor = UIColor.StyleFile.MediumGrayColor
+            } else {
+                cell.prayerRequestedDate.textColor = UIColor.StyleFile.MediumGrayColor
+                cell.prayerRequestedDate.font = UIFont.StyleFile.LastPrayedMedium
+                cell.prayerTextLabel.textColor = UIColor.StyleFile.DarkGrayColor
+            }
         }
     }
     
