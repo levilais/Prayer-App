@@ -249,16 +249,23 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
                     fullName = firstName + " " + lastName
                 }
                 
+                var hasContactInfo = false
+                if let phonesCheck = user.circleMemberPhoneNumbers {
+                    if phonesCheck.count > 0 {
+                        hasContactInfo = true
+                    }
+                }
+                if let emailsCheck = user.circleMemberEmails {
+                    if emailsCheck.count > 0 {
+                        hasContactInfo = true
+                    }
+                }
+                if !hasContactInfo {
+                    append = false
+                }
+                
                 if append == true {
                     let userWithStatus = CircleUser().getRelationshipStatus(userToCheck: user)
-                    if let userID = userWithStatus.userID {
-                        print("has ID")
-                    } else {
-                        print("no ID")
-                    }
-                    if let phone = userWithStatus.userPhone {
-                        print("phone found for: \(phone)")
-                    }
                     newContactsToDisplay.append(userWithStatus)
                 }
             }
@@ -463,13 +470,8 @@ class SelectContactsViewController: UIViewController, UITableViewDelegate, UITab
             let cell = tableView.cellForRow(at: indexPath as IndexPath) as! AddCircleMemberTableViewCell
             let user = contactAtIndexPath(indexPath: indexPath as IndexPath)
             
-            print("1")
             if user.relationshipToCurrentUser == CircleUser.userRelationshipToCurrentUser.memberButNoRelation.rawValue {
-                print("2")
                 FirebaseHelper().inviteUserToCircle(user: user, ref: self.ref)
-//                if let email = user.userEmail {
-//                    FirebaseHelper().inviteUserToCircle(userEmail: email, ref: self.ref)
-//                }
                 
                 updateSpotsLeftLabel()
                 cell.inviteButton.isHidden = true
