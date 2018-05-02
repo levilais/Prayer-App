@@ -30,7 +30,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         settingsProfileButtonImage.layer.cornerRadius = settingsProfileButtonImage.frame.size.height / 2
         settingsProfileButtonImage.clipsToBounds = true
         
-        setupFooterView()
+        if UIDevice.current.userInterfaceIdiom != .pad {
+            setupFooterView()
+        } else {
+            tableView.tableFooterView = UIView()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
